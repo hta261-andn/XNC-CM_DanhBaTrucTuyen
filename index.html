@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Danh bạ điện thoại trực tuyến — QLXNC Cà Mau</title>
   <meta name="description" content="Danh bạ điện thoại trực tuyến Phòng Quản lý Xuất nhập cảnh – Công an tỉnh Cà Mau" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,10 +14,12 @@
       --text-1: #1f2937;
       --text-2: #64748b;
       --line: rgba(148,163,184,.26);
-      --shadow: 0 18px 45px rgba(33, 11, 14, 0.18);
+      --shadow: 0 18px 45px rgba(33,11,14,.18);
       --success: #0f766e;
+      --red: #8b1220;
+      --gold: #d39c2f;
     }
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html, body { margin: 0; padding: 0; }
     body {
       font-family: "Be Vietnam Pro", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -27,7 +29,9 @@
         linear-gradient(135deg, #5d0c17 0%, #871727 42%, #b78228 100%);
       color: var(--text-1);
       min-height: 100vh;
+      animation: appFadeIn .45s ease both;
     }
+    @keyframes appFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
     .shell { width: min(1200px, calc(100% - 24px)); margin: 20px auto 40px; }
     .hero {
       position: relative; overflow: hidden; padding: 28px 26px 24px; border-radius: 28px; color: #fff;
@@ -49,21 +53,23 @@
     }
     .logo-wrap img { width: 92px; height: 92px; object-fit: contain; filter: drop-shadow(0 6px 12px rgba(0,0,0,.22)); }
     .title-block { text-align: center; }
-    .title-line-1 { margin: 0; font-size: clamp(26px, 3vw, 38px); line-height: 1.15; letter-spacing: .6px; font-weight: 800; text-transform: uppercase; }
-    .title-line-2 { margin: 8px 0 0; font-size: clamp(14px, 1.65vw, 20px); line-height: 1.4; font-weight: 700; letter-spacing: .35px; text-transform: uppercase; color: rgba(255,255,255,.9); }
+    .title-line-1 { margin: 0; font-size: clamp(24px, 3vw, 38px); line-height: 1.15; letter-spacing: .6px; font-weight: 800; text-transform: uppercase; }
+    .title-line-2 { margin: 8px 0 0; font-size: clamp(13px, 1.65vw, 20px); line-height: 1.4; font-weight: 700; letter-spacing: .35px; text-transform: uppercase; color: rgba(255,255,255,.9); }
     .hero-actions { display: flex; flex-direction: column; gap: 10px; align-items: stretch; }
-    .link-btn, .ghost-btn, .primary-btn, .tiny-btn {
-      border: 0; border-radius: 14px; font: inherit; cursor: pointer;
+    .link-btn, .ghost-btn, .primary-btn, .admin-btn, .tiny-btn {
+      border: 0; border-radius: 14px; font: inherit; cursor: pointer; touch-action: manipulation;
       transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease, color .18s ease;
     }
-    .link-btn, .ghost-btn, .primary-btn {
+    .link-btn, .ghost-btn, .primary-btn, .admin-btn {
       padding: 12px 16px; display: inline-flex; gap: 10px; align-items: center; justify-content: center; text-decoration: none; font-weight: 700; white-space: nowrap;
     }
-    .link-btn:hover, .ghost-btn:hover, .primary-btn:hover, .tiny-btn:hover { transform: translateY(-1px); }
+    .link-btn:hover, .ghost-btn:hover, .primary-btn:hover, .admin-btn:hover, .tiny-btn:hover { transform: translateY(-1px); }
+    .link-btn:active, .ghost-btn:active, .primary-btn:active, .admin-btn:active, .tiny-btn:active { transform: scale(.97); }
     .link-btn { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.16); }
     .ghost-btn { background: rgba(255,255,255,.08); color: #fff; border: 1px solid rgba(255,255,255,.12); }
     .primary-btn { background: linear-gradient(180deg, #f8d27a, #d39c2f); color: #5d0c17; box-shadow: 0 10px 20px rgba(30,10,12,.22); }
-    .link-btn:hover, .ghost-btn:hover { background: rgba(255,255,255,.18); }
+    .admin-btn { background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.08)); color: #fff; border: 1px solid rgba(255,255,255,.22); }
+    .link-btn:hover, .ghost-btn:hover, .admin-btn:hover { background: rgba(255,255,255,.2); }
     .main-panel {
       margin-top: 18px; background: rgba(255,255,255,.92); border: 1px solid rgba(255,255,255,.4);
       border-radius: 28px; box-shadow: var(--shadow); backdrop-filter: blur(12px); overflow: hidden;
@@ -74,13 +80,13 @@
     .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #9ca3af; pointer-events: none; }
     .search-input {
       width: 100%; height: 54px; border-radius: 18px; border: 1px solid rgba(148,163,184,.28);
-      background: #fff; padding: 0 50px 0 48px; font: inherit; font-size: 15px; color: var(--text-1); outline: none;
+      background: #fff; padding: 0 50px 0 48px; font: inherit; font-size: 16px; color: var(--text-1); outline: none;
       transition: border-color .18s ease, box-shadow .18s ease; box-shadow: inset 0 1px 1px rgba(15,23,42,.03);
     }
     .search-input:focus { border-color: rgba(139,18,32,.5); box-shadow: 0 0 0 4px rgba(139,18,32,.08); }
     .clear-btn {
       position: absolute; right: 12px; top: 50%; transform: translateY(-50%); width: 30px; height: 30px; border-radius: 50%;
-      border: none; background: #f3f4f6; color: #6b7280; display: none; cursor: pointer;
+      border: none; background: #f3f4f6; color: #6b7280; display: none; cursor: pointer; touch-action: manipulation;
     }
     .clear-btn.active { display: inline-grid; place-items: center; }
     .filter-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 16px; }
@@ -88,17 +94,29 @@
     .chips { display: flex; flex-wrap: wrap; gap: 8px; }
     .chip {
       border: 1px solid rgba(139,18,32,.14); background: rgba(139,18,32,.04); color: #6b7280; padding: 9px 14px; border-radius: 999px;
-      font-size: 13px; font-weight: 700; cursor: pointer;
+      font-size: 13px; font-weight: 700; cursor: pointer; transition: all .18s ease; touch-action: manipulation;
     }
+    .chip:active { transform: scale(.96); }
     .chip.active { background: linear-gradient(180deg, #8b1220, #6f0f19); color: #fff; border-color: transparent; box-shadow: 0 10px 18px rgba(139,18,32,.18); }
-    .meta-row {
-      display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; padding: 20px; border-bottom: 1px solid var(--line);
+
+    /* ── Compact stat bar ── */
+    .stat-bar {
+      display: flex; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--line);
       background: linear-gradient(180deg, rgba(251,249,246,.72), rgba(255,255,255,.88));
     }
-    .stat { border-radius: 22px; border: 1px solid rgba(201,154,54,.18); padding: 16px 18px; background: linear-gradient(180deg, #fff, #fff8eb); min-height: 96px; }
-    .stat-label { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; color: #8a6b2f; margin-bottom: 10px; }
-    .stat-value { font-size: clamp(24px, 2.4vw, 32px); font-weight: 800; color: #60101a; letter-spacing: .4px; }
-    .stat-sub { margin-top: 6px; font-size: 12px; line-height: 1.5; color: #7c8797; }
+    .stat-mini {
+      flex: 1; border-radius: 16px; border: 1px solid rgba(201,154,54,.18);
+      padding: 12px 14px; background: linear-gradient(180deg, #fff, #fff8eb);
+      display: flex; align-items: center; gap: 12px;
+    }
+    .stat-mini-icon {
+      width: 36px; height: 36px; border-radius: 12px; background: rgba(122,18,33,.07);
+      display: grid; place-items: center; flex-shrink: 0; color: #7a1221;
+    }
+    .stat-mini-body {}
+    .stat-mini-value { font-size: 22px; font-weight: 800; color: #60101a; letter-spacing: .3px; line-height: 1.1; }
+    .stat-mini-label { font-size: 11px; font-weight: 700; color: #8a6b2f; margin-top: 2px; }
+
     .status-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; padding: 0 20px 18px; }
     .status-text { font-size: 13px; color: var(--text-2); display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .status-pill {
@@ -112,7 +130,11 @@
       position: relative; border-radius: 24px; border: 1px solid rgba(148,163,184,.18);
       background: radial-gradient(circle at top right, rgba(201,154,54,.12), transparent 34%), linear-gradient(180deg, rgba(255,255,255,.98), rgba(255,255,255,.94));
       box-shadow: 0 12px 22px rgba(15,23,42,.05); padding: 18px 18px 16px; overflow: hidden;
+      transition: transform .2s ease, box-shadow .2s ease;
+      animation: cardIn .35s ease both;
     }
+    .person-card:active { transform: scale(.99); }
+    @keyframes cardIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
     .person-card::after { content: ""; position: absolute; inset: 0 auto auto 0; width: 100%; height: 4px; background: linear-gradient(90deg, #7a1221, #d6a847); opacity: .95; }
     .person-top { display: grid; grid-template-columns: 56px 1fr auto; gap: 14px; align-items: start; }
     .avatar {
@@ -138,9 +160,7 @@
       border: 1px solid rgba(148,163,184,.18); padding: 12px 12px 12px 14px; background: #fff;
     }
     .phone-main { min-width: 0; display: flex; gap: 12px; align-items: center; flex: 1; }
-    .phone-icon-wrap {
-      width: 38px; height: 38px; border-radius: 14px; display: grid; place-items: center; color: #7a1221; background: rgba(122,18,33,.06); flex-shrink: 0;
-    }
+    .phone-icon-wrap { width: 38px; height: 38px; border-radius: 14px; display: grid; place-items: center; color: #7a1221; background: rgba(122,18,33,.06); flex-shrink: 0; }
     .phone-info { min-width: 0; }
     .phone-number { font-size: 17px; line-height: 1.2; color: #8b1220; font-weight: 800; text-decoration: none; letter-spacing: .3px; word-break: break-word; }
     .phone-number:hover { text-decoration: underline; }
@@ -149,6 +169,7 @@
     .tiny-btn {
       min-width: 42px; height: 40px; padding: 0 12px; border: 1px solid rgba(148,163,184,.22); background: #f8fafc; color: #475569;
       font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      touch-action: manipulation; border-radius: 14px;
     }
     .tiny-btn:hover { border-color: rgba(139,18,32,.24); color: #7a1221; background: rgba(122,18,33,.05); }
     .tiny-btn.done { color: #0f766e; border-color: rgba(15,118,110,.24); background: rgba(15,118,110,.08); }
@@ -161,30 +182,32 @@
     }
     .empty-title, .loading-title { margin-top: 14px; font-size: 22px; font-weight: 800; color: #334155; }
     .empty-sub, .loading-sub { margin-top: 8px; font-size: 14px; color: #64748b; line-height: 1.65; }
-    .spinner {
-      width: 54px; height: 54px; margin: 0 auto; border-radius: 50%; border: 4px solid rgba(201,154,54,.2); border-top-color: #8b1220; animation: spin 1s linear infinite;
-    }
-    .footer {
-      padding: 18px 20px 24px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap;
-      background: linear-gradient(180deg, rgba(250,250,250,.64), rgba(255,255,255,.9));
-    }
+    .spinner { width: 54px; height: 54px; margin: 0 auto; border-radius: 50%; border: 4px solid rgba(201,154,54,.2); border-top-color: #8b1220; animation: spin 1s linear infinite; }
+    .footer { padding: 18px 20px 24px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap; background: linear-gradient(180deg, rgba(250,250,250,.64), rgba(255,255,255,.9)); }
     .footer-note { font-size: 13px; color: #64748b; line-height: 1.65; }
     .footer-note b { color: #7a1221; }
+
+    /* ── Modals ── */
     .modal {
-      position: fixed; inset: 0; display: none; align-items: center; justify-content: center; padding: 20px;
-      background: rgba(15,23,42,.48); backdrop-filter: blur(8px); z-index: 50;
+      position: fixed; inset: 0; display: none; align-items: flex-end; justify-content: center; padding: 0;
+      background: rgba(15,23,42,.52); backdrop-filter: blur(8px); z-index: 50;
     }
+    @media (min-width: 600px) { .modal { align-items: center; padding: 20px; } }
     .modal.show { display: flex; }
+    .modal.show .modal-card { animation: slideUp .3s cubic-bezier(.34,1.56,.64,1) both; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(40px) scale(.97); } to { opacity: 1; transform: none; } }
     .modal-card {
-      width: min(420px, 100%); border-radius: 28px; background: #fff; box-shadow: 0 24px 50px rgba(15,23,42,.24);
-      overflow: hidden; border: 1px solid rgba(255,255,255,.7);
+      width: min(480px, 100%); border-radius: 28px 28px 0 0; background: #fff; box-shadow: 0 24px 50px rgba(15,23,42,.24);
+      overflow: hidden; border: 1px solid rgba(255,255,255,.7); max-height: 92dvh; display: flex; flex-direction: column;
     }
+    @media (min-width: 600px) { .modal-card { border-radius: 28px; max-height: 88dvh; } }
     .modal-head {
       padding: 18px 20px; display: flex; justify-content: space-between; gap: 10px; align-items: center;
-      background: linear-gradient(135deg, #7a1221, #b8872a); color: #fff;
+      background: linear-gradient(135deg, #7a1221, #b8872a); color: #fff; flex-shrink: 0;
     }
     .modal-title { font-size: 18px; font-weight: 800; line-height: 1.35; }
-    .modal-body { padding: 22px 20px 20px; text-align: center; }
+    .modal-body { padding: 22px 20px 20px; text-align: center; overflow-y: auto; flex: 1; }
+    .modal-body-left { text-align: left; }
     .qr-wrap {
       width: 280px; height: 280px; margin: 0 auto 16px; padding: 16px; border-radius: 26px;
       background: linear-gradient(180deg, #fff, #faf7f2); border: 1px solid rgba(201,154,54,.24);
@@ -195,10 +218,65 @@
     .modal-actions { margin-top: 18px; display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
     .hidden { display: none !important; }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Admin / Password Modal ── */
+    .pass-icon { font-size: 48px; text-align: center; margin-bottom: 12px; }
+    .pass-subtitle { font-size: 14px; color: var(--text-2); margin-bottom: 20px; line-height: 1.6; }
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 6px; }
+    .form-input, .form-select {
+      width: 100%; height: 48px; border-radius: 14px; border: 1px solid rgba(148,163,184,.34);
+      background: #f9fafb; padding: 0 14px; font: inherit; font-size: 16px; color: var(--text-1); outline: none;
+      transition: border-color .18s ease, box-shadow .18s ease;
+    }
+    .form-input:focus, .form-select:focus { border-color: rgba(139,18,32,.5); box-shadow: 0 0 0 3px rgba(139,18,32,.08); background: #fff; }
+    .form-input.error { border-color: #dc2626; }
+    .error-msg { margin-top: 6px; font-size: 12px; color: #dc2626; font-weight: 600; display: none; }
+    .error-msg.show { display: block; }
+
+    .tab-bar { display: flex; border-bottom: 1px solid var(--line); margin-bottom: 20px; }
+    .tab-btn {
+      flex: 1; padding: 12px 8px; font: inherit; font-size: 13px; font-weight: 700; color: var(--text-2);
+      background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; transition: all .18s; touch-action: manipulation;
+    }
+    .tab-btn.active { color: var(--red); border-bottom-color: var(--red); }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    .action-btn {
+      width: 100%; height: 48px; border-radius: 14px; border: none; cursor: pointer; font: inherit; font-size: 15px; font-weight: 700;
+      background: linear-gradient(180deg, #8b1220, #6f0f19); color: #fff; box-shadow: 0 8px 18px rgba(139,18,32,.22);
+      transition: transform .18s, box-shadow .18s; touch-action: manipulation; display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .action-btn:hover { transform: translateY(-1px); box-shadow: 0 12px 22px rgba(139,18,32,.28); }
+    .action-btn:active { transform: scale(.97); }
+    .action-btn.danger { background: linear-gradient(180deg, #dc2626, #b91c1c); box-shadow: 0 8px 18px rgba(220,38,38,.22); }
+    .action-btn.gold { background: linear-gradient(180deg, #d39c2f, #b8872a); box-shadow: 0 8px 18px rgba(184,135,42,.22); }
+
+    .confirm-row { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
+    .confirm-label { font-size: 12px; font-weight: 700; color: #6b7280; margin-bottom: 8px; display: block; }
+
+    .toast {
+      position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px); z-index: 999;
+      background: #1f2937; color: #fff; padding: 12px 22px; border-radius: 999px; font-size: 14px; font-weight: 700;
+      box-shadow: 0 8px 24px rgba(0,0,0,.22); pointer-events: none; opacity: 0;
+      transition: opacity .25s ease, transform .25s ease;
+      white-space: nowrap; display: flex; align-items: center; gap: 8px;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.success { background: linear-gradient(135deg, #0f766e, #0d6460); }
+    .toast.error { background: linear-gradient(135deg, #dc2626, #b91c1c); }
+
+    /* ── Script info box ── */
+    .info-box {
+      background: rgba(201,154,54,.08); border: 1px solid rgba(201,154,54,.24); border-radius: 14px;
+      padding: 14px; font-size: 13px; line-height: 1.65; color: #6b4f1a; margin-bottom: 16px;
+    }
+    .info-box a { color: var(--red); font-weight: 700; }
+
     @media (max-width: 980px) {
       .hero-grid { grid-template-columns: 110px 1fr; }
       .hero-actions { grid-column: 1 / -1; flex-direction: row; justify-content: center; flex-wrap: wrap; }
-      .meta-row { grid-template-columns: repeat(2, minmax(0,1fr)); }
       .card-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 680px) {
@@ -207,7 +285,10 @@
       .hero-grid { grid-template-columns: 1fr; text-align: center; }
       .logo-wrap { margin: 0 auto; }
       .search-row { grid-template-columns: 1fr; }
-      .meta-row { grid-template-columns: 1fr; }
+      .stat-bar { flex-direction: row; gap: 8px; padding: 12px 14px; }
+      .stat-mini { flex-direction: column; align-items: flex-start; gap: 6px; padding: 10px 12px; }
+      .stat-mini-icon { width: 30px; height: 30px; border-radius: 10px; }
+      .stat-mini-value { font-size: 20px; }
       .toolbar, .content, .footer { padding-inline: 14px; }
       .status-row { padding-inline: 14px; }
       .person-top { grid-template-columns: 48px 1fr; }
@@ -215,6 +296,9 @@
       .phone-item { flex-direction: column; align-items: stretch; }
       .phone-actions { justify-content: flex-end; }
       .qr-wrap { width: min(280px, 100%); height: auto; aspect-ratio: 1; }
+    }
+    @media (hover: none) {
+      .person-card:hover { transform: none; box-shadow: 0 12px 22px rgba(15,23,42,.05); }
     }
   </style>
 </head>
@@ -233,9 +317,9 @@
           <button class="primary-btn" id="refreshBtn" type="button">
             <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4v6h-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Làm mới dữ liệu</span>
           </button>
-          <a class="link-btn" href="https://docs.google.com/spreadsheets/d/12ScVQf6SvfDt5kSKvLkX5BvFxx3IptISKaWsl3qi65w/edit?usp=sharing" target="_blank" rel="noopener noreferrer">
-            <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 3v5h5" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 13h8M8 17h8M8 9h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><span>Mở Google Sheets</span>
-          </a>
+          <button class="admin-btn" id="adminBtn" type="button">
+            <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Điều chỉnh/Bổ sung SĐT</span>
+          </button>
         </div>
       </div>
     </header>
@@ -251,35 +335,29 @@
           <button class="ghost-btn" id="resetBtn" type="button"><span><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M3 4v5h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Xóa lọc</span></button>
           <button class="ghost-btn" id="copyVisibleBtn" type="button"><span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><span>Chép số đang hiện</span></button>
         </div>
-
         <div class="filter-bar">
           <span class="filter-label"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> Bộ phận / vị trí</span>
           <div class="chips" id="chips"></div>
         </div>
       </section>
 
-      <section class="meta-row">
-        <article class="stat">
-          <div class="stat-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="9.5" cy="7" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M20 8.5a3 3 0 0 1 0 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M23 21v-2a4 4 0 0 0-3-3.87" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>Nhân sự hiển thị</span></div>
-          <div class="stat-value" id="visiblePeople">0</div>
-          <div class="stat-sub">Số người sau khi lọc theo tìm kiếm và bộ phận.</div>
-        </article>
-        <article class="stat">
-          <div class="stat-label"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.77 19.77 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.77 19.77 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.35 1.79.68 2.63a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.45-1.25a2 2 0 0 1 2.11-.45c.84.33 1.73.56 2.63.68A2 2 0 0 1 22 16.92Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Số điện thoại</span></div>
-          <div class="stat-value" id="visiblePhones">0</div>
-          <div class="stat-sub">Số điện thoại duy nhất đang hiển thị trên màn hình.</div>
-        </article>
-        <article class="stat">
-          <div class="stat-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><ellipse cx="12" cy="5" rx="7" ry="3" stroke="currentColor" stroke-width="1.8"/><path d="M5 5v6c0 1.66 3.13 3 7 3s7-1.34 7-3V5" stroke="currentColor" stroke-width="1.8"/><path d="M5 11v8c0 1.66 3.13 3 7 3s7-1.34 7-3v-8" stroke="currentColor" stroke-width="1.8"/></svg><span>Dữ liệu gốc / sau gộp</span></div>
-          <div class="stat-value" id="dedupeStat">0 / 0</div>
-          <div class="stat-sub">Tự động gộp khi SĐT 1 và SĐT 2 trùng nhau hoặc trùng toàn bộ thông tin.</div>
-        </article>
-        <article class="stat">
-          <div class="stat-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Trạng thái đồng bộ</span></div>
-          <div class="stat-value" id="syncTime">--:--:--</div>
-          <div class="stat-sub" id="syncSource">Đang chờ nạp dữ liệu từ Google Sheets.</div>
-        </article>
-      </section>
+      <!-- Compact 2-stat bar -->
+      <div class="stat-bar">
+        <div class="stat-mini">
+          <div class="stat-mini-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="9.5" cy="7" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M20 8.5a3 3 0 0 1 0 6M23 21v-2a4 4 0 0 0-3-3.87" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+          <div class="stat-mini-body">
+            <div class="stat-mini-value" id="visiblePeople">0</div>
+            <div class="stat-mini-label">Nhân sự hiển thị</div>
+          </div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.77 19.77 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.77 19.77 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.35 1.79.68 2.63a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.45-1.25a2 2 0 0 1 2.11-.45c.84.33 1.73.56 2.63.68A2 2 0 0 1 22 16.92Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+          <div class="stat-mini-body">
+            <div class="stat-mini-value" id="visiblePhones">0</div>
+            <div class="stat-mini-label">Số điện thoại</div>
+          </div>
+        </div>
+      </div>
 
       <div class="status-row">
         <div class="status-text" id="resultText"><span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><span>Chưa có dữ liệu.</span></div>
@@ -290,30 +368,27 @@
         <div class="loading-state" id="loadingState">
           <div class="spinner"></div>
           <div class="loading-title">Đang đồng bộ danh bạ…</div>
-          <div class="loading-sub">Ứng dụng đang lấy dữ liệu trực tiếp từ Google Sheets và tự động loại trùng theo yêu cầu.</div>
+          <div class="loading-sub">Ứng dụng đang lấy dữ liệu trực tiếp từ Google Sheets và tự động loại trùng.</div>
         </div>
-
         <div class="empty-state hidden" id="emptyState">
           <div><svg width="52" height="52" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="#94a3b8" stroke-width="1.6"/><path d="m20 20-3.5-3.5" stroke="#94a3b8" stroke-width="1.6" stroke-linecap="round"/><path d="M8 11h6" stroke="#cbd5e1" stroke-width="1.6" stroke-linecap="round"/></svg></div>
           <div class="empty-title">Không tìm thấy kết quả phù hợp</div>
           <div class="empty-sub">Anh/chị thử đổi từ khóa tìm kiếm hoặc bỏ bộ lọc để xem lại toàn bộ danh bạ.</div>
         </div>
-
         <div class="card-grid hidden" id="cardGrid"></div>
       </section>
 
       <footer class="footer">
         <div class="footer-note">
           <b>Nguồn dữ liệu:</b> Google Sheets đã gắn sẵn trong ứng dụng.<br>
-          <b>Tự động xử lý:</b> gộp SĐT trùng, loại bản ghi trùng toàn bộ thông tin, hỗ trợ sao chép và tạo QR cho từng số.
+          <b>Tự động xử lý:</b> gộp SĐT trùng, loại bản ghi trùng, hỗ trợ sao chép và tạo QR cho từng số.
         </div>
-        <div class="footer-note">
-          Để dùng ổn định nhất, nên mở file này qua GitHub Pages / web server tĩnh thay vì chạy từ môi trường chặn script ngoài.
-        </div>
+        <div class="footer-note">Nên mở file qua GitHub Pages / web server tĩnh để hoạt động ổn định nhất.</div>
       </footer>
     </main>
   </div>
 
+  <!-- QR Modal -->
   <div class="modal" id="qrModal" aria-hidden="true">
     <div class="modal-card">
       <div class="modal-head">
@@ -332,7 +407,251 @@
     </div>
   </div>
 
+  <!-- Admin Password Modal -->
+  <div class="modal" id="passModal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-title">🔐 Xác thực Admin</div>
+        <button class="ghost-btn" id="closePassBtn" type="button" style="padding:10px 12px;">Đóng</button>
+      </div>
+      <div class="modal-body">
+        <div class="pass-icon">🛡️</div>
+        <p class="pass-subtitle">Nhập mật khẩu admin để truy cập chức năng điều chỉnh và bổ sung số điện thoại.</p>
+        <div class="form-group">
+          <label class="form-label" for="passInput">Mật khẩu</label>
+          <input class="form-input" id="passInput" type="password" placeholder="Nhập mật khẩu..." autocomplete="off" />
+          <div class="error-msg" id="passError">Mật khẩu không đúng. Vui lòng thử lại.</div>
+        </div>
+        <button class="action-btn" id="passSubmitBtn" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M14 12H3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Đăng nhập
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Panel Modal -->
+  <div class="modal" id="adminModal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="modal-title">⚙️ Quản lý danh bạ</div>
+        <button class="ghost-btn" id="closeAdminBtn" type="button" style="padding:10px 12px;">Đóng</button>
+      </div>
+      <div class="modal-body modal-body-left">
+        <!-- Script URL notice -->
+        <div class="info-box" id="scriptNotice" style="display:none;">
+          ⚠️ <b>Chưa thiết lập Google Apps Script.</b> Để lưu dữ liệu vào Google Sheets, cần cấu hình <code>APP.scriptUrl</code>. 
+          Xem hướng dẫn <a href="#" id="showSetupGuide">tại đây</a>.
+        </div>
+        <div class="info-box" id="setupGuideBox" style="display:none;">
+          <b>Hướng dẫn cài đặt Apps Script:</b><br>
+          1. Mở <a href="https://script.google.com" target="_blank">script.google.com</a> → Dự án mới<br>
+          2. Dán code từ <code>APP.appsScriptCode</code> (xem console)<br>
+          3. Triển khai → Web app → Ai cũng có thể truy cập<br>
+          4. Sao chép URL và gán vào <code>APP.scriptUrl</code><br>
+          Sau đó mọi thao tác sẽ tự động lưu vào Google Sheets.
+        </div>
+
+        <!-- Tabs -->
+        <div class="tab-bar">
+          <button class="tab-btn active" data-tab="add" type="button">➕ Thêm nhân sự</button>
+          <button class="tab-btn" data-tab="update" type="button">✏️ Cập nhật SĐT</button>
+          <button class="tab-btn" data-tab="delete" type="button">🗑️ Xóa nhân sự</button>
+        </div>
+
+        <!-- Tab: Add -->
+        <div class="tab-pane active" id="tab-add">
+          <div class="form-group">
+            <label class="form-label">Họ và tên <span style="color:#dc2626">*</span></label>
+            <input class="form-input" id="add-name" type="text" placeholder="Nguyễn Văn A" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Chức vụ</label>
+            <input class="form-input" id="add-role" type="text" placeholder="Cán bộ, Đội trưởng..." />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Bộ phận / Đội <span style="color:#dc2626">*</span></label>
+            <input class="form-input" id="add-unit" type="text" placeholder="Ban chỉ huy, Đội 1..." />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Số điện thoại 1</label>
+            <input class="form-input" id="add-phone1" type="tel" placeholder="0901 234 567" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Số điện thoại 2</label>
+            <input class="form-input" id="add-phone2" type="tel" placeholder="(để trống nếu không có)" />
+          </div>
+          <div class="confirm-row">
+            <span class="confirm-label">🔑 Xác nhận mật khẩu admin để lưu</span>
+            <div class="form-group" style="margin-bottom:12px;">
+              <input class="form-input" id="add-confirm-pass" type="password" placeholder="Nhập lại mật khẩu..." />
+              <div class="error-msg" id="add-pass-error">Mật khẩu không đúng.</div>
+            </div>
+            <button class="action-btn" id="addSubmitBtn" type="button">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              Xác nhận thêm nhân sự
+            </button>
+          </div>
+        </div>
+
+        <!-- Tab: Update -->
+        <div class="tab-pane" id="tab-update">
+          <div class="form-group">
+            <label class="form-label">Chọn nhân sự cần cập nhật SĐT</label>
+            <select class="form-select" id="update-person">
+              <option value="">-- Chọn người --</option>
+            </select>
+          </div>
+          <div id="update-current-info" style="display:none; margin-bottom:14px; padding:12px; background:#f8fafc; border-radius:12px; font-size:13px; color:#475569; line-height:1.6;"></div>
+          <div class="form-group">
+            <label class="form-label">SĐT mới 1</label>
+            <input class="form-input" id="update-phone1" type="tel" placeholder="Số điện thoại 1 mới..." />
+          </div>
+          <div class="form-group">
+            <label class="form-label">SĐT mới 2 (để trống nếu không đổi)</label>
+            <input class="form-input" id="update-phone2" type="tel" placeholder="Số điện thoại 2 mới..." />
+          </div>
+          <div class="confirm-row">
+            <span class="confirm-label">🔑 Xác nhận mật khẩu admin để lưu</span>
+            <div class="form-group" style="margin-bottom:12px;">
+              <input class="form-input" id="update-confirm-pass" type="password" placeholder="Nhập lại mật khẩu..." />
+              <div class="error-msg" id="update-pass-error">Mật khẩu không đúng.</div>
+            </div>
+            <button class="action-btn gold" id="updateSubmitBtn" type="button">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              Xác nhận cập nhật SĐT
+            </button>
+          </div>
+        </div>
+
+        <!-- Tab: Delete -->
+        <div class="tab-pane" id="tab-delete">
+          <div class="info-box" style="background:rgba(220,38,38,.07); border-color:rgba(220,38,38,.2); color:#7f1d1d;">
+            ⚠️ Thao tác xóa sẽ <b>không thể hoàn tác</b>. Vui lòng xem kỹ trước khi xác nhận.
+          </div>
+          <div class="form-group">
+            <label class="form-label">Chọn nhân sự cần xóa</label>
+            <select class="form-select" id="delete-person">
+              <option value="">-- Chọn người cần xóa --</option>
+            </select>
+          </div>
+          <div id="delete-preview" style="display:none; margin-bottom:14px; padding:12px; background:#fff0f0; border:1px solid rgba(220,38,38,.18); border-radius:12px; font-size:13px; color:#7f1d1d; line-height:1.6;"></div>
+          <div class="confirm-row">
+            <span class="confirm-label">🔑 Xác nhận mật khẩu admin để xóa</span>
+            <div class="form-group" style="margin-bottom:12px;">
+              <input class="form-input" id="delete-confirm-pass" type="password" placeholder="Nhập lại mật khẩu..." />
+              <div class="error-msg" id="delete-pass-error">Mật khẩu không đúng.</div>
+            </div>
+            <button class="action-btn danger" id="deleteSubmitBtn" type="button">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Xác nhận xóa nhân sự
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
   <script>
+    // ━━━━━━━━━━━━━━ SOUND ENGINE ━━━━━━━━━━━━━━
+    const Sound = (() => {
+      let ctx = null;
+      function getCtx() {
+        if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+        return ctx;
+      }
+      function play(freq, dur, type = 'sine', vol = 0.12) {
+        try {
+          const c = getCtx();
+          const osc = c.createOscillator();
+          const gain = c.createGain();
+          osc.connect(gain);
+          gain.connect(c.destination);
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, c.currentTime);
+          gain.gain.setValueAtTime(vol, c.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, c.currentTime + dur);
+          osc.start(c.currentTime);
+          osc.stop(c.currentTime + dur);
+        } catch(e) {}
+      }
+      return {
+        tap()     { play(560, 0.08); },
+        success() { play(523, 0.1); setTimeout(() => play(659, 0.1), 100); setTimeout(() => play(784, 0.18), 200); },
+        error()   { play(280, 0.12, 'square', 0.09); setTimeout(() => play(200, 0.15, 'square', 0.09), 130); },
+        open()    { play(440, 0.12); setTimeout(() => play(520, 0.1), 80); },
+        close()   { play(420, 0.1); },
+        copy()    { play(680, 0.1); setTimeout(() => play(740, 0.08), 90); }
+      };
+    })();
+
+    function vibrate(ms = 10) {
+      try { navigator.vibrate && navigator.vibrate(ms); } catch(e) {}
+    }
+
+    // ━━━━━━━━━━━━━━ TOAST ━━━━━━━━━━━━━━
+    const toastEl = document.getElementById('toast');
+    let toastTimer = null;
+    function showToast(msg, type = 'ok', icon = '') {
+      clearTimeout(toastTimer);
+      toastEl.className = 'toast show' + (type === 'success' ? ' success' : type === 'error' ? ' error' : '');
+      toastEl.innerHTML = (icon ? icon + ' ' : '') + msg;
+      toastTimer = setTimeout(() => { toastEl.className = 'toast'; }, 3000);
+    }
+
+    // ━━━━━━━━━━━━━━ CONFIG ━━━━━━━━━━━━━━
+    const APP = {
+      sheetId: "12ScVQf6SvfDt5kSKvLkX5BvFxx3IptISKaWsl3qi65w",
+      gid: "0",
+      scriptUrl: "https://script.google.com/d/1Oc-zx1L1hKxfmgZc2wddvR0R9V2Wix3-USOpGt6KPcmCzEexFxbcVm1Q/edit?usp=sharing", // ← Điền URL Google Apps Script Web App tại đây
+      PASS_HASH: btoa("310326Xnc@"),
+      appName: "Danh bạ điện thoại trực tuyến QLXNC Cà Mau",
+      appsScriptCode: `
+// Dán vào Google Apps Script (script.google.com):
+const SHEET_ID = '12ScVQf6SvfDt5kSKvLkX5BvFxx3IptISKaWsl3qi65w';
+function doGet(e) {
+  const p = e.parameter;
+  if (p.auth !== atob('MzEwMzI5WG5jQA==')) return resp({ok:false,msg:'Sai mật khẩu'});
+  const sh = SpreadsheetApp.openById(SHEET_ID).getSheets()[0];
+  try {
+    if (p.action === 'add') {
+      const tt = sh.getLastRow();
+      sh.appendRow([tt, p.name, p.role, p.unit, p.phone1||'', p.phone2||'']);
+      return resp({ok:true, msg:'Đã thêm nhân sự mới.'});
+    }
+    if (p.action === 'delete') {
+      const data = sh.getDataRange().getValues();
+      for (let i = 1; i < data.length; i++) {
+        if (data[i][1] === p.name && data[i][3] === p.unit) {
+          sh.deleteRow(i + 1); return resp({ok:true, msg:'Đã xóa.'});
+        }
+      }
+      return resp({ok:false, msg:'Không tìm thấy.'});
+    }
+    if (p.action === 'update') {
+      const data = sh.getDataRange().getValues();
+      for (let i = 1; i < data.length; i++) {
+        if (data[i][1] === p.name && data[i][3] === p.unit) {
+          if (p.phone1) sh.getRange(i+1,5).setValue(p.phone1);
+          if (p.phone2 !== undefined) sh.getRange(i+1,6).setValue(p.phone2);
+          return resp({ok:true, msg:'Đã cập nhật SĐT.'});
+        }
+      }
+      return resp({ok:false, msg:'Không tìm thấy.'});
+    }
+  } catch(e) { return resp({ok:false, msg:e.toString()}); }
+  function resp(obj) { return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON); }
+}`
+    };
+
+    function checkPass(input) {
+      return btoa(input) === APP.PASS_HASH;
+    }
+
+    // ━━━━━━━━━━━━━━ ICONS ━━━━━━━━━━━━━━
     const ICONS = {
       phone: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.77 19.77 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.77 19.77 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.35 1.79.68 2.63a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.45-1.25a2 2 0 0 1 2.11-.45c.84.33 1.73.56 2.63.68A2 2 0 0 1 22 16.92Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>`,
       copy: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`,
@@ -343,24 +662,12 @@
       filter: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`
     };
 
-    const APP = {
-      sheetId: "12ScVQf6SvfDt5kSKvLkX5BvFxx3IptISKaWsl3qi65w",
-      gid: "0",
-      sheetUrl: "https://docs.google.com/spreadsheets/d/12ScVQf6SvfDt5kSKvLkX5BvFxx3IptISKaWsl3qi65w/edit?usp=sharing",
-      appName: "Danh bạ điện thoại trực tuyến QLXNC Cà Mau"
-    };
-
+    // ━━━━━━━━━━━━━━ STATE ━━━━━━━━━━━━━━
     const state = {
-      rawRows: [],
-      people: [],
-      filtered: [],
-      query: "",
-      activeUnit: "Tất cả",
-      unitOptions: ["Tất cả"],
-      duplicateRowsRemoved: 0,
-      duplicatePhonesCollapsed: 0,
-      isLoading: true,
-      lastSyncAt: null
+      rawRows: [], people: [], filtered: [], query: "",
+      activeUnit: "Tất cả", unitOptions: ["Tất cả"],
+      duplicateRowsRemoved: 0, duplicatePhonesCollapsed: 0,
+      isLoading: true, lastSyncAt: null
     };
 
     const els = {
@@ -369,15 +676,13 @@
       resetBtn: document.getElementById("resetBtn"),
       copyVisibleBtn: document.getElementById("copyVisibleBtn"),
       refreshBtn: document.getElementById("refreshBtn"),
+      adminBtn: document.getElementById("adminBtn"),
       loadingState: document.getElementById("loadingState"),
       emptyState: document.getElementById("emptyState"),
       cardGrid: document.getElementById("cardGrid"),
       chips: document.getElementById("chips"),
       visiblePeople: document.getElementById("visiblePeople"),
       visiblePhones: document.getElementById("visiblePhones"),
-      dedupeStat: document.getElementById("dedupeStat"),
-      syncTime: document.getElementById("syncTime"),
-      syncSource: document.getElementById("syncSource"),
       resultText: document.getElementById("resultText"),
       statusPill: document.getElementById("statusPill"),
       qrModal: document.getElementById("qrModal"),
@@ -385,26 +690,27 @@
       qrNumber: document.getElementById("qrNumber"),
       closeQrBtn: document.getElementById("closeQrBtn"),
       copyQrPhoneBtn: document.getElementById("copyQrPhoneBtn"),
-      callQrPhoneLink: document.getElementById("callQrPhoneLink")
+      callQrPhoneLink: document.getElementById("callQrPhoneLink"),
+      passModal: document.getElementById("passModal"),
+      passInput: document.getElementById("passInput"),
+      passError: document.getElementById("passError"),
+      passSubmitBtn: document.getElementById("passSubmitBtn"),
+      closePassBtn: document.getElementById("closePassBtn"),
+      adminModal: document.getElementById("adminModal"),
+      closeAdminBtn: document.getElementById("closeAdminBtn"),
     };
 
-    let qrInstance = null;
-    let qrPhone = "";
+    let qrInstance = null, qrPhone = "";
 
+    // ━━━━━━━━━━━━━━ UTILS ━━━━━━━━━━━━━━
     function norm(input) {
-      return String(input || "")
-        .trim()
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/đ/g, "d");
+      return String(input || "").trim().toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d");
     }
-
     function initials(name) {
       const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
-      return parts.slice(-2).map(part => part[0] || "").join("").toUpperCase() || "NA";
+      return parts.slice(-2).map(p => p[0] || "").join("").toUpperCase() || "NA";
     }
-
     function canonicalHeader(header) {
       const h = norm(header).replace(/[^a-z0-9/ ]+/g, " ").replace(/\s+/g, " ").trim();
       if (h === "tt") return "TT";
@@ -415,20 +721,17 @@
       if (h.includes("sdt 2") || h.includes("so dien thoai 2") || h.includes("dien thoai 2")) return "SĐT 2";
       return header;
     }
-
     function rawCellValue(cell) {
       if (!cell) return "";
       if (typeof cell.v === "number") return String(Math.trunc(cell.v));
       return String(cell.v ?? cell.f ?? "").trim();
     }
-
     function standardizeDigits(value) {
       let digits = String(value || "").replace(/\D/g, "");
       if (!digits) return "";
       if (digits.length === 9) digits = "0" + digits;
       return digits;
     }
-
     function formatPhoneDisplay(digits) {
       const cleaned = standardizeDigits(digits);
       if (!cleaned) return "";
@@ -437,22 +740,12 @@
       if (cleaned.length === 8) return cleaned.replace(/(\d{4})(\d{4})/, "$1 $2");
       return cleaned;
     }
-
     function extractPhones(...values) {
-      const all = values
-        .flatMap(value => String(value || "").split(/[\n;,|/]+/g))
-        .map(item => standardizeDigits(item))
-        .filter(Boolean);
-      return {
-        uniquePhones: [...new Set(all)],
-        collapsedCount: Math.max(0, all.length - new Set(all).size)
-      };
+      const all = values.flatMap(v => String(v || "").split(/[\n;,|/]+/g))
+        .map(item => standardizeDigits(item)).filter(Boolean);
+      return { uniquePhones: [...new Set(all)], collapsedCount: Math.max(0, all.length - new Set(all).size) };
     }
-
-    function compareText(a, b) {
-      return norm(a).localeCompare(norm(b), "vi");
-    }
-
+    function compareText(a, b) { return norm(a).localeCompare(norm(b), "vi"); }
     function unitClass(unit) {
       const key = norm(unit);
       if (key.includes("ban chi huy")) return "command";
@@ -461,90 +754,53 @@
       if (key.includes("doi 3")) return "team3";
       return "other";
     }
-
     function escapeHtml(value) {
-      return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
+      return String(value ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
     }
-
     function setStatus(text, kind = "ok") {
       els.statusPill.className = "status-pill" + (kind === "warn" ? " warn" : "");
       els.statusPill.innerHTML = (kind === "warn" ? ICONS.warn : ICONS.check) + `<span>${escapeHtml(kind === "warn" ? "Lưu ý" : "Sẵn sàng")}</span>`;
       els.resultText.innerHTML = ICONS.result + `<span>${escapeHtml(text)}</span>`;
     }
-
     function setLoading(loading) {
       state.isLoading = loading;
       els.loadingState.classList.toggle("hidden", !loading);
-      if (loading) {
-        els.cardGrid.classList.add("hidden");
-        els.emptyState.classList.add("hidden");
-      }
+      if (loading) { els.cardGrid.classList.add("hidden"); els.emptyState.classList.add("hidden"); }
     }
 
+    // ━━━━━━━━━━━━━━ RENDER ━━━━━━━━━━━━━━
     function renderChips() {
       els.chips.innerHTML = state.unitOptions.map(unit => `
-        <button class="chip ${unit === state.activeUnit ? "active" : ""}" type="button" data-unit="${escapeHtml(unit)}">
-          ${escapeHtml(unit)}
-        </button>
+        <button class="chip ${unit === state.activeUnit ? "active" : ""}" type="button" data-unit="${escapeHtml(unit)}">${escapeHtml(unit)}</button>
       `).join("");
-
-      els.chips.querySelectorAll(".chip").forEach(button => {
-        button.addEventListener("click", () => {
-          state.activeUnit = button.dataset.unit;
-          render();
-        });
+      els.chips.querySelectorAll(".chip").forEach(btn => {
+        btn.addEventListener("click", () => { Sound.tap(); vibrate(); state.activeUnit = btn.dataset.unit; render(); });
       });
     }
-
     function buildSearchIndex(person) {
       return norm([person.name, person.unit, person.role, ...person.phones, ...person.phoneDisplays].join(" "));
     }
-
     function preparePeople(rows) {
-      let duplicateRowsRemoved = 0;
-      let duplicatePhonesCollapsed = 0;
+      let duplicateRowsRemoved = 0, duplicatePhonesCollapsed = 0;
       const exactMap = new Map();
-
       rows.forEach((row, index) => {
         const name = String(row["Họ tên"] || "").trim();
         const role = String(row["Chức vụ"] || "").trim();
         const unit = String(row["Vị trí"] || row["Vị trí/Đội"] || "").trim();
         const tt = String(row["TT"] || index + 1).trim();
         if (!name && !role && !unit && !row["SĐT 1"] && !row["SĐT 2"]) return;
-
         const phoneInfo = extractPhones(row["SĐT 1"], row["SĐT 2"]);
         duplicatePhonesCollapsed += phoneInfo.collapsedCount;
-
         const person = {
-          tt,
-          name: name || "Chưa rõ họ tên",
-          role: role || "Chưa rõ chức vụ",
-          unit: unit || "Chưa rõ bộ phận",
-          phones: phoneInfo.uniquePhones,
+          tt, name: name || "Chưa rõ họ tên", role: role || "Chưa rõ chức vụ",
+          unit: unit || "Chưa rõ bộ phận", phones: phoneInfo.uniquePhones,
           phoneDisplays: phoneInfo.uniquePhones.map(formatPhoneDisplay)
         };
-
-        const exactKey = [
-          norm(person.name),
-          norm(person.role),
-          norm(person.unit),
-          [...person.phones].sort().join("|")
-        ].join("::");
-
-        if (exactMap.has(exactKey)) {
-          duplicateRowsRemoved += 1;
-          return;
-        }
-
+        const exactKey = [norm(person.name), norm(person.role), norm(person.unit), [...person.phones].sort().join("|")].join("::");
+        if (exactMap.has(exactKey)) { duplicateRowsRemoved += 1; return; }
         person.searchIndex = buildSearchIndex(person);
         exactMap.set(exactKey, person);
       });
-
       const people = [...exactMap.values()].sort((a, b) => {
         const byUnit = compareText(a.unit, b.unit);
         if (byUnit !== 0) return byUnit;
@@ -552,313 +808,349 @@
         if (byRole !== 0) return byRole;
         return compareText(a.name, b.name);
       });
-
       return { people, duplicateRowsRemoved, duplicatePhonesCollapsed };
     }
-
     function applyFilter() {
-      const q = norm(state.query);
-      const activeUnit = norm(state.activeUnit);
-
+      const q = norm(state.query), activeUnit = norm(state.activeUnit);
       state.filtered = state.people.filter(person => {
         const matchUnit = state.activeUnit === "Tất cả" || norm(person.unit) === activeUnit;
         const digitsQ = q.replace(/\D/g, "");
-        const matchQuery = !q || person.searchIndex.includes(q) || (digitsQ && person.phones.some(phone => phone.includes(digitsQ)));
+        const matchQuery = !q || person.searchIndex.includes(q) || (digitsQ && person.phones.some(ph => ph.includes(digitsQ)));
         return matchUnit && matchQuery;
       });
     }
-
     function renderStats() {
-      const visiblePhoneCount = state.filtered.reduce((sum, person) => sum + person.phones.length, 0);
+      const visiblePhoneCount = state.filtered.reduce((sum, p) => sum + p.phones.length, 0);
       els.visiblePeople.textContent = String(state.filtered.length);
       els.visiblePhones.textContent = String(visiblePhoneCount);
-      els.dedupeStat.textContent = `${state.rawRows.length} / ${state.people.length}`;
-
-      if (state.lastSyncAt) {
-        els.syncTime.textContent = new Intl.DateTimeFormat("vi-VN", {
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit"
-        }).format(state.lastSyncAt);
-      }
-      els.syncSource.textContent = `Loại ${state.duplicateRowsRemoved} bản ghi trùng và gộp ${state.duplicatePhonesCollapsed} SĐT trùng trong cùng bản ghi.`;
     }
-
     function renderCards() {
       if (!state.filtered.length) {
         els.cardGrid.classList.add("hidden");
         els.emptyState.classList.remove("hidden");
         return;
       }
-
       els.emptyState.classList.add("hidden");
       els.cardGrid.classList.remove("hidden");
-
-      els.cardGrid.innerHTML = state.filtered.map(person => {
+      els.cardGrid.innerHTML = state.filtered.map((person, cardIdx) => {
         const phonesHtml = person.phones.length
           ? person.phones.map((phone, idx) => {
               const display = person.phoneDisplays[idx];
-              return `
-                <div class="phone-item">
-                  <div class="phone-main">
-                    <div class="phone-icon-wrap">${ICONS.phone}</div>
-                    <div class="phone-info">
-                      <a class="phone-number" href="tel:${phone}">${escapeHtml(display)}</a>
-                      <div class="phone-meta">Chạm để gọi hoặc dùng QR để thao tác nhanh.</div>
-                    </div>
-                  </div>
-                  <div class="phone-actions">
-                    <button class="tiny-btn copy-phone-btn" type="button" data-phone="${escapeHtml(phone)}" data-display="${escapeHtml(display)}">
-                      ${ICONS.copy}<span>Chép</span>
-                    </button>
-                    <button class="tiny-btn qr-phone-btn" type="button" data-phone="${escapeHtml(phone)}" data-display="${escapeHtml(display)}" aria-label="Hiện QR">
-                      ${ICONS.qr}<span>QR</span>
-                    </button>
+              return `<div class="phone-item">
+                <div class="phone-main">
+                  <div class="phone-icon-wrap">${ICONS.phone}</div>
+                  <div class="phone-info">
+                    <a class="phone-number" href="tel:${phone}">${escapeHtml(display)}</a>
+                    <div class="phone-meta">Chạm để gọi hoặc dùng QR để thao tác nhanh.</div>
                   </div>
                 </div>
-              `;
+                <div class="phone-actions">
+                  <button class="tiny-btn copy-phone-btn" type="button" data-phone="${escapeHtml(phone)}" data-display="${escapeHtml(display)}">${ICONS.copy}<span>Chép</span></button>
+                  <button class="tiny-btn qr-phone-btn" type="button" data-phone="${escapeHtml(phone)}" data-display="${escapeHtml(display)}" aria-label="Hiện QR">${ICONS.qr}<span>QR</span></button>
+                </div>
+              </div>`;
             }).join("")
-          : `
-            <div class="phone-item">
-              <div class="phone-main">
-                <div class="phone-icon-wrap">${ICONS.phone}</div>
-                <div class="phone-info">
-                  <div class="phone-number" style="text-decoration:none; cursor:default;">Chưa có số điện thoại</div>
-                  <div class="phone-meta">Bản ghi này hiện chưa có dữ liệu SĐT.</div>
-                </div>
-              </div>
-            </div>
-          `;
-
-        return `
-          <article class="person-card">
-            <div class="person-top">
-              <div class="avatar">${escapeHtml(initials(person.name))}</div>
-              <div>
-                <h3 class="person-name">${escapeHtml(person.name)}</h3>
-                <div class="person-role">${escapeHtml(person.role)}</div>
-              </div>
-              <div class="tt-badge">TT #${escapeHtml(person.tt)}</div>
-            </div>
-            <div class="badge-row">
-              <span class="unit-badge ${unitClass(person.unit)}">${ICONS.filter}<span>${escapeHtml(person.unit)}</span></span>
-              <span class="count-badge">${ICONS.phone}<span>${person.phones.length} số</span></span>
-            </div>
-            <div class="phone-list">${phonesHtml}</div>
-            <div class="person-footer">
-              <div class="note">Ứng dụng tự gộp nếu SĐT 1 và SĐT 2 trùng nhau trên cùng bản ghi.</div>
-              <button class="tiny-btn copy-all-btn" type="button" data-phones="${escapeHtml(person.phoneDisplays.join(", "))}">
-                ${ICONS.copy}<span>Chép tất cả</span>
-              </button>
-            </div>
-          </article>
-        `;
+          : `<div class="phone-item"><div class="phone-main"><div class="phone-icon-wrap">${ICONS.phone}</div><div class="phone-info"><div class="phone-number" style="text-decoration:none;cursor:default;">Chưa có số điện thoại</div><div class="phone-meta">Bản ghi này hiện chưa có dữ liệu SĐT.</div></div></div></div>`;
+        return `<article class="person-card" style="animation-delay:${cardIdx * 0.04}s">
+          <div class="person-top">
+            <div class="avatar">${escapeHtml(initials(person.name))}</div>
+            <div><h3 class="person-name">${escapeHtml(person.name)}</h3><div class="person-role">${escapeHtml(person.role)}</div></div>
+            <div class="tt-badge">TT #${escapeHtml(person.tt)}</div>
+          </div>
+          <div class="badge-row">
+            <span class="unit-badge ${unitClass(person.unit)}">${ICONS.filter}<span>${escapeHtml(person.unit)}</span></span>
+            <span class="count-badge">${ICONS.phone}<span>${person.phones.length} số</span></span>
+          </div>
+          <div class="phone-list">${phonesHtml}</div>
+          <div class="person-footer">
+            <div class="note">Ứng dụng tự gộp nếu SĐT 1 và SĐT 2 trùng nhau trên cùng bản ghi.</div>
+            <button class="tiny-btn copy-all-btn" type="button" data-phones="${escapeHtml(person.phoneDisplays.join(", "))}">${ICONS.copy}<span>Chép tất cả</span></button>
+          </div>
+        </article>`;
       }).join("");
-
-      els.cardGrid.querySelectorAll(".copy-phone-btn").forEach(button => {
-        button.addEventListener("click", () => copyText(button.dataset.display || button.dataset.phone, button));
-      });
-      els.cardGrid.querySelectorAll(".qr-phone-btn").forEach(button => {
-        button.addEventListener("click", () => openQrModal(button.dataset.phone, button.dataset.display || button.dataset.phone));
-      });
-      els.cardGrid.querySelectorAll(".copy-all-btn").forEach(button => {
-        button.addEventListener("click", () => copyText(button.dataset.phones || "", button));
-      });
+      els.cardGrid.querySelectorAll(".copy-phone-btn").forEach(btn => btn.addEventListener("click", () => { Sound.copy(); vibrate(8); copyText(btn.dataset.display || btn.dataset.phone, btn); }));
+      els.cardGrid.querySelectorAll(".qr-phone-btn").forEach(btn => btn.addEventListener("click", () => { Sound.tap(); vibrate(8); openQrModal(btn.dataset.phone, btn.dataset.display || btn.dataset.phone); }));
+      els.cardGrid.querySelectorAll(".copy-all-btn").forEach(btn => btn.addEventListener("click", () => { Sound.copy(); vibrate(8); copyText(btn.dataset.phones || "", btn); }));
     }
-
     function renderSummaryText() {
       if (state.isLoading) return;
-      if (!state.people.length) {
-        setStatus("Không đọc được dữ liệu từ Google Sheets.", "warn");
-        return;
-      }
+      if (!state.people.length) { setStatus("Không đọc được dữ liệu từ Google Sheets.", "warn"); return; }
       const totalPhones = state.filtered.reduce((sum, p) => sum + p.phones.length, 0);
-      const msg = `Hiển thị ${state.filtered.length} người với ${totalPhones} số điện thoại. Dữ liệu đã gộp ${state.duplicateRowsRemoved} bản ghi trùng toàn bộ thông tin.`;
-      setStatus(msg, "ok");
+      setStatus(`Hiển thị ${state.filtered.length} người với ${totalPhones} số điện thoại.`, "ok");
     }
-
     function render() {
-      applyFilter();
-      renderChips();
-      renderStats();
-      renderCards();
-      renderSummaryText();
+      applyFilter(); renderChips(); renderStats(); renderCards(); renderSummaryText();
       els.clearBtn.classList.toggle("active", !!state.query);
     }
 
+    // ━━━━━━━━━━━━━━ COPY ━━━━━━━━━━━━━━
     async function copyText(text, button) {
       const value = String(text || "").trim();
       if (!value) return;
-
-      try {
-        await navigator.clipboard.writeText(value);
-      } catch (error) {
+      try { await navigator.clipboard.writeText(value); }
+      catch (e) {
         const ta = document.createElement("textarea");
-        ta.value = value;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand("copy");
-        document.body.removeChild(ta);
+        ta.value = value; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta);
       }
-
       if (button) {
         const original = button.innerHTML;
-        button.classList.add("done");
-        button.innerHTML = `${ICONS.check}<span>Đã chép</span>`;
-        window.setTimeout(() => {
-          button.classList.remove("done");
-          button.innerHTML = original;
-        }, 1400);
+        button.classList.add("done"); button.innerHTML = `${ICONS.check}<span>Đã chép</span>`;
+        setTimeout(() => { button.classList.remove("done"); button.innerHTML = original; }, 1400);
       }
     }
 
+    // ━━━━━━━━━━━━━━ QR MODAL ━━━━━━━━━━━━━━
     function openQrModal(phone, display) {
       qrPhone = String(phone || "").trim();
-      const shown = display || formatPhoneDisplay(phone);
-      els.qrNumber.textContent = shown;
+      els.qrNumber.textContent = display || formatPhoneDisplay(phone);
       els.callQrPhoneLink.href = `tel:${qrPhone}`;
-      els.qrModal.classList.add("show");
-      els.qrModal.setAttribute("aria-hidden", "false");
-
+      els.qrModal.classList.add("show"); els.qrModal.setAttribute("aria-hidden","false");
+      Sound.open(); vibrate(12);
       if (window.QRious) {
         if (!qrInstance) {
-          qrInstance = new QRious({
-            element: els.qrCanvas,
-            size: 240,
-            background: "#ffffff",
-            foreground: "#7a1221",
-            level: "H",
-            padding: 16
-          });
+          qrInstance = new QRious({ element: els.qrCanvas, size: 240, background: "#ffffff", foreground: "#7a1221", level: "H", padding: 16 });
         }
         qrInstance.value = `tel:${qrPhone}`;
-      } else {
-        const ctx = els.qrCanvas.getContext("2d");
-        ctx.clearRect(0, 0, els.qrCanvas.width, els.qrCanvas.height);
-        ctx.font = "14px sans-serif";
-        ctx.fillStyle = "#475569";
-        ctx.textAlign = "center";
-        ctx.fillText("Không tải được thư viện QR.", els.qrCanvas.width / 2, els.qrCanvas.height / 2 - 10);
-        ctx.fillText("Vẫn có thể dùng nút gọi hoặc sao chép.", els.qrCanvas.width / 2, els.qrCanvas.height / 2 + 16);
       }
     }
+    function closeModal(el) { el.classList.remove("show"); el.setAttribute("aria-hidden","true"); Sound.close(); }
 
-    function closeQrModal() {
-      els.qrModal.classList.remove("show");
-      els.qrModal.setAttribute("aria-hidden", "true");
-    }
-
+    // ━━━━━━━━━━━━━━ LOAD DATA ━━━━━━━━━━━━━━
     function transformRows(gvizResponse) {
       const cols = (gvizResponse.table?.cols || []).map(col => canonicalHeader(col.label || ""));
       const rows = (gvizResponse.table?.rows || []).map(row => {
         const obj = {};
-        cols.forEach((col, index) => {
-          obj[col] = rawCellValue(row.c?.[index]);
-        });
+        cols.forEach((col, i) => { obj[col] = rawCellValue(row.c?.[i]); });
         return obj;
       });
-      return rows.filter(row => Object.values(row).some(value => String(value || "").trim() !== ""));
+      return rows.filter(row => Object.values(row).some(v => String(v || "").trim() !== ""));
     }
-
     function loadSheetViaJsonp() {
       return new Promise((resolve, reject) => {
-        const callbackName = `__sheetJsonp_${Date.now()}_${Math.floor(Math.random() * 100000)}`;
+        const cbName = `__sheetJsonp_${Date.now()}_${Math.floor(Math.random()*100000)}`;
         const script = document.createElement("script");
-        const timeout = window.setTimeout(() => {
-          cleanup();
-          reject(new Error("Hết thời gian chờ tải dữ liệu Google Sheets."));
-        }, 15000);
-
-        function cleanup() {
-          window.clearTimeout(timeout);
-          delete window[callbackName];
-          script.remove();
-        }
-
-        window[callbackName] = (response) => {
-          try {
-            cleanup();
-            resolve(transformRows(response));
-          } catch (error) {
-            reject(error);
-          }
-        };
-
-        script.onerror = () => {
-          cleanup();
-          reject(new Error("Không tải được script dữ liệu từ Google Sheets."));
-        };
-
-        const tqx = encodeURIComponent(`out:json;responseHandler:${callbackName}`);
-        script.src = `https://docs.google.com/spreadsheets/d/${APP.sheetId}/gviz/tq?gid=${APP.gid}&headers=1&tqx=${tqx}`;
+        const timeout = setTimeout(() => { cleanup(); reject(new Error("Hết thời gian chờ.")); }, 15000);
+        function cleanup() { clearTimeout(timeout); delete window[cbName]; script.remove(); }
+        window[cbName] = (response) => { try { cleanup(); resolve(transformRows(response)); } catch(e) { reject(e); } };
+        script.onerror = () => { cleanup(); reject(new Error("Không tải được dữ liệu.")); };
+        script.src = `https://docs.google.com/spreadsheets/d/${APP.sheetId}/gviz/tq?gid=${APP.gid}&headers=1&tqx=${encodeURIComponent(`out:json;responseHandler:${cbName}`)}`;
         document.body.appendChild(script);
       });
     }
-
     async function syncData() {
-      setLoading(true);
-      setStatus("Đang đồng bộ dữ liệu từ Google Sheets…", "ok");
+      setLoading(true); setStatus("Đang đồng bộ dữ liệu từ Google Sheets…", "ok");
       try {
         const rawRows = await loadSheetViaJsonp();
         const prepared = preparePeople(rawRows);
-        state.rawRows = rawRows;
-        state.people = prepared.people;
+        state.rawRows = rawRows; state.people = prepared.people;
         state.duplicateRowsRemoved = prepared.duplicateRowsRemoved;
         state.duplicatePhonesCollapsed = prepared.duplicatePhonesCollapsed;
         state.lastSyncAt = new Date();
-
-        state.unitOptions = ["Tất cả", ...new Set(prepared.people.map(person => person.unit))];
-        render();
-
-        els.syncSource.textContent = `Loại ${state.duplicateRowsRemoved} bản ghi trùng và gộp ${state.duplicatePhonesCollapsed} SĐT trùng trong cùng bản ghi.`;
-      } catch (error) {
+        state.unitOptions = ["Tất cả", ...new Set(prepared.people.map(p => p.unit))];
+        render(); Sound.success();
+      } catch(error) {
         console.error(error);
-        state.rawRows = [];
-        state.people = [];
-        state.filtered = [];
-        state.unitOptions = ["Tất cả"];
-        renderChips();
-        els.cardGrid.classList.add("hidden");
-        els.emptyState.classList.remove("hidden");
-        els.syncSource.textContent = "Không thể lấy dữ liệu. Kiểm tra lại quyền chia sẻ Google Sheets hoặc môi trường mạng.";
-        setStatus("Không thể đồng bộ dữ liệu từ Google Sheets. Ứng dụng cần link Sheet đang ở chế độ chia sẻ xem công khai.", "warn");
-      } finally {
-        setLoading(false);
+        state.rawRows = []; state.people = []; state.filtered = []; state.unitOptions = ["Tất cả"];
+        renderChips(); els.cardGrid.classList.add("hidden"); els.emptyState.classList.remove("hidden");
+        setStatus("Không thể đồng bộ dữ liệu. Kiểm tra quyền chia sẻ Google Sheets.", "warn");
+        Sound.error();
+      } finally { setLoading(false); }
+    }
+
+    // ━━━━━━━━━━━━━━ GOOGLE APPS SCRIPT ━━━━━━━━━━━━━━
+    async function callScript(params) {
+      if (!APP.scriptUrl) {
+        return { ok: false, msg: "Chưa cấu hình Google Apps Script URL." };
+      }
+      const url = APP.scriptUrl + "?" + new URLSearchParams({...params, auth: "310329Xnc@"}).toString();
+      try {
+        const res = await fetch(url);
+        return await res.json();
+      } catch(e) {
+        return { ok: false, msg: "Không kết nối được với Apps Script: " + e.message };
       }
     }
 
-    els.searchInput.addEventListener("input", (event) => {
-      state.query = event.target.value;
-      render();
+    // ━━━━━━━━━━━━━━ ADMIN LOGIC ━━━━━━━━━━━━━━
+    function populatePersonDropdowns() {
+      const opts = state.people.map((p, i) =>
+        `<option value="${i}">${escapeHtml(p.name)} – ${escapeHtml(p.unit)}</option>`
+      ).join("");
+      document.getElementById("update-person").innerHTML = '<option value="">-- Chọn người --</option>' + opts;
+      document.getElementById("delete-person").innerHTML = '<option value="">-- Chọn người cần xóa --</option>' + opts;
+    }
+
+    document.getElementById("update-person").addEventListener("change", function() {
+      const idx = parseInt(this.value);
+      const box = document.getElementById("update-current-info");
+      if (isNaN(idx)) { box.style.display = "none"; return; }
+      const p = state.people[idx];
+      box.style.display = "block";
+      box.innerHTML = `<b>${escapeHtml(p.name)}</b> – ${escapeHtml(p.role)}<br>SĐT hiện tại: <b>${p.phoneDisplays.join(", ") || "Chưa có"}</b>`;
+      document.getElementById("update-phone1").value = p.phoneDisplays[0] || "";
+      document.getElementById("update-phone2").value = p.phoneDisplays[1] || "";
     });
 
-    els.clearBtn.addEventListener("click", () => {
-      state.query = "";
-      els.searchInput.value = "";
-      els.searchInput.focus();
-      render();
+    document.getElementById("delete-person").addEventListener("change", function() {
+      const idx = parseInt(this.value);
+      const box = document.getElementById("delete-preview");
+      if (isNaN(idx)) { box.style.display = "none"; return; }
+      const p = state.people[idx];
+      box.style.display = "block";
+      box.innerHTML = `Sẽ xóa: <b>${escapeHtml(p.name)}</b> (${escapeHtml(p.unit)})<br>Chức vụ: ${escapeHtml(p.role)}<br>SĐT: ${p.phoneDisplays.join(", ") || "Chưa có"}`;
     });
 
-    els.resetBtn.addEventListener("click", () => {
-      state.query = "";
-      state.activeUnit = "Tất cả";
-      els.searchInput.value = "";
-      render();
+    // Tab switching
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        Sound.tap();
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+      });
     });
 
+    // Add submit
+    document.getElementById("addSubmitBtn").addEventListener("click", async () => {
+      const name = document.getElementById("add-name").value.trim();
+      const role = document.getElementById("add-role").value.trim();
+      const unit = document.getElementById("add-unit").value.trim();
+      const phone1 = document.getElementById("add-phone1").value.trim();
+      const phone2 = document.getElementById("add-phone2").value.trim();
+      const pass = document.getElementById("add-confirm-pass").value;
+      const errEl = document.getElementById("add-pass-error");
+      errEl.classList.remove("show");
+      if (!name || !unit) { showToast("Vui lòng nhập họ tên và bộ phận.", "error", "⚠️"); Sound.error(); return; }
+      if (!checkPass(pass)) { errEl.classList.add("show"); Sound.error(); vibrate([10,50,10]); return; }
+      vibrate(15);
+      const btn = document.getElementById("addSubmitBtn");
+      btn.disabled = true; btn.textContent = "Đang gửi…";
+      const result = await callScript({ action: "add", name, role, unit, phone1: standardizeDigits(phone1), phone2: standardizeDigits(phone2) });
+      btn.disabled = false; btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Xác nhận thêm nhân sự';
+      if (result.ok) {
+        Sound.success(); showToast(result.msg || "Thêm thành công!", "success", "✅");
+        document.getElementById("add-name").value = ""; document.getElementById("add-role").value = "";
+        document.getElementById("add-unit").value = ""; document.getElementById("add-phone1").value = "";
+        document.getElementById("add-phone2").value = ""; document.getElementById("add-confirm-pass").value = "";
+        setTimeout(syncData, 1200);
+      } else {
+        Sound.error(); showToast(result.msg || "Lỗi không xác định.", "error", "❌");
+      }
+    });
+
+    // Update submit
+    document.getElementById("updateSubmitBtn").addEventListener("click", async () => {
+      const idx = parseInt(document.getElementById("update-person").value);
+      const pass = document.getElementById("update-confirm-pass").value;
+      const errEl = document.getElementById("update-pass-error");
+      errEl.classList.remove("show");
+      if (isNaN(idx)) { showToast("Vui lòng chọn nhân sự.", "error", "⚠️"); Sound.error(); return; }
+      if (!checkPass(pass)) { errEl.classList.add("show"); Sound.error(); vibrate([10,50,10]); return; }
+      const p = state.people[idx];
+      const phone1 = standardizeDigits(document.getElementById("update-phone1").value);
+      const phone2 = standardizeDigits(document.getElementById("update-phone2").value);
+      vibrate(15);
+      const btn = document.getElementById("updateSubmitBtn");
+      btn.disabled = true; btn.textContent = "Đang cập nhật…";
+      const result = await callScript({ action: "update", name: p.name, unit: p.unit, phone1, phone2 });
+      btn.disabled = false; btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> Xác nhận cập nhật SĐT';
+      if (result.ok) {
+        Sound.success(); showToast(result.msg || "Cập nhật thành công!", "success", "✅");
+        document.getElementById("update-confirm-pass").value = "";
+        setTimeout(syncData, 1200);
+      } else { Sound.error(); showToast(result.msg || "Lỗi không xác định.", "error", "❌"); }
+    });
+
+    // Delete submit
+    document.getElementById("deleteSubmitBtn").addEventListener("click", async () => {
+      const idx = parseInt(document.getElementById("delete-person").value);
+      const pass = document.getElementById("delete-confirm-pass").value;
+      const errEl = document.getElementById("delete-pass-error");
+      errEl.classList.remove("show");
+      if (isNaN(idx)) { showToast("Vui lòng chọn nhân sự.", "error", "⚠️"); Sound.error(); return; }
+      if (!checkPass(pass)) { errEl.classList.add("show"); Sound.error(); vibrate([10,50,10]); return; }
+      const p = state.people[idx];
+      vibrate(20);
+      const btn = document.getElementById("deleteSubmitBtn");
+      btn.disabled = true; btn.textContent = "Đang xóa…";
+      const result = await callScript({ action: "delete", name: p.name, unit: p.unit });
+      btn.disabled = false; btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Xác nhận xóa nhân sự';
+      if (result.ok) {
+        Sound.success(); showToast(result.msg || "Đã xóa thành công!", "success", "✅");
+        document.getElementById("delete-confirm-pass").value = "";
+        document.getElementById("delete-person").value = "";
+        document.getElementById("delete-preview").style.display = "none";
+        setTimeout(syncData, 1200);
+      } else { Sound.error(); showToast(result.msg || "Lỗi không xác định.", "error", "❌"); }
+    });
+
+    // ━━━━━━━━━━━━━━ EVENT LISTENERS ━━━━━━━━━━━━━━
+    els.searchInput.addEventListener("input", (e) => { state.query = e.target.value; render(); });
+    els.clearBtn.addEventListener("click", () => { Sound.tap(); state.query = ""; els.searchInput.value = ""; els.searchInput.focus(); render(); });
+    els.resetBtn.addEventListener("click", () => { Sound.tap(); state.query = ""; state.activeUnit = "Tất cả"; els.searchInput.value = ""; render(); });
     els.copyVisibleBtn.addEventListener("click", () => {
-      const phones = state.filtered.flatMap(person => person.phoneDisplays);
+      Sound.copy(); vibrate(10);
+      const phones = state.filtered.flatMap(p => p.phoneDisplays);
       copyText(phones.join(", "), els.copyVisibleBtn);
     });
+    els.refreshBtn.addEventListener("click", () => { Sound.tap(); vibrate(10); syncData(); });
 
-    els.refreshBtn.addEventListener("click", syncData);
-    els.closeQrBtn.addEventListener("click", closeQrModal);
-    els.copyQrPhoneBtn.addEventListener("click", () => copyText(formatPhoneDisplay(qrPhone), els.copyQrPhoneBtn));
-    els.qrModal.addEventListener("click", (event) => {
-      if (event.target === els.qrModal) closeQrModal();
+    // Admin button → password modal
+    els.adminBtn.addEventListener("click", () => {
+      Sound.open(); vibrate(12);
+      els.passInput.value = ""; els.passError.classList.remove("show");
+      els.passModal.classList.add("show"); els.passModal.setAttribute("aria-hidden","false");
+      setTimeout(() => els.passInput.focus(), 350);
     });
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && els.qrModal.classList.contains("show")) closeQrModal();
+    els.closePassBtn.addEventListener("click", () => closeModal(els.passModal));
+    els.passModal.addEventListener("click", (e) => { if (e.target === els.passModal) closeModal(els.passModal); });
+
+    // Password submit
+    function submitPassword() {
+      const val = els.passInput.value;
+      if (!checkPass(val)) {
+        els.passError.classList.add("show");
+        Sound.error(); vibrate([10,50,10]);
+        els.passInput.classList.add("error");
+        setTimeout(() => els.passInput.classList.remove("error"), 600);
+        return;
+      }
+      Sound.success(); vibrate(15);
+      closeModal(els.passModal);
+      // Check script URL
+      const noticeEl = document.getElementById("scriptNotice");
+      noticeEl.style.display = APP.scriptUrl ? "none" : "block";
+      // Populate dropdowns
+      populatePersonDropdowns();
+      setTimeout(() => {
+        els.adminModal.classList.add("show"); els.adminModal.setAttribute("aria-hidden","false");
+      }, 200);
+    }
+    els.passSubmitBtn.addEventListener("click", submitPassword);
+    els.passInput.addEventListener("keydown", (e) => { if (e.key === "Enter") submitPassword(); });
+
+    els.closeAdminBtn.addEventListener("click", () => closeModal(els.adminModal));
+    els.adminModal.addEventListener("click", (e) => { if (e.target === els.adminModal) closeModal(els.adminModal); });
+
+    // Setup guide
+    document.getElementById("showSetupGuide").addEventListener("click", (e) => {
+      e.preventDefault();
+      const g = document.getElementById("setupGuideBox");
+      g.style.display = g.style.display === "none" ? "block" : "none";
+      console.log("Apps Script code:\n", APP.appsScriptCode);
+    });
+
+    // QR modal listeners
+    els.closeQrBtn.addEventListener("click", () => closeModal(els.qrModal));
+    els.copyQrPhoneBtn.addEventListener("click", () => { Sound.copy(); copyText(formatPhoneDisplay(qrPhone), els.copyQrPhoneBtn); });
+    els.qrModal.addEventListener("click", (e) => { if (e.target === els.qrModal) closeModal(els.qrModal); });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        if (els.adminModal.classList.contains("show")) closeModal(els.adminModal);
+        else if (els.passModal.classList.contains("show")) closeModal(els.passModal);
+        else if (els.qrModal.classList.contains("show")) closeModal(els.qrModal);
+      }
     });
 
     renderChips();
