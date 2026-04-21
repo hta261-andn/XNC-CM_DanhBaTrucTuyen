@@ -11,294 +11,1079 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
   <style>
     :root {
+      --bg-1: #5d0c17;
+      --bg-2: #871727;
+      --bg-3: #b78228;
       --text-1: #1f2937;
       --text-2: #64748b;
-      --line: rgba(148,163,184,.26);
-      --shadow: 0 18px 45px rgba(33,11,14,.18);
+      --line: rgba(148,163,184,.22);
+      --shadow: 0 20px 46px rgba(33,11,14,.18);
       --success: #0f766e;
-      --red: #8b1220;
+      --danger: #b91c1c;
       --gold: #d39c2f;
+      --card: rgba(255,255,255,.94);
+      --tap: 52px;
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html, body { margin: 0; padding: 0; }
     body {
       font-family: "Be Vietnam Pro", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(201,154,54,.24), transparent 26%),
-        radial-gradient(circle at top right, rgba(255,255,255,.08), transparent 18%),
-        linear-gradient(135deg, #5d0c17 0%, #871727 42%, #b78228 100%);
-      color: var(--text-1);
       min-height: 100vh;
-      animation: appFadeIn .45s ease both;
+      color: var(--text-1);
+      background:
+        radial-gradient(circle at top left, rgba(211,156,47,.22), transparent 26%),
+        radial-gradient(circle at top right, rgba(255,255,255,.08), transparent 16%),
+        linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 42%, var(--bg-3) 100%);
     }
-    @keyframes appFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-    .shell { width: min(1200px, calc(100% - 24px)); margin: 20px auto 40px; }
+    button, input, select, a { font: inherit; }
+    .shell { width: min(1180px, calc(100% - 18px)); margin: 12px auto 22px; }
     .hero {
-      position: relative; overflow: hidden; padding: 28px 26px 24px; border-radius: 28px; color: #fff;
-      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      padding: 22px 18px 18px;
+      border-radius: 26px;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.12);
       background:
         linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.02)),
-        linear-gradient(125deg, rgba(110,12,26,.88), rgba(56,8,15,.9) 44%, rgba(180,130,40,.78) 100%);
-      border: 1px solid rgba(255,255,255,.12); backdrop-filter: blur(10px);
+        linear-gradient(125deg, rgba(110,12,26,.9), rgba(56,8,15,.92) 46%, rgba(180,130,40,.78) 100%);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
     }
     .hero::before {
-      content: ""; position: absolute; inset: -120px auto auto -80px; width: 280px; height: 280px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,255,255,.14), transparent 70%); pointer-events: none;
+      content: "";
+      position: absolute;
+      width: 260px; height: 260px;
+      border-radius: 50%;
+      top: -130px; left: -90px;
+      background: radial-gradient(circle, rgba(255,255,255,.16), transparent 70%);
+      pointer-events: none;
     }
-    .hero-grid { display: grid; grid-template-columns: 116px 1fr auto; gap: 20px; align-items: center; position: relative; z-index: 1; }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 82px 1fr auto;
+      gap: 14px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
     .logo-wrap {
-      width: 116px; height: 116px; border-radius: 28px; background: rgba(255,255,255,.12);
-      border: 1px solid rgba(255,255,255,.14); display: grid; place-items: center;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.05); backdrop-filter: blur(6px);
+      width: 82px; height: 82px;
+      display: grid; place-items: center;
+      margin-inline: auto;
     }
-    .logo-wrap img { width: 92px; height: 92px; object-fit: contain; filter: drop-shadow(0 6px 12px rgba(0,0,0,.22)); }
+    .logo-wrap img {
+      width: 82px; height: 82px; object-fit: contain;
+      filter: drop-shadow(0 8px 14px rgba(0,0,0,.24));
+    }
     .title-block { text-align: center; }
-    .title-line-1 { margin: 0; font-size: clamp(24px, 3vw, 38px); line-height: 1.15; letter-spacing: .6px; font-weight: 800; text-transform: uppercase; }
-    .title-line-2 { margin: 8px 0 0; font-size: clamp(13px, 1.65vw, 20px); line-height: 1.4; font-weight: 700; letter-spacing: .35px; text-transform: uppercase; color: rgba(255,255,255,.9); }
-    .hero-actions { display: flex; flex-direction: column; gap: 10px; align-items: stretch; }
-    .link-btn, .ghost-btn, .primary-btn, .admin-btn, .tiny-btn {
-      border: 0; border-radius: 14px; font: inherit; cursor: pointer; touch-action: manipulation;
-      transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease, color .18s ease;
+    .title-line-1 {
+      margin: 0;
+      font-size: clamp(22px, 3vw, 36px);
+      line-height: 1.12;
+      letter-spacing: .5px;
+      font-weight: 800;
+      text-transform: uppercase;
     }
-    .link-btn, .ghost-btn, .primary-btn, .admin-btn {
-      padding: 12px 16px; display: inline-flex; gap: 10px; align-items: center; justify-content: center; text-decoration: none; font-weight: 700; white-space: nowrap;
+    .title-line-2 {
+      margin: 8px 0 0;
+      font-size: clamp(12px, 1.35vw, 17px);
+      line-height: 1.35;
+      font-weight: 700;
+      color: rgba(255,255,255,.9);
+      text-transform: uppercase;
     }
-    .link-btn:hover, .ghost-btn:hover, .primary-btn:hover, .admin-btn:hover, .tiny-btn:hover { transform: translateY(-1px); }
-    .link-btn:active, .ghost-btn:active, .primary-btn:active, .admin-btn:active, .tiny-btn:active { transform: scale(.97); }
-    .link-btn { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.16); }
-    .ghost-btn { background: rgba(255,255,255,.08); color: #fff; border: 1px solid rgba(255,255,255,.12); }
-    .primary-btn { background: linear-gradient(180deg, #f8d27a, #d39c2f); color: #5d0c17; box-shadow: 0 10px 20px rgba(30,10,12,.22); }
-    .admin-btn { background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.08)); color: #fff; border: 1px solid rgba(255,255,255,.22); }
-    .link-btn:hover, .ghost-btn:hover, .admin-btn:hover { background: rgba(255,255,255,.2); }
+    .title-line-2 span { display: inline-block; }
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .btn, .tiny-btn, .icon-toggle {
+      border: 0;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: transform .16s ease, box-shadow .16s ease, background .16s ease, border-color .16s ease, color .16s ease, opacity .16s ease;
+      touch-action: manipulation;
+    }
+    .btn:active, .tiny-btn:active, .icon-toggle:active { transform: scale(.97); }
+    .btn {
+      min-height: var(--tap);
+      padding: 0 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      white-space: nowrap;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: linear-gradient(180deg, #f8d27a, #d39c2f);
+      color: #5d0c17;
+      box-shadow: 0 10px 20px rgba(30,10,12,.22);
+    }
+    .btn-ghost {
+      background: rgba(255,255,255,.1);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.14);
+    }
+    .btn-admin {
+      background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.08));
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.2);
+    }
+    .icon-toggle {
+      min-width: var(--tap);
+      min-height: var(--tap);
+      padding: 0 14px;
+      display: inline-grid;
+      place-items: center;
+      background: rgba(255,255,255,.1);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.14);
+    }
+    .icon-toggle.off {
+      opacity: .72;
+      background: rgba(255,255,255,.06);
+    }
+
     .main-panel {
-      margin-top: 18px; background: rgba(255,255,255,.92); border: 1px solid rgba(255,255,255,.4);
-      border-radius: 28px; box-shadow: var(--shadow); backdrop-filter: blur(12px); overflow: hidden;
+      margin-top: 16px;
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.42);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      overflow: hidden;
     }
-    .toolbar { padding: 20px; border-bottom: 1px solid var(--line); background: linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.92)); }
-    .search-row { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: center; }
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 9;
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.78), rgba(255,255,255,.94));
+      backdrop-filter: blur(16px);
+    }
+    .search-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 10px;
+      align-items: center;
+    }
     .search-wrap { position: relative; }
-    .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #9ca3af; pointer-events: none; }
-    .search-input {
-      width: 100%; height: 54px; border-radius: 18px; border: 1px solid rgba(148,163,184,.28);
-      background: #fff; padding: 0 50px 0 48px; font: inherit; font-size: 16px; color: var(--text-1); outline: none;
-      transition: border-color .18s ease, box-shadow .18s ease; box-shadow: inset 0 1px 1px rgba(15,23,42,.03);
+    .search-icon {
+      position: absolute;
+      left: 16px; top: 50%;
+      transform: translateY(-50%);
+      color: #9ca3af;
+      pointer-events: none;
     }
-    .search-input:focus { border-color: rgba(139,18,32,.5); box-shadow: 0 0 0 4px rgba(139,18,32,.08); }
+    .search-input {
+      width: 100%;
+      min-height: 54px;
+      border-radius: 18px;
+      border: 1px solid rgba(148,163,184,.28);
+      background: #fff;
+      padding: 0 46px 0 48px;
+      font-size: 16px;
+      color: var(--text-1);
+      outline: none;
+      transition: border-color .18s ease, box-shadow .18s ease;
+      box-shadow: inset 0 1px 1px rgba(15,23,42,.03);
+    }
+    .search-input:focus {
+      border-color: rgba(139,18,32,.5);
+      box-shadow: 0 0 0 4px rgba(139,18,32,.08);
+    }
     .clear-btn {
-      position: absolute; right: 12px; top: 50%; transform: translateY(-50%); width: 30px; height: 30px; border-radius: 50%;
-      border: none; background: #f3f4f6; color: #6b7280; display: none; cursor: pointer; touch-action: manipulation;
+      position: absolute;
+      right: 12px; top: 50%;
+      transform: translateY(-50%);
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: #f3f4f6;
+      color: #6b7280;
+      display: none;
+      cursor: pointer;
     }
     .clear-btn.active { display: inline-grid; place-items: center; }
-    .filter-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 16px; }
-    .filter-label { font-size: 13px; font-weight: 700; color: var(--text-2); display: inline-flex; gap: 8px; align-items: center; }
-    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    .filters {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+    .filter-box {
+      border: 1px solid rgba(148,163,184,.18);
+      border-radius: 18px;
+      background: rgba(255,255,255,.7);
+      padding: 12px;
+    }
+    .filter-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text-2);
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
     .chip {
-      border: 1px solid rgba(139,18,32,.14); background: rgba(139,18,32,.04); color: #6b7280; padding: 9px 14px; border-radius: 999px;
-      font-size: 13px; font-weight: 700; cursor: pointer; transition: all .18s ease; touch-action: manipulation;
+      min-height: 42px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(139,18,32,.14);
+      background: rgba(139,18,32,.04);
+      color: #6b7280;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
     }
-    .chip:active { transform: scale(.96); }
-    .chip.active { background: linear-gradient(180deg, #8b1220, #6f0f19); color: #fff; border-color: transparent; box-shadow: 0 10px 18px rgba(139,18,32,.18); }
+    .chip.active {
+      background: linear-gradient(180deg, #8b1220, #6f0f19);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 10px 18px rgba(139,18,32,.18);
+    }
+    .picker-box {
+      border: 1px solid rgba(148,163,184,.18);
+      border-radius: 18px;
+      background: rgba(255,255,255,.74);
+      padding: 12px;
+    }
+    .picker-search {
+      width: 100%;
+      min-height: 48px;
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,.28);
+      background: #fff;
+      padding: 0 14px;
+      outline: none;
+      color: var(--text-1);
+    }
+    .picker-search:focus {
+      border-color: rgba(139,18,32,.45);
+      box-shadow: 0 0 0 4px rgba(139,18,32,.08);
+    }
+    .picker-section + .picker-section { margin-top: 12px; }
+    .picker-label {
+      margin-bottom: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text-2);
+    }
+    .picker-list {
+      display: grid;
+      gap: 8px;
+      max-height: 250px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+    .picker-person {
+      width: 100%;
+      text-align: left;
+      border: 1px solid rgba(148,163,184,.18);
+      background: #fff;
+      color: var(--text-1);
+      border-radius: 16px;
+      padding: 11px 12px;
+      cursor: pointer;
+      transition: transform .16s ease, box-shadow .16s ease, border-color .16s ease, background .16s ease;
+    }
+    .picker-person:hover {
+      border-color: rgba(139,18,32,.24);
+      box-shadow: 0 10px 18px rgba(15,23,42,.06);
+      transform: translateY(-1px);
+    }
+    .picker-person.active {
+      border-color: rgba(139,18,32,.45);
+      background: linear-gradient(180deg, rgba(139,18,32,.07), rgba(211,156,47,.08));
+      box-shadow: 0 10px 18px rgba(139,18,32,.1);
+    }
+    .picker-person-name {
+      font-size: 14px;
+      font-weight: 800;
+      color: #1f2937;
+      line-height: 1.45;
+    }
+    .picker-person-meta {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.55;
+    }
+    .picker-empty {
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px dashed rgba(148,163,184,.28);
+      color: #64748b;
+      font-size: 13px;
+      background: rgba(248,250,252,.8);
+      text-align: center;
+    }
 
-    /* ── Compact stat bar ── */
-    .stat-bar {
-      display: flex; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(251,249,246,.72), rgba(255,255,255,.88));
+    .mini-summary {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+      padding: 12px 16px 10px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(251,249,246,.82), rgba(255,255,255,.92));
     }
-    .stat-mini {
-      flex: 1; border-radius: 16px; border: 1px solid rgba(201,154,54,.18);
-      padding: 12px 14px; background: linear-gradient(180deg, #fff, #fff8eb);
-      display: flex; align-items: center; gap: 12px;
+    .mini-stat {
+      border-radius: 16px;
+      border: 1px solid rgba(211,156,47,.16);
+      background: linear-gradient(180deg, #fff, #fff9ef);
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    .stat-mini-icon {
-      width: 36px; height: 36px; border-radius: 12px; background: rgba(122,18,33,.07);
-      display: grid; place-items: center; flex-shrink: 0; color: #7a1221;
+    .mini-icon {
+      width: 34px; height: 34px;
+      border-radius: 12px;
+      background: rgba(122,18,33,.07);
+      color: #7a1221;
+      display: grid; place-items: center;
+      flex-shrink: 0;
     }
-    .stat-mini-body {}
-    .stat-mini-value { font-size: 22px; font-weight: 800; color: #60101a; letter-spacing: .3px; line-height: 1.1; }
-    .stat-mini-label { font-size: 11px; font-weight: 700; color: #8a6b2f; margin-top: 2px; }
+    .mini-value {
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.05;
+      color: #60101a;
+    }
+    .mini-label {
+      margin-top: 2px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #8a6b2f;
+      letter-spacing: .1px;
+    }
 
-    .status-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; padding: 0 20px 18px; }
-    .status-text { font-size: 13px; color: var(--text-2); display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .status-pill {
-      display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 999px; font-size: 12px; font-weight: 700;
-      background: rgba(15,118,110,.08); color: var(--success); border: 1px solid rgba(15,118,110,.14);
+    .result-strip {
+      padding: 0 16px 14px;
+      font-size: 13px;
+      color: var(--text-2);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
     }
-    .status-pill.warn { background: rgba(185,40,40,.08); color: #b91c1c; border-color: rgba(185,40,40,.12); }
-    .content { padding: 22px 20px 24px; }
-    .card-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
+    .result-msg {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      line-height: 1.55;
+    }
+    .result-badges {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .soft-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,118,110,.14);
+      background: rgba(15,118,110,.08);
+      color: var(--success);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .soft-pill.warn {
+      color: var(--danger);
+      background: rgba(220,38,38,.08);
+      border-color: rgba(220,38,38,.14);
+    }
+
+    .content {
+      padding: 18px 16px 22px;
+      min-height: 260px;
+      view-transition-name: content-grid;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 14px;
+    }
     .person-card {
-      position: relative; border-radius: 24px; border: 1px solid rgba(148,163,184,.18);
-      background: radial-gradient(circle at top right, rgba(201,154,54,.12), transparent 34%), linear-gradient(180deg, rgba(255,255,255,.98), rgba(255,255,255,.94));
-      box-shadow: 0 12px 22px rgba(15,23,42,.05); padding: 18px 18px 16px; overflow: hidden;
-      transition: transform .2s ease, box-shadow .2s ease;
-      animation: cardIn .35s ease both;
+      position: relative;
+      border-radius: 24px;
+      border: 1px solid rgba(148,163,184,.18);
+      background:
+        radial-gradient(circle at top right, rgba(211,156,47,.12), transparent 32%),
+        linear-gradient(180deg, rgba(255,255,255,.98), rgba(255,255,255,.94));
+      box-shadow: 0 12px 24px rgba(15,23,42,.06);
+      padding: 16px;
+      overflow: hidden;
+      transform-origin: center;
+      animation: cardIn .28s ease both;
     }
-    .person-card:active { transform: scale(.99); }
-    @keyframes cardIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
-    .person-card::after { content: ""; position: absolute; inset: 0 auto auto 0; width: 100%; height: 4px; background: linear-gradient(90deg, #7a1221, #d6a847); opacity: .95; }
-    .person-top { display: grid; grid-template-columns: 56px 1fr auto; gap: 14px; align-items: start; }
+    .person-card::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 4px;
+      background: linear-gradient(90deg, #7a1221, #d6a847);
+      opacity: .95;
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(10px) scale(.99); }
+      to { opacity: 1; transform: none; }
+    }
+    .person-top {
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
     .avatar {
-      width: 56px; height: 56px; border-radius: 18px; display: grid; place-items: center; font-weight: 800; letter-spacing: .5px;
-      font-size: 17px; color: #60101a; background: linear-gradient(180deg, #fde7b0, #f5d377); box-shadow: inset 0 0 0 1px rgba(139,18,32,.08);
+      width: 54px; height: 54px;
+      border-radius: 18px;
+      display: grid; place-items: center;
+      font-size: 17px; font-weight: 800;
+      letter-spacing: .5px;
+      color: #60101a;
+      background: linear-gradient(180deg, #fde7b0, #f5d377);
+      box-shadow: inset 0 0 0 1px rgba(139,18,32,.08);
     }
-    .person-name { margin: 0; font-size: 18px; line-height: 1.35; font-weight: 800; color: #1f2937; }
-    .person-role { margin-top: 6px; font-size: 13px; color: var(--text-2); line-height: 1.45; }
-    .tt-badge { padding: 7px 10px; border-radius: 12px; background: rgba(96,16,26,.06); color: #7a1221; font-size: 12px; font-weight: 800; white-space: nowrap; }
-    .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; margin-bottom: 14px; }
-    .unit-badge, .count-badge {
-      display: inline-flex; align-items: center; gap: 7px; border-radius: 999px; padding: 8px 12px; font-size: 12px; font-weight: 800; border: 1px solid transparent;
+    .person-name {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.34;
+      font-weight: 800;
+      color: #1f2937;
     }
-    .unit-badge.command { background: rgba(201,154,54,.14); color: #8a6b2f; border-color: rgba(201,154,54,.2); }
-    .unit-badge.team1 { background: rgba(59,130,246,.1); color: #1d4ed8; border-color: rgba(59,130,246,.16); }
-    .unit-badge.team2 { background: rgba(15,118,110,.1); color: #0f766e; border-color: rgba(15,118,110,.16); }
-    .unit-badge.team3 { background: rgba(217,70,239,.08); color: #a21caf; border-color: rgba(217,70,239,.12); }
-    .unit-badge.other { background: rgba(71,85,105,.08); color: #475569; border-color: rgba(71,85,105,.12); }
-    .count-badge { background: rgba(122,18,33,.05); color: #7a1221; border-color: rgba(122,18,33,.1); }
-    .phone-list { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
+    .person-role {
+      margin-top: 6px;
+      font-size: 13px;
+      color: var(--text-2);
+      line-height: 1.45;
+    }
+    .tt-badge {
+      padding: 7px 10px;
+      border-radius: 12px;
+      background: rgba(96,16,26,.06);
+      color: #7a1221;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+      margin-bottom: 12px;
+    }
+    .unit-badge, .count-badge, .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border-radius: 999px;
+      padding: 7px 11px;
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid transparent;
+    }
+    .unit-badge.bch {
+      background: rgba(211,156,47,.16);
+      color: #8a6b2f;
+      border-color: rgba(211,156,47,.22);
+    }
+    .unit-badge.team1 {
+      background: rgba(59,130,246,.1);
+      color: #1d4ed8;
+      border-color: rgba(59,130,246,.16);
+    }
+    .unit-badge.team2 {
+      background: rgba(15,118,110,.1);
+      color: #0f766e;
+      border-color: rgba(15,118,110,.16);
+    }
+    .unit-badge.team3 {
+      background: rgba(168,85,247,.1);
+      color: #7c3aed;
+      border-color: rgba(168,85,247,.16);
+    }
+    .unit-badge.other {
+      background: rgba(71,85,105,.08);
+      color: #475569;
+      border-color: rgba(71,85,105,.12);
+    }
+    .role-badge {
+      background: rgba(122,18,33,.05);
+      color: #7a1221;
+      border-color: rgba(122,18,33,.1);
+    }
+    .count-badge {
+      background: rgba(15,23,42,.04);
+      color: #475569;
+      border-color: rgba(148,163,184,.14);
+    }
+    .search-hit {
+      background: linear-gradient(180deg, rgba(248,210,122,.5), rgba(248,210,122,.22));
+      color: #6f0f19;
+      padding: 0 3px;
+      border-radius: 6px;
+      font-weight: 800;
+    }
+    .phone-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px;
+    }
     .phone-item {
-      display: flex; align-items: center; justify-content: space-between; gap: 12px; border-radius: 18px;
-      border: 1px solid rgba(148,163,184,.18); padding: 12px 12px 12px 14px; background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(148,163,184,.18);
+      padding: 12px;
+      background: #fff;
     }
-    .phone-main { min-width: 0; display: flex; gap: 12px; align-items: center; flex: 1; }
-    .phone-icon-wrap { width: 38px; height: 38px; border-radius: 14px; display: grid; place-items: center; color: #7a1221; background: rgba(122,18,33,.06); flex-shrink: 0; }
-    .phone-info { min-width: 0; }
-    .phone-number { font-size: 17px; line-height: 1.2; color: #8b1220; font-weight: 800; text-decoration: none; letter-spacing: .3px; word-break: break-word; }
+    .phone-main {
+      min-width: 0;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex: 1;
+    }
+    .phone-icon-wrap {
+      width: 38px; height: 38px;
+      border-radius: 14px;
+      display: grid; place-items: center;
+      color: #7a1221;
+      background: rgba(122,18,33,.06);
+      flex-shrink: 0;
+    }
+    .phone-number {
+      display: inline-block;
+      font-size: 17px;
+      line-height: 1.18;
+      color: #8b1220;
+      font-weight: 800;
+      text-decoration: none;
+      letter-spacing: .25px;
+      word-break: break-word;
+    }
     .phone-number:hover { text-decoration: underline; }
-    .phone-meta { margin-top: 4px; font-size: 12px; color: #7b8794; }
-    .phone-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
-    .tiny-btn {
-      min-width: 42px; height: 40px; padding: 0 12px; border: 1px solid rgba(148,163,184,.22); background: #f8fafc; color: #475569;
-      font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-      touch-action: manipulation; border-radius: 14px;
+    .phone-meta {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #7b8794;
     }
-    .tiny-btn:hover { border-color: rgba(139,18,32,.24); color: #7a1221; background: rgba(122,18,33,.05); }
-    .tiny-btn.done { color: #0f766e; border-color: rgba(15,118,110,.24); background: rgba(15,118,110,.08); }
-    .person-footer { margin-top: 14px; display: flex; justify-content: space-between; gap: 10px; align-items: center; flex-wrap: wrap; }
-    .note { font-size: 12px; line-height: 1.5; color: #7b8794; }
-    .copy-all-btn { padding-inline: 14px; }
+    .phone-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .tiny-btn {
+      min-width: 42px;
+      min-height: 42px;
+      padding: 0 12px;
+      border: 1px solid rgba(148,163,184,.22);
+      background: #f8fafc;
+      color: #475569;
+      font-size: 12px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border-radius: 14px;
+    }
+    .tiny-btn.done {
+      color: var(--success);
+      border-color: rgba(15,118,110,.24);
+      background: rgba(15,118,110,.08);
+    }
+    .person-footer {
+      margin-top: 13px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .note {
+      font-size: 12px;
+      color: #7b8794;
+      line-height: 1.5;
+    }
+
     .empty-state, .loading-state {
-      padding: 52px 20px; text-align: center; border-radius: 24px; border: 1px dashed rgba(148,163,184,.28);
+      padding: 52px 20px;
+      text-align: center;
+      border-radius: 24px;
+      border: 1px dashed rgba(148,163,184,.28);
       background: linear-gradient(180deg, rgba(255,255,255,.86), rgba(248,250,252,.92));
     }
-    .empty-title, .loading-title { margin-top: 14px; font-size: 22px; font-weight: 800; color: #334155; }
-    .empty-sub, .loading-sub { margin-top: 8px; font-size: 14px; color: #64748b; line-height: 1.65; }
-    .spinner { width: 54px; height: 54px; margin: 0 auto; border-radius: 50%; border: 4px solid rgba(201,154,54,.2); border-top-color: #8b1220; animation: spin 1s linear infinite; }
-    .footer { padding: 18px 20px 24px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap; background: linear-gradient(180deg, rgba(250,250,250,.64), rgba(255,255,255,.9)); }
-    .footer-note { font-size: 13px; color: #64748b; line-height: 1.65; }
+    .empty-title, .loading-title {
+      margin-top: 14px;
+      font-size: 22px;
+      font-weight: 800;
+      color: #334155;
+    }
+    .empty-sub, .loading-sub {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #64748b;
+      line-height: 1.65;
+    }
+    .spinner {
+      width: 54px; height: 54px;
+      margin: 0 auto;
+      border-radius: 50%;
+      border: 4px solid rgba(211,156,47,.2);
+      border-top-color: #8b1220;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .hidden { display: none !important; }
+
+    .footer {
+      padding: 16px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      background: linear-gradient(180deg, rgba(250,250,250,.68), rgba(255,255,255,.9));
+    }
+    .footer-note {
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.65;
+    }
     .footer-note b { color: #7a1221; }
 
-    /* ── Modals ── */
     .modal {
-      position: fixed; inset: 0; display: none; align-items: flex-end; justify-content: center; padding: 0;
-      background: rgba(15,23,42,.52); backdrop-filter: blur(8px); z-index: 50;
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0;
+      background: rgba(15,23,42,.52);
+      backdrop-filter: blur(8px);
+      z-index: 50;
     }
-    @media (min-width: 600px) { .modal { align-items: center; padding: 20px; } }
     .modal.show { display: flex; }
-    .modal.show .modal-card { animation: slideUp .3s cubic-bezier(.34,1.56,.64,1) both; }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(40px) scale(.97); } to { opacity: 1; transform: none; } }
+    .modal.show .modal-card { animation: slideUp .26s cubic-bezier(.34,1.56,.64,1) both; }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(36px) scale(.98); }
+      to { opacity: 1; transform: none; }
+    }
     .modal-card {
-      width: min(480px, 100%); border-radius: 28px 28px 0 0; background: #fff; box-shadow: 0 24px 50px rgba(15,23,42,.24);
-      overflow: hidden; border: 1px solid rgba(255,255,255,.7); max-height: 92dvh; display: flex; flex-direction: column;
+      width: min(560px, 100%);
+      border-radius: 26px 26px 0 0;
+      background: #fff;
+      box-shadow: 0 24px 50px rgba(15,23,42,.24);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.7);
+      max-height: 92dvh;
+      display: flex;
+      flex-direction: column;
     }
-    @media (min-width: 600px) { .modal-card { border-radius: 28px; max-height: 88dvh; } }
     .modal-head {
-      padding: 18px 20px; display: flex; justify-content: space-between; gap: 10px; align-items: center;
-      background: linear-gradient(135deg, #7a1221, #b8872a); color: #fff; flex-shrink: 0;
+      padding: 18px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, #7a1221, #b8872a);
+      color: #fff;
+      flex-shrink: 0;
     }
-    .modal-title { font-size: 18px; font-weight: 800; line-height: 1.35; }
-    .modal-body { padding: 22px 20px 20px; text-align: center; overflow-y: auto; flex: 1; }
+    .modal-title {
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+    .modal-body {
+      padding: 18px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .modal-body.center { text-align: center; }
     .modal-body-left { text-align: left; }
-    .qr-wrap {
-      width: 280px; height: 280px; margin: 0 auto 16px; padding: 16px; border-radius: 26px;
-      background: linear-gradient(180deg, #fff, #faf7f2); border: 1px solid rgba(201,154,54,.24);
-      display: grid; place-items: center; box-shadow: inset 0 0 0 1px rgba(122,18,33,.04);
+    .modal-actions {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
     }
-    .qr-caption { margin: 0; font-size: 15px; line-height: 1.65; color: #475569; }
-    .qr-number { margin-top: 8px; font-size: 24px; font-weight: 800; color: #7a1221; letter-spacing: .4px; word-break: break-word; }
-    .modal-actions { margin-top: 18px; display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
-    .hidden { display: none !important; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .qr-wrap {
+      width: 270px; height: 270px;
+      margin: 0 auto 16px;
+      padding: 16px;
+      border-radius: 26px;
+      background: linear-gradient(180deg, #fff, #faf7f2);
+      border: 1px solid rgba(211,156,47,.24);
+      display: grid; place-items: center;
+      box-shadow: inset 0 0 0 1px rgba(122,18,33,.04);
+    }
+    .qr-caption {
+      margin: 0;
+      font-size: 15px;
+      color: #475569;
+      line-height: 1.65;
+    }
+    .qr-number {
+      margin-top: 8px;
+      font-size: 24px;
+      font-weight: 800;
+      color: #7a1221;
+      letter-spacing: .4px;
+      word-break: break-word;
+    }
 
-    /* ── Admin / Password Modal ── */
-    .pass-icon { font-size: 48px; text-align: center; margin-bottom: 12px; }
-    .pass-subtitle { font-size: 14px; color: var(--text-2); margin-bottom: 20px; line-height: 1.6; }
-    .form-group { margin-bottom: 16px; }
-    .form-label { display: block; font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 6px; }
+    .pass-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+    .pass-subtitle {
+      font-size: 14px;
+      color: var(--text-2);
+      margin-bottom: 18px;
+      line-height: 1.65;
+    }
+
+    .info-box {
+      background: rgba(211,156,47,.08);
+      border: 1px solid rgba(211,156,47,.24);
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 13px;
+      line-height: 1.65;
+      color: #6b4f1a;
+      margin-bottom: 16px;
+    }
+    .info-box a {
+      color: #7a1221;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 12px;
+    }
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-group.span-2 { grid-column: 1 / -1; }
+    .section-title {
+      margin: 6px 0 12px;
+      font-size: 14px;
+      font-weight: 800;
+      color: #7a1221;
+      line-height: 1.4;
+    }
+    .picker-heading {
+      margin-bottom: 8px;
+      color: #7a1221;
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: #374151;
+      margin-bottom: 6px;
+    }
     .form-input, .form-select {
-      width: 100%; height: 48px; border-radius: 14px; border: 1px solid rgba(148,163,184,.34);
-      background: #f9fafb; padding: 0 14px; font: inherit; font-size: 16px; color: var(--text-1); outline: none;
+      width: 100%;
+      min-height: 48px;
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,.34);
+      background: #f9fafb;
+      padding: 0 14px;
+      font-size: 16px;
+      color: var(--text-1);
+      outline: none;
       transition: border-color .18s ease, box-shadow .18s ease;
     }
-    .form-input:focus, .form-select:focus { border-color: rgba(139,18,32,.5); box-shadow: 0 0 0 3px rgba(139,18,32,.08); background: #fff; }
-    .form-input.error { border-color: #dc2626; }
-    .error-msg { margin-top: 6px; font-size: 12px; color: #dc2626; font-weight: 600; display: none; }
-    .error-msg.show { display: block; }
-
-    .tab-bar { display: flex; border-bottom: 1px solid var(--line); margin-bottom: 20px; }
-    .tab-btn {
-      flex: 1; padding: 12px 8px; font: inherit; font-size: 13px; font-weight: 700; color: var(--text-2);
-      background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; transition: all .18s; touch-action: manipulation;
+    .form-input:focus, .form-select:focus {
+      border-color: rgba(139,18,32,.5);
+      box-shadow: 0 0 0 3px rgba(139,18,32,.08);
+      background: #fff;
     }
-    .tab-btn.active { color: var(--red); border-bottom-color: var(--red); }
+    .form-input.error {
+      border-color: #dc2626;
+      background: #fff7f7;
+    }
+    .error-msg {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #dc2626;
+      font-weight: 600;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+    .tab-bar {
+      display: flex;
+      gap: 4px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 18px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+    .tab-btn {
+      flex: 1 0 0;
+      min-height: 46px;
+      padding: 0 12px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-2);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .tab-btn.active {
+      color: #8b1220;
+      border-bottom-color: #8b1220;
+    }
     .tab-pane { display: none; }
     .tab-pane.active { display: block; }
-
     .action-btn {
-      width: 100%; height: 48px; border-radius: 14px; border: none; cursor: pointer; font: inherit; font-size: 15px; font-weight: 700;
-      background: linear-gradient(180deg, #8b1220, #6f0f19); color: #fff; box-shadow: 0 8px 18px rgba(139,18,32,.22);
-      transition: transform .18s, box-shadow .18s; touch-action: manipulation; display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%;
+      min-height: 50px;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(180deg, #8b1220, #6f0f19);
+      box-shadow: 0 8px 18px rgba(139,18,32,.22);
     }
-    .action-btn:hover { transform: translateY(-1px); box-shadow: 0 12px 22px rgba(139,18,32,.28); }
-    .action-btn:active { transform: scale(.97); }
-    .action-btn.danger { background: linear-gradient(180deg, #dc2626, #b91c1c); box-shadow: 0 8px 18px rgba(220,38,38,.22); }
-    .action-btn.gold { background: linear-gradient(180deg, #d39c2f, #b8872a); box-shadow: 0 8px 18px rgba(184,135,42,.22); }
-
-    .confirm-row { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
-    .confirm-label { font-size: 12px; font-weight: 700; color: #6b7280; margin-bottom: 8px; display: block; }
+    .action-btn.gold {
+      background: linear-gradient(180deg, #d39c2f, #b8872a);
+      box-shadow: 0 8px 18px rgba(184,135,42,.22);
+    }
+    .action-btn.danger {
+      background: linear-gradient(180deg, #dc2626, #b91c1c);
+      box-shadow: 0 8px 18px rgba(220,38,38,.22);
+    }
+    .confirm-row {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+    .confirm-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 12px;
+      color: #6b7280;
+      font-weight: 700;
+    }
+    .preview-box {
+      margin-bottom: 14px;
+      padding: 12px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid rgba(148,163,184,.18);
+      font-size: 13px;
+      color: #475569;
+      line-height: 1.65;
+    }
+    .preview-box.danger {
+      background: #fff5f5;
+      border-color: rgba(220,38,38,.18);
+      color: #7f1d1d;
+    }
 
     .toast {
-      position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px); z-index: 999;
-      background: #1f2937; color: #fff; padding: 12px 22px; border-radius: 999px; font-size: 14px; font-weight: 700;
-      box-shadow: 0 8px 24px rgba(0,0,0,.22); pointer-events: none; opacity: 0;
-      transition: opacity .25s ease, transform .25s ease;
-      white-space: nowrap; display: flex; align-items: center; gap: 8px;
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(18px);
+      z-index: 999;
+      background: #1f2937;
+      color: #fff;
+      padding: 12px 22px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: 0 8px 24px rgba(0,0,0,.22);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .22s ease, transform .22s ease;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      max-width: calc(100vw - 28px);
     }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-    .toast.success { background: linear-gradient(135deg, #0f766e, #0d6460); }
-    .toast.error { background: linear-gradient(135deg, #dc2626, #b91c1c); }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .toast.success {
+      background: linear-gradient(135deg, #0f766e, #0d6460);
+    }
+    .toast.error {
+      background: linear-gradient(135deg, #dc2626, #b91c1c);
+    }
 
-    /* ── Script info box ── */
-    .info-box {
-      background: rgba(201,154,54,.08); border: 1px solid rgba(201,154,54,.24); border-radius: 14px;
-      padding: 14px; font-size: 13px; line-height: 1.65; color: #6b4f1a; margin-bottom: 16px;
+    
+    .diag-grid {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 8px 12px;
+      font-size: 13px;
+      line-height: 1.6;
     }
-    .info-box a { color: var(--red); font-weight: 700; }
+    .diag-grid b { color: #7a1221; }
+    .diag-key { color: #64748b; font-weight: 700; }
+    .diag-value code {
+      background: rgba(15,23,42,.05);
+      padding: 2px 6px;
+      border-radius: 8px;
+      font-size: 12px;
+      word-break: break-all;
+    }
+    .helper-text {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.5;
+    }
+    .badge-subline {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.55;
+    }
+    .cache-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(211,156,47,.18);
+      background: rgba(211,156,47,.08);
+      color: #8a6b2f;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .pass-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center;
+    }
+    .toggle-pass-btn {
+      min-height: 48px;
+      min-width: 48px;
+      padding: 0 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,.22);
+      background: #fff;
+      color: #475569;
+      font-weight: 700;
+    }
 
     @media (max-width: 980px) {
-      .hero-grid { grid-template-columns: 110px 1fr; }
-      .hero-actions { grid-column: 1 / -1; flex-direction: row; justify-content: center; flex-wrap: wrap; }
+      .hero-grid { grid-template-columns: 90px 1fr; }
+      .hero-actions { grid-column: 1 / -1; justify-content: center; }
+      .filters { grid-template-columns: 1fr; }
       .card-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 680px) {
-      .shell { width: min(100% - 14px, 1200px); margin: 12px auto 24px; }
-      .hero { padding: 20px 16px 18px; border-radius: 24px; }
-      .hero-grid { grid-template-columns: 1fr; text-align: center; }
-      .logo-wrap { margin: 0 auto; }
-      .search-row { grid-template-columns: 1fr; }
-      .stat-bar { flex-direction: row; gap: 8px; padding: 12px 14px; }
-      .stat-mini { flex-direction: column; align-items: flex-start; gap: 6px; padding: 10px 12px; }
-      .stat-mini-icon { width: 30px; height: 30px; border-radius: 10px; }
-      .stat-mini-value { font-size: 20px; }
-      .toolbar, .content, .footer { padding-inline: 14px; }
-      .status-row { padding-inline: 14px; }
-      .person-top { grid-template-columns: 48px 1fr; }
-      .tt-badge { grid-column: 2; justify-self: start; }
-      .phone-item { flex-direction: column; align-items: stretch; }
+      .shell { width: min(100% - 8px, 1180px); margin: 6px auto 12px; }
+      .hero { padding: 14px 12px 14px; border-radius: 22px; }
+      .hero-grid { grid-template-columns: 1fr; text-align: center; gap: 10px; }
+      .logo-wrap { margin: 0 auto; width: 74px; height: 74px; }
+      .logo-wrap img { width: 74px; height: 74px; }
+      .title-line-1 { font-size: 22px; line-height: 1.18; }
+      .title-line-2 { font-size: 11px; line-height: 1.32; }
+      .hero-actions { width: 100%; display: grid; grid-template-columns: 1fr; gap: 8px; }
+      .hero-actions .btn, .hero-actions .icon-toggle { width: 100%; min-height: 48px; justify-content: center; }
+      .main-panel { margin-top: 10px; border-radius: 22px; }
+      .toolbar { padding: 12px; }
+      .search-row { grid-template-columns: 1fr; gap: 8px; }
+      .search-input { min-height: 50px; font-size: 15px; }
+      .filters { gap: 8px; }
+      .filter-box { padding: 10px; border-radius: 16px; }
+      .chip { min-height: 40px; font-size: 12px; padding: 0 12px; }
+      .mini-summary { padding: 10px 12px 8px; }
+      .mini-stat { padding: 9px 10px; border-radius: 14px; }
+      .mini-value { font-size: 18px; }
+      .toolbar, .content, .footer, .modal-body { padding-inline: 12px; }
+      .result-strip { padding: 0 12px 12px; }
+      .content { padding-top: 14px; padding-bottom: 16px; }
+      .person-card { padding: 14px; border-radius: 20px; }
+      .person-top { grid-template-columns: 46px 1fr; gap: 10px; }
+      .avatar { width: 46px; height: 46px; border-radius: 14px; font-size: 15px; }
+      .person-name { font-size: 17px; }
+      .person-role { font-size: 12px; margin-top: 4px; }
+      .badge-row { gap: 6px; margin-top: 10px; margin-bottom: 10px; }
+      .unit-badge, .count-badge, .role-badge { font-size: 11px; padding: 6px 10px; }
+      .phone-item { flex-direction: column; align-items: stretch; padding: 10px; border-radius: 16px; }
+      .phone-main { gap: 10px; }
+      .phone-icon-wrap { width: 34px; height: 34px; border-radius: 12px; }
+      .phone-number { font-size: 18px; }
       .phone-actions { justify-content: flex-end; }
-      .qr-wrap { width: min(280px, 100%); height: auto; aspect-ratio: 1; }
+      .person-footer { margin-top: 10px; }
+      .note { font-size: 11px; }
+      .form-grid { grid-template-columns: 1fr; gap: 10px; }
+      .form-input, .form-select, .picker-search { min-height: 46px; font-size: 15px; }
+      .picker-box { padding: 10px; border-radius: 16px; }
+      .picker-section + .picker-section { margin-top: 10px; }
+      .picker-list { max-height: 34dvh; gap: 7px; }
+      .picker-person { border-radius: 14px; padding: 10px; }
+      .picker-person-name { font-size: 13px; }
+      .picker-person-meta { font-size: 11px; }
+      .diag-grid { grid-template-columns: 1fr; }
+      .pass-row { grid-template-columns: 1fr auto; }
+      .toggle-pass-btn { min-height: 46px; }
+      .modal { align-items: flex-end; padding: 0; }
+      .modal-card { width: 100%; max-height: 96dvh; border-radius: 22px 22px 0 0; }
+      .modal-head { padding: 14px 12px; }
+      .modal-title { font-size: 16px; }
+      .modal-actions { grid-template-columns: 1fr; }
+      .action-btn { min-height: 48px; }
+      .footer { padding: 12px; }
+      .footer-note { font-size: 12px; line-height: 1.5; }
     }
-    @media (hover: none) {
-      .person-card:hover { transform: none; box-shadow: 0 12px 22px rgba(15,23,42,.05); }
+    @media (min-width: 681px) {
+      .modal { align-items: center; padding: 20px; }
+      .modal-card { border-radius: 28px; max-height: 88dvh; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
     }
   </style>
 </head>
@@ -311,14 +1096,19 @@
         </div>
         <div class="title-block">
           <h1 class="title-line-1">DANH BẠ ĐIỆN THOẠI TRỰC TUYẾN</h1>
-          <p class="title-line-2">PHÒNG QUẢN LÝ XUẤT NHẬP CẢNH – CÔNG AN TỈNH CÀ MAU</p>
+          <p class="title-line-2"><span>PHÒNG QUẢN LÝ XUẤT NHẬP CẢNH</span><br><span>CÔNG AN TỈNH CÀ MAU</span></p>
         </div>
         <div class="hero-actions">
-          <button class="primary-btn" id="refreshBtn" type="button">
-            <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4v6h-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Làm mới dữ liệu</span>
+          <button class="btn btn-primary" id="refreshBtn" type="button">
+            <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4v6h-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span>Làm mới dữ liệu</span>
           </button>
-          <button class="admin-btn" id="adminBtn" type="button">
-            <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Điều chỉnh/Bổ sung SĐT</span>
+          <button class="icon-toggle" id="soundToggleBtn" type="button" aria-label="Bật hoặc tắt âm thanh">
+            <span id="soundToggleIcon">🔊</span>
+          </button>
+          <button class="btn btn-admin" id="adminBtn" type="button">
+            <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span>Điều chỉnh/Bổ sung SĐT</span>
           </button>
         </div>
       </div>
@@ -329,97 +1119,128 @@
         <div class="search-row">
           <div class="search-wrap">
             <span class="search-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
-            <input id="searchInput" class="search-input" type="text" placeholder="Tìm theo họ tên, vị trí, chức vụ hoặc số điện thoại..." autocomplete="off" />
+            <input id="searchInput" class="search-input" type="text" placeholder="Tìm theo họ tên, bộ phận, chức vụ hoặc số điện thoại..." autocomplete="off" />
             <button id="clearBtn" class="clear-btn" type="button" aria-label="Xóa tìm kiếm">×</button>
           </div>
-          <button class="ghost-btn" id="resetBtn" type="button"><span><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M3 4v5h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Xóa lọc</span></button>
-          <button class="ghost-btn" id="copyVisibleBtn" type="button"><span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><span>Chép số đang hiện</span></button>
+          <button class="btn btn-ghost" id="resetBtn" type="button">
+            <span><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M3 4v5h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span>Xóa lọc</span>
+          </button>
+          <button class="btn btn-ghost" id="copyVisibleBtn" type="button">
+            <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+            <span>Chép số đang hiện</span>
+          </button>
         </div>
-        <div class="filter-bar">
-          <span class="filter-label"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> Bộ phận / vị trí</span>
-          <div class="chips" id="chips"></div>
+
+        <div class="filters">
+          <div class="filter-box">
+            <div class="filter-head">
+              <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+              <span>Bộ phận</span>
+            </div>
+            <div class="chips" id="deptChips"></div>
+          </div>
+          <div class="filter-box">
+            <div class="filter-head">
+              <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 7h8M6 12h12M10 17h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+              <span>Chức vụ</span>
+            </div>
+            <div class="chips" id="roleChips"></div>
+          </div>
         </div>
       </section>
 
-      <!-- Compact 2-stat bar -->
-      <div class="stat-bar">
-        <div class="stat-mini">
-          <div class="stat-mini-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="9.5" cy="7" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M20 8.5a3 3 0 0 1 0 6M23 21v-2a4 4 0 0 0-3-3.87" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
-          <div class="stat-mini-body">
-            <div class="stat-mini-value" id="visiblePeople">0</div>
-            <div class="stat-mini-label">Nhân sự hiển thị</div>
+      <div class="mini-summary">
+        <div class="mini-stat">
+          <div class="mini-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="9.5" cy="7" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M20 8.5a3 3 0 0 1 0 6M23 21v-2a4 4 0 0 0-3-3.87" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+          <div>
+            <div class="mini-value" id="visiblePeople">0</div>
+            <div class="mini-label">Nhân sự hiển thị</div>
           </div>
         </div>
-        <div class="stat-mini">
-          <div class="stat-mini-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.77 19.77 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.77 19.77 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.35 1.79.68 2.63a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.45-1.25a2 2 0 0 1 2.11-.45c.84.33 1.73.56 2.63.68A2 2 0 0 1 22 16.92Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
-          <div class="stat-mini-body">
-            <div class="stat-mini-value" id="visiblePhones">0</div>
-            <div class="stat-mini-label">Số điện thoại</div>
+        <div class="mini-stat">
+          <div class="mini-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.77 19.77 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.77 19.77 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.35 1.79.68 2.63a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.45-1.25a2 2 0 0 1 2.11-.45c.84.33 1.73.56 2.63.68A2 2 0 0 1 22 16.92Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
+          <div>
+            <div class="mini-value" id="visiblePhones">0</div>
+            <div class="mini-label">Số điện thoại</div>
           </div>
         </div>
       </div>
 
-      <div class="status-row">
-        <div class="status-text" id="resultText"><span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><span>Chưa có dữ liệu.</span></div>
-        <div class="status-pill" id="statusPill"><span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m20 6-11 11-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>Sẵn sàng</span></div>
+      <div class="result-strip">
+        <div class="result-msg" id="resultText">
+          <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+          <span>Đang chuẩn bị dữ liệu...</span>
+        </div>
+        <div class="result-badges">
+          <span class="soft-pill" id="syncBadge">Sẵn sàng</span>
+        </div>
       </div>
 
       <section class="content">
         <div class="loading-state" id="loadingState">
           <div class="spinner"></div>
           <div class="loading-title">Đang đồng bộ danh bạ…</div>
-          <div class="loading-sub">Ứng dụng đang lấy dữ liệu trực tiếp từ Google Sheets và tự động loại trùng.</div>
+          <div class="loading-sub">Ứng dụng đang đồng bộ danh bạ và tối ưu hiển thị để tra cứu nhanh.</div>
         </div>
         <div class="empty-state hidden" id="emptyState">
           <div><svg width="52" height="52" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="#94a3b8" stroke-width="1.6"/><path d="m20 20-3.5-3.5" stroke="#94a3b8" stroke-width="1.6" stroke-linecap="round"/><path d="M8 11h6" stroke="#cbd5e1" stroke-width="1.6" stroke-linecap="round"/></svg></div>
           <div class="empty-title">Không tìm thấy kết quả phù hợp</div>
           <div class="empty-sub">Anh/chị thử đổi từ khóa tìm kiếm hoặc bỏ bộ lọc để xem lại toàn bộ danh bạ.</div>
+          <div style="margin-top:14px;">
+            <button class="btn btn-primary" id="retryBtn" type="button" style="min-height:46px;">Tải lại dữ liệu</button>
+          </div>
         </div>
         <div class="card-grid hidden" id="cardGrid"></div>
       </section>
 
       <footer class="footer">
         <div class="footer-note">
-          <b>Nguồn dữ liệu:</b> Google Sheets đã gắn sẵn trong ứng dụng.<br>
-          <b>Tự động xử lý:</b> gộp SĐT trùng, loại bản ghi trùng, hỗ trợ sao chép và tạo QR cho từng số.
+          <b>Danh bạ nội bộ</b> • giao diện đã được tối ưu ưu tiên cho điện thoại.
         </div>
-        <div class="footer-note">Nên mở file qua GitHub Pages / web server tĩnh để hoạt động ổn định nhất.</div>
       </footer>
     </main>
   </div>
 
-  <!-- QR Modal -->
   <div class="modal" id="qrModal" aria-hidden="true">
     <div class="modal-card">
       <div class="modal-head">
         <div class="modal-title">Mã QR số điện thoại</div>
-        <button class="ghost-btn" id="closeQrBtn" type="button" style="padding:10px 12px;">Đóng</button>
+        <button class="btn btn-ghost" id="closeQrBtn" type="button" style="min-height:42px;padding:0 12px;">Đóng</button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body center">
         <div class="qr-wrap"><canvas id="qrCanvas" width="240" height="240"></canvas></div>
         <p class="qr-caption">Quét mã để gọi nhanh hoặc lưu số thuận tiện trên thiết bị di động.</p>
         <div class="qr-number" id="qrNumber">--</div>
         <div class="modal-actions">
-          <button class="primary-btn" id="copyQrPhoneBtn" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>Sao chép số</span></button>
-          <a class="link-btn" id="callQrPhoneLink" href="#" target="_self"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.77 19.77 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.77 19.77 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.35 1.79.68 2.63a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.45-1.25a2 2 0 0 1 2.11-.45c.84.33 1.73.56 2.63.68A2 2 0 0 1 22 16.92Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Gọi ngay</span></a>
+          <button class="btn btn-primary" id="copyQrPhoneBtn" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <span>Sao chép số</span>
+          </button>
+          <a class="btn btn-ghost" id="callQrPhoneLink" href="#" target="_self">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.77 19.77 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.77 19.77 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.35 1.79.68 2.63a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.45-1.25a2 2 0 0 1 2.11-.45c.84.33 1.73.56 2.63.68A2 2 0 0 1 22 16.92Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+            <span>Gọi ngay</span>
+          </a>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Admin Password Modal -->
   <div class="modal" id="passModal" aria-hidden="true">
     <div class="modal-card">
       <div class="modal-head">
         <div class="modal-title">🔐 Xác thực Admin</div>
-        <button class="ghost-btn" id="closePassBtn" type="button" style="padding:10px 12px;">Đóng</button>
+        <button class="btn btn-ghost" id="closePassBtn" type="button" style="min-height:42px;padding:0 12px;">Đóng</button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body center">
         <div class="pass-icon">🛡️</div>
-        <p class="pass-subtitle">Nhập mật khẩu admin để truy cập chức năng điều chỉnh và bổ sung số điện thoại.</p>
+        <p class="pass-subtitle">Nhập mật khẩu admin để truy cập khu vực điều chỉnh và bổ sung danh bạ.</p>
         <div class="form-group">
           <label class="form-label" for="passInput">Mật khẩu</label>
-          <input class="form-input" id="passInput" type="password" placeholder="Nhập mật khẩu..." autocomplete="off" />
+          <div class="pass-row">
+            <input class="form-input" id="passInput" type="password" placeholder="Nhập mật khẩu..." autocomplete="off" />
+            <button class="toggle-pass-btn" id="togglePassBtn" type="button">Hiện</button>
+          </div>
           <div class="error-msg" id="passError">Mật khẩu không đúng. Vui lòng thử lại.</div>
         </div>
         <button class="action-btn" id="passSubmitBtn" type="button">
@@ -430,61 +1251,64 @@
     </div>
   </div>
 
-  <!-- Admin Panel Modal -->
   <div class="modal" id="adminModal" aria-hidden="true">
     <div class="modal-card">
       <div class="modal-head">
         <div class="modal-title">⚙️ Quản lý danh bạ</div>
-        <button class="ghost-btn" id="closeAdminBtn" type="button" style="padding:10px 12px;">Đóng</button>
+        <button class="btn btn-ghost" id="closeAdminBtn" type="button" style="min-height:42px;padding:0 12px;">Đóng</button>
       </div>
       <div class="modal-body modal-body-left">
-        <!-- Script URL notice -->
         <div class="info-box" id="scriptNotice" style="display:none;">
-          ⚠️ <b>Chưa thiết lập Google Apps Script.</b> Để lưu dữ liệu vào Google Sheets, cần cấu hình <code>APP.scriptUrl</code>. 
-          Xem hướng dẫn <a href="#" id="showSetupGuide">tại đây</a>.
+          ⚠️ <b>Chưa thiết lập đúng Google Apps Script Web App.</b><br>
+          Ứng dụng chỉ ghi dữ liệu về Google Sheets khi <code>APP.scriptUrl</code> là URL đã triển khai dạng <code>/exec</code>. File này đã chuẩn bị sẵn logic thêm/cập nhật/xóa; chỉ cần dán URL đúng vào biến cấu hình.
+          <div style="margin-top:8px;"><a href="#" id="toggleSetupGuide">Xem hướng dẫn nhanh</a></div>
         </div>
         <div class="info-box" id="setupGuideBox" style="display:none;">
-          <b>Hướng dẫn cài đặt Apps Script:</b><br>
-          1. Mở <a href="https://script.google.com" target="_blank">script.google.com</a> → Dự án mới<br>
-          2. Dán code từ <code>APP.appsScriptCode</code> (xem console)<br>
-          3. Triển khai → Web app → Ai cũng có thể truy cập<br>
-          4. Sao chép URL và gán vào <code>APP.scriptUrl</code><br>
-          Sau đó mọi thao tác sẽ tự động lưu vào Google Sheets.
+          <b>Thiết lập nhanh:</b><br>
+          1. Mở <code>script.google.com</code> → tạo dự án mới.<br>
+          2. Dán nội dung file <code>apps_script_danhba.gs</code> đi kèm.<br>
+          3. Deploy → Web app → cho phép truy cập phù hợp.<br>
+          4. Sao chép URL có đuôi <code>/exec</code> và dán vào <code>APP.scriptUrl</code> trong file HTML này.<br>
+          5. Tải lại trang, lúc đó các thao tác admin mới ghi ngược về Google Sheet.
         </div>
 
-        <!-- Tabs -->
         <div class="tab-bar">
           <button class="tab-btn active" data-tab="add" type="button">➕ Thêm nhân sự</button>
-          <button class="tab-btn" data-tab="update" type="button">✏️ Cập nhật SĐT</button>
+          <button class="tab-btn" data-tab="update" type="button">✏️ Cập nhật</button>
           <button class="tab-btn" data-tab="delete" type="button">🗑️ Xóa nhân sự</button>
         </div>
 
-        <!-- Tab: Add -->
         <div class="tab-pane active" id="tab-add">
-          <div class="form-group">
-            <label class="form-label">Họ và tên <span style="color:#dc2626">*</span></label>
-            <input class="form-input" id="add-name" type="text" placeholder="Nguyễn Văn A" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Chức vụ</label>
-            <input class="form-input" id="add-role" type="text" placeholder="Cán bộ, Đội trưởng..." />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Bộ phận / Đội <span style="color:#dc2626">*</span></label>
-            <input class="form-input" id="add-unit" type="text" placeholder="Ban chỉ huy, Đội 1..." />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Số điện thoại 1</label>
-            <input class="form-input" id="add-phone1" type="tel" placeholder="0901 234 567" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Số điện thoại 2</label>
-            <input class="form-input" id="add-phone2" type="tel" placeholder="(để trống nếu không có)" />
+          <div class="form-grid">
+            <div class="form-group span-2">
+              <label class="form-label">Họ và tên <span style="color:#dc2626">*</span></label>
+              <input class="form-input" id="add-name" type="text" placeholder="Nguyễn Văn A" />
+            </div>
+            <div class="form-group span-2">
+              <label class="form-label">Bộ phận <span style="color:#dc2626">*</span></label>
+              <select class="form-select" id="add-dept"></select>
+            </div>
+            <div class="form-group span-2">
+              <label class="form-label">Chức vụ <span style="color:#dc2626">*</span></label>
+              <select class="form-select" id="add-role"></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Số điện thoại 1</label>
+              <input class="form-input" id="add-phone1" type="tel" placeholder="0901 234 567" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Số điện thoại 2</label>
+              <input class="form-input" id="add-phone2" type="tel" placeholder="Để trống nếu không có" />
+            </div>
           </div>
           <div class="confirm-row">
             <span class="confirm-label">🔑 Xác nhận mật khẩu admin để lưu</span>
             <div class="form-group" style="margin-bottom:12px;">
-              <input class="form-input" id="add-confirm-pass" type="password" placeholder="Nhập lại mật khẩu..." />
+              <div class="pass-row">
+                <input class="form-input" id="add-confirm-pass" type="password" placeholder="Nhập lại mật khẩu..." />
+                <button class="toggle-pass-btn" id="toggleAddPassBtn" type="button">Hiện</button>
+              </div>
+              <div class="helper-text">Mọi thao tác thêm mới sẽ được xác nhận lại bằng mật khẩu admin.</div>
               <div class="error-msg" id="add-pass-error">Mật khẩu không đúng.</div>
             </div>
             <button class="action-btn" id="addSubmitBtn" type="button">
@@ -494,52 +1318,104 @@
           </div>
         </div>
 
-        <!-- Tab: Update -->
         <div class="tab-pane" id="tab-update">
           <div class="form-group">
-            <label class="form-label">Chọn nhân sự cần cập nhật SĐT</label>
-            <select class="form-select" id="update-person">
+            <label class="form-label">Chọn nhanh nhân sự cần cập nhật</label>
+            <div class="picker-box">
+              <input class="picker-search" id="update-picker-search" type="text" placeholder="Tìm theo họ tên, bộ phận, chức vụ hoặc số điện thoại..." autocomplete="off" />
+              <div class="picker-section">
+                <div class="picker-label">Bộ phận</div>
+                <div class="chips" id="updateDeptChips"></div>
+              </div>
+              <div class="picker-section">
+                <div class="picker-label">Chức vụ</div>
+                <div class="chips" id="updateRoleChips"></div>
+              </div>
+              <div class="picker-section">
+                <div class="picker-heading">Chọn cá nhân cần điều chỉnh</div>
+                <div class="picker-label">Chọn tên</div>
+                <div class="picker-list" id="updatePersonList"></div>
+              </div>
+            </div>
+            <select class="form-select hidden" id="update-person">
               <option value="">-- Chọn người --</option>
             </select>
           </div>
-          <div id="update-current-info" style="display:none; margin-bottom:14px; padding:12px; background:#f8fafc; border-radius:12px; font-size:13px; color:#475569; line-height:1.6;"></div>
-          <div class="form-group">
-            <label class="form-label">SĐT mới 1</label>
-            <input class="form-input" id="update-phone1" type="tel" placeholder="Số điện thoại 1 mới..." />
-          </div>
-          <div class="form-group">
-            <label class="form-label">SĐT mới 2 (để trống nếu không đổi)</label>
-            <input class="form-input" id="update-phone2" type="tel" placeholder="Số điện thoại 2 mới..." />
+          <div class="preview-box hidden" id="update-current-info"></div>
+          <div class="section-title">Thông tin cần điều chỉnh</div>
+          <div class="form-grid">
+            <div class="form-group span-2">
+              <label class="form-label">Họ và tên</label>
+              <input class="form-input" id="update-name" type="text" placeholder="Họ tên..." />
+            </div>
+            <div class="form-group span-2">
+              <label class="form-label">Bộ phận</label>
+              <select class="form-select" id="update-dept"></select>
+            </div>
+            <div class="form-group span-2">
+              <label class="form-label">Chức vụ</label>
+              <select class="form-select" id="update-role"></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">SĐT 1</label>
+              <input class="form-input" id="update-phone1" type="tel" placeholder="Số điện thoại 1..." />
+            </div>
+            <div class="form-group">
+              <label class="form-label">SĐT 2</label>
+              <input class="form-input" id="update-phone2" type="tel" placeholder="Số điện thoại 2..." />
+            </div>
           </div>
           <div class="confirm-row">
             <span class="confirm-label">🔑 Xác nhận mật khẩu admin để lưu</span>
             <div class="form-group" style="margin-bottom:12px;">
-              <input class="form-input" id="update-confirm-pass" type="password" placeholder="Nhập lại mật khẩu..." />
+              <div class="pass-row">
+                <input class="form-input" id="update-confirm-pass" type="password" placeholder="Nhập lại mật khẩu..." />
+                <button class="toggle-pass-btn" id="toggleUpdatePassBtn" type="button">Hiện</button>
+              </div>
+              <div class="helper-text">Có thể cập nhật cùng lúc họ tên, bộ phận, chức vụ và số điện thoại.</div>
               <div class="error-msg" id="update-pass-error">Mật khẩu không đúng.</div>
             </div>
             <button class="action-btn gold" id="updateSubmitBtn" type="button">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-              Xác nhận cập nhật SĐT
+              Xác nhận cập nhật
             </button>
           </div>
         </div>
 
-        <!-- Tab: Delete -->
         <div class="tab-pane" id="tab-delete">
           <div class="info-box" style="background:rgba(220,38,38,.07); border-color:rgba(220,38,38,.2); color:#7f1d1d;">
-            ⚠️ Thao tác xóa sẽ <b>không thể hoàn tác</b>. Vui lòng xem kỹ trước khi xác nhận.
+            ⚠️ Thao tác xóa sẽ <b>không thể hoàn tác</b>. Vui lòng kiểm tra kỹ trước khi xác nhận.
           </div>
           <div class="form-group">
-            <label class="form-label">Chọn nhân sự cần xóa</label>
-            <select class="form-select" id="delete-person">
+            <label class="form-label">Chọn nhanh nhân sự cần xóa</label>
+            <div class="picker-box">
+              <input class="picker-search" id="delete-picker-search" type="text" placeholder="Tìm theo họ tên, bộ phận, chức vụ hoặc số điện thoại..." autocomplete="off" />
+              <div class="picker-section">
+                <div class="picker-label">Bộ phận</div>
+                <div class="chips" id="deleteDeptChips"></div>
+              </div>
+              <div class="picker-section">
+                <div class="picker-label">Chức vụ</div>
+                <div class="chips" id="deleteRoleChips"></div>
+              </div>
+              <div class="picker-section">
+                <div class="picker-label">Nhân sự phù hợp</div>
+                <div class="picker-list" id="deletePersonList"></div>
+              </div>
+            </div>
+            <select class="form-select hidden" id="delete-person">
               <option value="">-- Chọn người cần xóa --</option>
             </select>
           </div>
-          <div id="delete-preview" style="display:none; margin-bottom:14px; padding:12px; background:#fff0f0; border:1px solid rgba(220,38,38,.18); border-radius:12px; font-size:13px; color:#7f1d1d; line-height:1.6;"></div>
+          <div class="preview-box danger hidden" id="delete-preview"></div>
           <div class="confirm-row">
             <span class="confirm-label">🔑 Xác nhận mật khẩu admin để xóa</span>
             <div class="form-group" style="margin-bottom:12px;">
-              <input class="form-input" id="delete-confirm-pass" type="password" placeholder="Nhập lại mật khẩu..." />
+              <div class="pass-row">
+                <input class="form-input" id="delete-confirm-pass" type="password" placeholder="Nhập lại mật khẩu..." />
+                <button class="toggle-pass-btn" id="toggleDeletePassBtn" type="button">Hiện</button>
+              </div>
+              <div class="helper-text">Xóa là thao tác không thể hoàn tác.</div>
               <div class="error-msg" id="delete-pass-error">Mật khẩu không đúng.</div>
             </div>
             <button class="action-btn danger" id="deleteSubmitBtn" type="button">
@@ -552,20 +1428,54 @@
     </div>
   </div>
 
-  <!-- Toast -->
   <div class="toast" id="toast"></div>
 
+
   <script>
-    // ━━━━━━━━━━━━━━ SOUND ENGINE ━━━━━━━━━━━━━━
+    const APP = {
+      version: "6.1-mobile-passfix",
+      sheetId: "12ScVQf6SvfDt5kSKvLkX5BvFxx3IptISKaWsl3qi65w",
+      gid: "0",
+      scriptUrl: "https://script.google.com/macros/s/AKfycbw3ieo6Iq_RrBHL7lKJBKWIHEpey9cd9eJrqSOAD1Lf3PCpE-ALhzBI_PMrgPCa30IaJw/exec",
+      adminPassword: "310326Xnc@",
+      departmentOptions: ["BCH", "Đội 1", "Đội 2", "Đội 3"],
+      roleOptions: ["Trưởng phòng", "Phó Trưởng phòng", "Đội trưởng", "Phó Đội trưởng", "Cán bộ"],
+      cacheKey: "xnc_phonebook_cache_v6",
+      cacheMetaKey: "xnc_phonebook_cache_meta_v6"
+    };
+
+    const ICONS = {
+      phone: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.77 19.77 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.77 19.77 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.35 1.79.68 2.63a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.45-1.25a2 2 0 0 1 2.11-.45c.84.33 1.73.56 2.63.68A2 2 0 0 1 22 16.92Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>',
+      copy: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+      qr: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4z" stroke="currentColor" stroke-width="1.8"/><path d="M15 15h2v2h-2zM19 15h1v1h-1zM15 19h1v1h-1zM18 18h2v2h-2z" stroke="currentColor" stroke-width="1.8"/></svg>',
+      check: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m20 6-11 11-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      result: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>'
+    };
+
+    const Storage = {
+      get(key, fallback) {
+        try {
+          const raw = localStorage.getItem(key);
+          return raw === null ? fallback : JSON.parse(raw);
+        } catch (e) { return fallback; }
+      },
+      set(key, value) {
+        try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {}
+      }
+    };
+
     const Sound = (() => {
       let ctx = null;
+      let enabled = Storage.get('xnc_sound_enabled', true);
       function getCtx() {
         if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
         return ctx;
       }
-      function play(freq, dur, type = 'sine', vol = 0.12) {
+      function play(freq, dur, type = 'sine', vol = 0.11) {
+        if (!enabled) return;
         try {
           const c = getCtx();
+          if (c.state === 'suspended') c.resume().catch(() => {});
           const osc = c.createOscillator();
           const gain = c.createGain();
           osc.connect(gain);
@@ -576,584 +1486,1388 @@
           gain.gain.exponentialRampToValueAtTime(0.001, c.currentTime + dur);
           osc.start(c.currentTime);
           osc.stop(c.currentTime + dur);
-        } catch(e) {}
+        } catch (e) {}
       }
       return {
-        tap()     { play(560, 0.08); },
-        success() { play(523, 0.1); setTimeout(() => play(659, 0.1), 100); setTimeout(() => play(784, 0.18), 200); },
-        error()   { play(280, 0.12, 'square', 0.09); setTimeout(() => play(200, 0.15, 'square', 0.09), 130); },
-        open()    { play(440, 0.12); setTimeout(() => play(520, 0.1), 80); },
-        close()   { play(420, 0.1); },
-        copy()    { play(680, 0.1); setTimeout(() => play(740, 0.08), 90); }
+        tap() { play(560, 0.08); },
+        success() { play(523, 0.1); setTimeout(() => play(659, 0.1), 90); setTimeout(() => play(784, 0.16), 180); },
+        error() { play(280, 0.12, 'square', 0.09); setTimeout(() => play(200, 0.16, 'square', 0.09), 120); },
+        open() { play(440, 0.11); setTimeout(() => play(520, 0.09), 70); },
+        close() { play(420, 0.08); },
+        copy() { play(680, 0.08); setTimeout(() => play(740, 0.08), 80); },
+        setEnabled(value) { enabled = !!value; Storage.set('xnc_sound_enabled', enabled); },
+        get enabled() { return enabled; }
       };
     })();
 
     function vibrate(ms = 10) {
-      try { navigator.vibrate && navigator.vibrate(ms); } catch(e) {}
+      try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {}
     }
 
-    // ━━━━━━━━━━━━━━ TOAST ━━━━━━━━━━━━━━
-    const toastEl = document.getElementById('toast');
-    let toastTimer = null;
-    function showToast(msg, type = 'ok', icon = '') {
-      clearTimeout(toastTimer);
-      toastEl.className = 'toast show' + (type === 'success' ? ' success' : type === 'error' ? ' error' : '');
-      toastEl.innerHTML = (icon ? icon + ' ' : '') + msg;
-      toastTimer = setTimeout(() => { toastEl.className = 'toast'; }, 3000);
-    }
-
-    // ━━━━━━━━━━━━━━ CONFIG ━━━━━━━━━━━━━━
-    const APP = {
-      sheetId: "12ScVQf6SvfDt5kSKvLkX5BvFxx3IptISKaWsl3qi65w",
-      gid: "0",
-      scriptUrl: "https://script.google.com/d/1Oc-zx1L1hKxfmgZc2wddvR0R9V2Wix3-USOpGt6KPcmCzEexFxbcVm1Q/edit?usp=sharing", // ← Điền URL Google Apps Script Web App tại đây
-      PASS_HASH: btoa("310326Xnc@"),
-      appName: "Danh bạ điện thoại trực tuyến QLXNC Cà Mau",
-      appsScriptCode: `
-// Dán vào Google Apps Script (script.google.com):
-const SHEET_ID = '12ScVQf6SvfDt5kSKvLkX5BvFxx3IptISKaWsl3qi65w';
-function doGet(e) {
-  const p = e.parameter;
-  if (p.auth !== atob('MzEwMzI5WG5jQA==')) return resp({ok:false,msg:'Sai mật khẩu'});
-  const sh = SpreadsheetApp.openById(SHEET_ID).getSheets()[0];
-  try {
-    if (p.action === 'add') {
-      const tt = sh.getLastRow();
-      sh.appendRow([tt, p.name, p.role, p.unit, p.phone1||'', p.phone2||'']);
-      return resp({ok:true, msg:'Đã thêm nhân sự mới.'});
-    }
-    if (p.action === 'delete') {
-      const data = sh.getDataRange().getValues();
-      for (let i = 1; i < data.length; i++) {
-        if (data[i][1] === p.name && data[i][3] === p.unit) {
-          sh.deleteRow(i + 1); return resp({ok:true, msg:'Đã xóa.'});
-        }
-      }
-      return resp({ok:false, msg:'Không tìm thấy.'});
-    }
-    if (p.action === 'update') {
-      const data = sh.getDataRange().getValues();
-      for (let i = 1; i < data.length; i++) {
-        if (data[i][1] === p.name && data[i][3] === p.unit) {
-          if (p.phone1) sh.getRange(i+1,5).setValue(p.phone1);
-          if (p.phone2 !== undefined) sh.getRange(i+1,6).setValue(p.phone2);
-          return resp({ok:true, msg:'Đã cập nhật SĐT.'});
-        }
-      }
-      return resp({ok:false, msg:'Không tìm thấy.'});
-    }
-  } catch(e) { return resp({ok:false, msg:e.toString()}); }
-  function resp(obj) { return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON); }
-}`
-    };
-
-    function checkPass(input) {
-      return btoa(input) === APP.PASS_HASH;
-    }
-
-    // ━━━━━━━━━━━━━━ ICONS ━━━━━━━━━━━━━━
-    const ICONS = {
-      phone: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.77 19.77 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.77 19.77 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.35 1.79.68 2.63a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.45-1.25a2 2 0 0 1 2.11-.45c.84.33 1.73.56 2.63.68A2 2 0 0 1 22 16.92Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>`,
-      copy: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`,
-      qr: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4z" stroke="currentColor" stroke-width="1.8"/><path d="M15 15h2v2h-2zM19 15h1v1h-1zM15 19h1v1h-1zM18 18h2v2h-2z" stroke="currentColor" stroke-width="1.8"/></svg>`,
-      check: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m20 6-11 11-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-      warn: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 9v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 17h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>`,
-      result: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`,
-      filter: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`
-    };
-
-    // ━━━━━━━━━━━━━━ STATE ━━━━━━━━━━━━━━
     const state = {
-      rawRows: [], people: [], filtered: [], query: "",
-      activeUnit: "Tất cả", unitOptions: ["Tất cả"],
-      duplicateRowsRemoved: 0, duplicatePhonesCollapsed: 0,
-      isLoading: true, lastSyncAt: null
+      rawRows: [],
+      people: [],
+      filtered: [],
+      query: '',
+      activeDept: 'Tất cả',
+      activeRole: 'Tất cả',
+      isLoading: true,
+      lastSyncAt: null,
+      duplicateRowsRemoved: 0,
+      duplicatePhonesCollapsed: 0,
+      dataSource: '',
+      dataDetail: '',
+      lastError: '',
+      usingCache: false,
+      cachedAt: null,
+      adminSessionAuthorized: false,
+      adminSessionPass: ''
+    };
+
+    const adminPickerState = {
+      update: { dept: 'Tất cả', role: 'Tất cả', query: '', selectedId: '' },
+      delete: { dept: 'Tất cả', role: 'Tất cả', query: '', selectedId: '' }
     };
 
     const els = {
-      searchInput: document.getElementById("searchInput"),
-      clearBtn: document.getElementById("clearBtn"),
-      resetBtn: document.getElementById("resetBtn"),
-      copyVisibleBtn: document.getElementById("copyVisibleBtn"),
-      refreshBtn: document.getElementById("refreshBtn"),
-      adminBtn: document.getElementById("adminBtn"),
-      loadingState: document.getElementById("loadingState"),
-      emptyState: document.getElementById("emptyState"),
-      cardGrid: document.getElementById("cardGrid"),
-      chips: document.getElementById("chips"),
-      visiblePeople: document.getElementById("visiblePeople"),
-      visiblePhones: document.getElementById("visiblePhones"),
-      resultText: document.getElementById("resultText"),
-      statusPill: document.getElementById("statusPill"),
-      qrModal: document.getElementById("qrModal"),
-      qrCanvas: document.getElementById("qrCanvas"),
-      qrNumber: document.getElementById("qrNumber"),
-      closeQrBtn: document.getElementById("closeQrBtn"),
-      copyQrPhoneBtn: document.getElementById("copyQrPhoneBtn"),
-      callQrPhoneLink: document.getElementById("callQrPhoneLink"),
-      passModal: document.getElementById("passModal"),
-      passInput: document.getElementById("passInput"),
-      passError: document.getElementById("passError"),
-      passSubmitBtn: document.getElementById("passSubmitBtn"),
-      closePassBtn: document.getElementById("closePassBtn"),
-      adminModal: document.getElementById("adminModal"),
-      closeAdminBtn: document.getElementById("closeAdminBtn"),
+      searchInput: document.getElementById('searchInput'),
+      clearBtn: document.getElementById('clearBtn'),
+      resetBtn: document.getElementById('resetBtn'),
+      copyVisibleBtn: document.getElementById('copyVisibleBtn'),
+      refreshBtn: document.getElementById('refreshBtn'),
+      retryBtn: document.getElementById('retryBtn'),
+      adminBtn: document.getElementById('adminBtn'),
+      soundToggleBtn: document.getElementById('soundToggleBtn'),
+      soundToggleIcon: document.getElementById('soundToggleIcon'),
+      deptChips: document.getElementById('deptChips'),
+      roleChips: document.getElementById('roleChips'),
+      visiblePeople: document.getElementById('visiblePeople'),
+      visiblePhones: document.getElementById('visiblePhones'),
+      resultText: document.getElementById('resultText'),
+      syncBadge: document.getElementById('syncBadge'),
+      loadingState: document.getElementById('loadingState'),
+      emptyState: document.getElementById('emptyState'),
+      cardGrid: document.getElementById('cardGrid'),
+      qrModal: document.getElementById('qrModal'),
+      qrCanvas: document.getElementById('qrCanvas'),
+      qrNumber: document.getElementById('qrNumber'),
+      closeQrBtn: document.getElementById('closeQrBtn'),
+      copyQrPhoneBtn: document.getElementById('copyQrPhoneBtn'),
+      callQrPhoneLink: document.getElementById('callQrPhoneLink'),
+      passModal: document.getElementById('passModal'),
+      passInput: document.getElementById('passInput'),
+      passError: document.getElementById('passError'),
+      passSubmitBtn: document.getElementById('passSubmitBtn'),
+      closePassBtn: document.getElementById('closePassBtn'),
+      adminModal: document.getElementById('adminModal'),
+      closeAdminBtn: document.getElementById('closeAdminBtn'),
+      scriptNotice: document.getElementById('scriptNotice'),
+      setupGuideBox: document.getElementById('setupGuideBox'),
+      toast: document.getElementById('toast')
     };
 
-    let qrInstance = null, qrPhone = "";
+    const DEPT_FILTERS = ['Tất cả', ...APP.departmentOptions];
+    const ROLE_ALL = 'Tất cả';
 
-    // ━━━━━━━━━━━━━━ UTILS ━━━━━━━━━━━━━━
+    function getAllowedRolesByDept(dept) {
+      if (dept === 'BCH') return ['Trưởng phòng', 'Phó Trưởng phòng'];
+      if (dept && dept !== 'Tất cả') return ['Đội trưởng', 'Phó Đội trưởng', 'Cán bộ'];
+      return [...APP.roleOptions];
+    }
+
+    function getAvailableRolesForDept(dept, peopleList) {
+      const allowed = new Set(getAllowedRolesByDept(dept));
+      const dynamic = new Set((peopleList || state.people).filter(person => dept === 'Tất cả' || person.department === dept).map(person => person.role).filter(Boolean));
+      const ordered = APP.roleOptions.filter(role => allowed.has(role) && (dynamic.size === 0 || dynamic.has(role)));
+      return ordered.length ? ordered : APP.roleOptions.filter(role => allowed.has(role));
+    }
+    let qrInstance = null;
+    let qrPhone = '';
+    let toastTimer = null;
+    let searchDebounceTimer = null;
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     function norm(input) {
-      return String(input || "").trim().toLowerCase()
-        .normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d");
+      return String(input || '').trim().toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd');
     }
-    function initials(name) {
-      const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
-      return parts.slice(-2).map(p => p[0] || "").join("").toUpperCase() || "NA";
-    }
-    function canonicalHeader(header) {
-      const h = norm(header).replace(/[^a-z0-9/ ]+/g, " ").replace(/\s+/g, " ").trim();
-      if (h === "tt") return "TT";
-      if (h.includes("ho ten")) return "Họ tên";
-      if (h.includes("chuc vu")) return "Chức vụ";
-      if (h.includes("vi tri") || h.includes("doi")) return "Vị trí";
-      if (h.includes("sdt 1") || h.includes("so dien thoai 1") || h.includes("dien thoai 1")) return "SĐT 1";
-      if (h.includes("sdt 2") || h.includes("so dien thoai 2") || h.includes("dien thoai 2")) return "SĐT 2";
-      return header;
-    }
-    function rawCellValue(cell) {
-      if (!cell) return "";
-      if (typeof cell.v === "number") return String(Math.trunc(cell.v));
-      return String(cell.v ?? cell.f ?? "").trim();
-    }
+
     function standardizeDigits(value) {
-      let digits = String(value || "").replace(/\D/g, "");
-      if (!digits) return "";
-      if (digits.length === 9) digits = "0" + digits;
+      let digits = String(value || '').replace(/\D/g, '');
+      if (!digits) return '';
+      if (digits.length === 9) digits = '0' + digits;
       return digits;
     }
+
     function formatPhoneDisplay(digits) {
       const cleaned = standardizeDigits(digits);
-      if (!cleaned) return "";
-      if (cleaned.length === 10) return cleaned.replace(/(\d{4})(\d{3})(\d{3})/, "$1 $2 $3");
-      if (cleaned.length === 11) return cleaned.replace(/(\d{4})(\d{3})(\d{4})/, "$1 $2 $3");
-      if (cleaned.length === 8) return cleaned.replace(/(\d{4})(\d{4})/, "$1 $2");
+      if (!cleaned) return '';
+      if (cleaned.length === 10) return cleaned.replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3');
+      if (cleaned.length === 11) return cleaned.replace(/(\d{4})(\d{3})(\d{4})/, '$1 $2 $3');
+      if (cleaned.length === 8) return cleaned.replace(/(\d{4})(\d{4})/, '$1 $2');
       return cleaned;
     }
-    function extractPhones(...values) {
-      const all = values.flatMap(v => String(v || "").split(/[\n;,|/]+/g))
-        .map(item => standardizeDigits(item)).filter(Boolean);
-      return { uniquePhones: [...new Set(all)], collapsedCount: Math.max(0, all.length - new Set(all).size) };
-    }
-    function compareText(a, b) { return norm(a).localeCompare(norm(b), "vi"); }
-    function unitClass(unit) {
-      const key = norm(unit);
-      if (key.includes("ban chi huy")) return "command";
-      if (key.includes("doi 1")) return "team1";
-      if (key.includes("doi 2")) return "team2";
-      if (key.includes("doi 3")) return "team3";
-      return "other";
-    }
-    function escapeHtml(value) {
-      return String(value ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
-    }
-    function setStatus(text, kind = "ok") {
-      els.statusPill.className = "status-pill" + (kind === "warn" ? " warn" : "");
-      els.statusPill.innerHTML = (kind === "warn" ? ICONS.warn : ICONS.check) + `<span>${escapeHtml(kind === "warn" ? "Lưu ý" : "Sẵn sàng")}</span>`;
-      els.resultText.innerHTML = ICONS.result + `<span>${escapeHtml(text)}</span>`;
-    }
-    function setLoading(loading) {
-      state.isLoading = loading;
-      els.loadingState.classList.toggle("hidden", !loading);
-      if (loading) { els.cardGrid.classList.add("hidden"); els.emptyState.classList.add("hidden"); }
+
+    function canonicalHeader(header) {
+      const h = norm(header).replace(/[^a-z0-9/ ]+/g, ' ').replace(/\s+/g, ' ').trim();
+      if (h === 'tt') return 'TT';
+      if (h.includes('ho ten')) return 'Họ tên';
+      if (h.includes('vi tri') || h.includes('bo phan') || h.includes('doi')) return 'Vị trí';
+      if (h.includes('chuc vu')) return 'Chức vụ';
+      if (h.includes('sdt 1') || h.includes('so dien thoai 1') || h.includes('dien thoai 1')) return 'SĐT 1';
+      if (h.includes('sdt 2') || h.includes('so dien thoai 2') || h.includes('dien thoai 2')) return 'SĐT 2';
+      return String(header || '').trim();
     }
 
-    // ━━━━━━━━━━━━━━ RENDER ━━━━━━━━━━━━━━
-    function renderChips() {
-      els.chips.innerHTML = state.unitOptions.map(unit => `
-        <button class="chip ${unit === state.activeUnit ? "active" : ""}" type="button" data-unit="${escapeHtml(unit)}">${escapeHtml(unit)}</button>
-      `).join("");
-      els.chips.querySelectorAll(".chip").forEach(btn => {
-        btn.addEventListener("click", () => { Sound.tap(); vibrate(); state.activeUnit = btn.dataset.unit; render(); });
+    function rawCellValue(cell) {
+      if (!cell) return '';
+      if (typeof cell.v === 'number') return String(Math.trunc(cell.v));
+      return String(cell.v ?? cell.f ?? '').trim();
+    }
+
+    function initials(name) {
+      const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+      return parts.slice(-2).map(p => p[0] || '').join('').toUpperCase() || 'NA';
+    }
+
+    function normalizeDepartment(value) {
+      const raw = String(value || '').trim();
+      const key = norm(raw);
+      if (!key) return '';
+      if (key === 'bch' || key.includes('ban chi huy')) return 'BCH';
+      const m = key.match(/doi\s*([0-9]+)/);
+      if (m) return 'Đội ' + m[1];
+      return raw;
+    }
+
+    function normalizeRole(value) {
+      const raw = String(value || '').trim();
+      const key = norm(raw);
+      if (!key) return '';
+      if (key.includes('pho truong phong')) return 'Phó Trưởng phòng';
+      if (key.includes('truong phong')) return 'Trưởng phòng';
+      if (key.includes('pho doi truong')) return 'Phó Đội trưởng';
+      if (key.includes('doi truong')) return 'Đội trưởng';
+      if (key.includes('can bo')) return 'Cán bộ';
+      return raw;
+    }
+
+    function detectDepartment(cell) {
+      const value = normalizeDepartment(cell);
+      return value || '';
+    }
+
+    function detectRole(cell) {
+      const value = normalizeRole(cell);
+      const key = norm(value);
+      if (['truong phong','pho truong phong','doi truong','pho doi truong','can bo'].includes(key)) return value;
+      if (["Trưởng phòng", "Phó Trưởng phòng", "Đội trưởng", "Phó Đội trưởng", "Cán bộ"].includes(value)) return value;
+      return '';
+    }
+
+    function isPhoneLike(cell) {
+      const digits = standardizeDigits(cell);
+      return digits.length >= 8;
+    }
+
+    function isTTLike(cell) {
+      const s = String(cell || '').trim();
+      return /^\d{1,4}$/.test(s);
+    }
+
+    function extractPhones(...values) {
+      const all = values.flatMap(v => String(v || '').split(/[\n;,|/]+/g))
+        .map(item => standardizeDigits(item)).filter(Boolean);
+      const unique = [...new Set(all)];
+      return { uniquePhones: unique, collapsedCount: Math.max(0, all.length - unique.length) };
+    }
+
+    function buildSearchIndex(person) {
+      return norm([person.name, person.department, person.role, ...person.phones, ...person.phoneDisplays].join(' '));
+    }
+
+    function compareText(a, b) {
+      return norm(a).localeCompare(norm(b), 'vi');
+    }
+
+    function getPersonById(personId) {
+      return state.people.find(person => person.id === personId) || null;
+    }
+
+    function parseSelectedPersonId(value) {
+      return String(value || '').trim();
+    }
+
+    function filterPeopleForPicker(mode) {
+      const config = adminPickerState[mode];
+      const roles = getAvailableRolesForDept(config.dept, state.people);
+      if (config.role !== ROLE_ALL && !roles.includes(config.role)) config.role = ROLE_ALL;
+      const query = norm(config.query);
+      const digitsQ = query.replace(/\D/g, '');
+      return state.people.filter(person => {
+        const matchDept = config.dept === 'Tất cả' || person.department === config.dept;
+        const matchRole = config.role === ROLE_ALL || person.role === config.role;
+        const matchQuery = !query || person.searchIndex.includes(query) || (digitsQ && person.phones.some(ph => ph.includes(digitsQ)));
+        person.__pickerScore = getSearchScore(person, query, digitsQ);
+        return matchDept && matchRole && matchQuery;
+      }).sort((a, b) => {
+        const byScore = (b.__pickerScore || 0) - (a.__pickerScore || 0);
+        if (byScore !== 0) return byScore;
+        return comparePeopleBase(a, b);
       });
     }
-    function buildSearchIndex(person) {
-      return norm([person.name, person.unit, person.role, ...person.phones, ...person.phoneDisplays].join(" "));
+
+    function departmentClass(value) {
+      if (value === 'BCH') return 'bch';
+      if (value === 'Đội 1') return 'team1';
+      if (value === 'Đội 2') return 'team2';
+      if (value === 'Đội 3') return 'team3';
+      return 'other';
     }
+
+    function setLoading(loading) {
+      state.isLoading = loading;
+      els.loadingState.classList.toggle('hidden', !loading);
+      if (loading) {
+        els.cardGrid.classList.add('hidden');
+        els.emptyState.classList.add('hidden');
+        els.syncBadge.textContent = 'Đang tải';
+        els.syncBadge.className = 'soft-pill';
+      }
+    }
+
+    function setBadge(kind, text) {
+      els.syncBadge.className = 'soft-pill' + (kind === 'warn' ? ' warn' : '');
+      els.syncBadge.textContent = text;
+    }
+
+    function showToast(msg, type = 'ok', icon = '') {
+      clearTimeout(toastTimer);
+      els.toast.className = 'toast show' + (type === 'success' ? ' success' : type === 'error' ? ' error' : '');
+      els.toast.innerHTML = (icon ? icon + ' ' : '') + escapeHtml(msg);
+      toastTimer = setTimeout(() => { els.toast.className = 'toast'; }, 2800);
+    }
+
+    function formatDateTime(dt) {
+      if (!dt) return '—';
+      const d = new Date(dt);
+      if (Number.isNaN(d.getTime())) return '—';
+      const dd = String(d.getDate()).padStart(2, '0');
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const yyyy = d.getFullYear();
+      const hh = String(d.getHours()).padStart(2, '0');
+      const mi = String(d.getMinutes()).padStart(2, '0');
+      const ss = String(d.getSeconds()).padStart(2, '0');
+      return `${dd}/${mm}/${yyyy} ${hh}:${mi}:${ss}`;
+    }
+
+    function saveCache(rows, source) {
+      Storage.set(APP.cacheKey, rows);
+      Storage.set(APP.cacheMetaKey, { source, savedAt: new Date().toISOString(), version: APP.version });
+    }
+
+    function loadCache() {
+      const rows = Storage.get(APP.cacheKey, null);
+      const meta = Storage.get(APP.cacheMetaKey, null);
+      if (!Array.isArray(rows) || !rows.length) return null;
+      return { rows, meta: meta || {} };
+    }
+
+    function renderRoleChips() {
+      const roles = getAvailableRolesForDept(state.activeDept, state.people);
+      if (state.activeRole !== ROLE_ALL && !roles.includes(state.activeRole)) state.activeRole = ROLE_ALL;
+      if (!els.roleChips) return;
+      const allRoles = [ROLE_ALL, ...roles];
+      els.roleChips.innerHTML = allRoles.map(role => `
+        <button class="chip ${role === state.activeRole ? 'active' : ''}" type="button" data-role="${escapeHtml(role)}">${escapeHtml(role === ROLE_ALL ? 'Tất cả chức vụ' : role)}</button>
+      `).join('');
+      els.roleChips.querySelectorAll('.chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+          Sound.tap();
+          vibrate(8);
+          state.activeRole = btn.dataset.role;
+          runTransition(render);
+        });
+      });
+    }
+
+    function renderAdminPersonPicker(mode) {
+      const config = adminPickerState[mode];
+      const deptWrap = document.getElementById(`${mode}DeptChips`);
+      const roleWrap = document.getElementById(`${mode}RoleChips`);
+      const listWrap = document.getElementById(`${mode}PersonList`);
+      const hiddenSelect = document.getElementById(`${mode}-person`);
+      if (!deptWrap || !roleWrap || !listWrap || !hiddenSelect) return;
+
+      deptWrap.innerHTML = DEPT_FILTERS.map(dept => `
+        <button class="chip ${dept === config.dept ? 'active' : ''}" type="button" data-mode="${mode}" data-dept="${escapeHtml(dept)}">${escapeHtml(dept)}</button>
+      `).join('');
+      deptWrap.querySelectorAll('.chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+          Sound.tap();
+          config.dept = btn.dataset.dept;
+          config.role = ROLE_ALL;
+          renderAdminPersonPicker(mode);
+        });
+      });
+
+      const roles = getAvailableRolesForDept(config.dept, state.people);
+      if (config.role !== ROLE_ALL && !roles.includes(config.role)) config.role = ROLE_ALL;
+      roleWrap.innerHTML = [ROLE_ALL, ...roles].map(role => `
+        <button class="chip ${role === config.role ? 'active' : ''}" type="button" data-mode="${mode}" data-role="${escapeHtml(role)}">${escapeHtml(role === ROLE_ALL ? 'Tất cả chức vụ' : role)}</button>
+      `).join('');
+      roleWrap.querySelectorAll('.chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+          Sound.tap();
+          config.role = btn.dataset.role;
+          renderAdminPersonPicker(mode);
+        });
+      });
+
+      const matched = filterPeopleForPicker(mode);
+      if (!matched.length) {
+        listWrap.innerHTML = '<div class="picker-empty">Không có nhân sự phù hợp với bộ lọc hiện tại.</div>';
+        return;
+      }
+
+      listWrap.innerHTML = matched.map(person => `
+        <button class="picker-person ${person.id === config.selectedId ? 'active' : ''}" type="button" data-mode="${mode}" data-person-id="${escapeHtml(person.id)}">
+          <div class="picker-person-name">${highlightText(person.name, config.query)}</div>
+          <div class="picker-person-meta">${escapeHtml(person.department)} • ${escapeHtml(person.role)}${person.phoneDisplays.length ? ' • ' + escapeHtml(person.phoneDisplays.join(', ')) : ''}</div>
+        </button>
+      `).join('');
+
+      listWrap.querySelectorAll('.picker-person').forEach(btn => {
+        btn.addEventListener('click', () => {
+          Sound.tap();
+          const personId = btn.dataset.personId;
+          config.selectedId = personId;
+          hiddenSelect.value = personId;
+          const person = getPersonById(personId);
+          if (!person) return;
+          if (mode === 'update') fillUpdateForm(person);
+          if (mode === 'delete') updateDeletePreview(person);
+          renderAdminPersonPicker(mode);
+        });
+      });
+    }
+
+    function runTransition(fn) {
+      if (document.startViewTransition) document.startViewTransition(fn);
+      else fn();
+    }
+
+    async function copyText(text, button) {
+      const value = String(text || '').trim();
+      if (!value) return;
+      try { await navigator.clipboard.writeText(value); }
+      catch (e) {
+        const ta = document.createElement('textarea');
+        ta.value = value;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      if (button) {
+        const original = button.innerHTML;
+        button.classList.add('done');
+        button.innerHTML = ICONS.check + '<span>Đã chép</span>';
+        setTimeout(() => { button.classList.remove('done'); button.innerHTML = original; }, 1200);
+      }
+    }
+
+    function openModal(modalEl) {
+      modalEl.classList.add('show');
+      modalEl.setAttribute('aria-hidden', 'false');
+      Sound.open();
+      vibrate(10);
+    }
+
+    function closeModal(modalEl) {
+      modalEl.classList.remove('show');
+      modalEl.setAttribute('aria-hidden', 'true');
+      Sound.close();
+    }
+
+    function updateSoundToggle() {
+      els.soundToggleBtn.classList.toggle('off', !Sound.enabled);
+      els.soundToggleIcon.textContent = Sound.enabled ? '🔊' : '🔇';
+      els.soundToggleBtn.title = Sound.enabled ? 'Âm thanh: Bật' : 'Âm thanh: Tắt';
+    }
+
+    function sanitizePasswordInput(value) {
+      return String(value || '')
+        .normalize('NFKC')
+        .replace(/[​-‍﻿]/g, '')
+        .trim();
+    }
+
+    function checkPass(input) {
+      return sanitizePasswordInput(input) === sanitizePasswordInput(APP.adminPassword);
+    }
+
+    function deptPriority(value) {
+      const key = normalizeDepartment(value || '');
+      return ({ 'BCH': 0, 'Đội 1': 1, 'Đội 2': 2, 'Đội 3': 3 })[key] ?? 99;
+    }
+
+    function rolePriority(value) {
+      const key = normalizeRole(value || '');
+      return ({ 'Trưởng phòng': 0, 'Phó Trưởng phòng': 1, 'Đội trưởng': 2, 'Phó Đội trưởng': 3, 'Cán bộ': 4 })[key] ?? 99;
+    }
+
+    function comparePeopleBase(a, b) {
+      const byDept = deptPriority(a.department) - deptPriority(b.department);
+      if (byDept !== 0) return byDept;
+      const byRole = rolePriority(a.role) - rolePriority(b.role);
+      if (byRole !== 0) return byRole;
+      return compareText(a.name, b.name);
+    }
+
+    function getSearchScore(person, q, digitsQ) {
+      if (!q && !digitsQ) return 0;
+      let score = 0;
+      const name = norm(person.name);
+      const dept = norm(person.department);
+      const role = norm(person.role);
+      const phones = person.phones.join(' ');
+      const full = person.searchIndex || '';
+      if (q) {
+        if (name === q) score += 1000;
+        else if (name.startsWith(q)) score += 850;
+        else if (name.includes(q)) score += 700;
+        if (dept === q) score += 520;
+        else if (dept.startsWith(q)) score += 430;
+        else if (dept.includes(q)) score += 360;
+        if (role === q) score += 320;
+        else if (role.startsWith(q)) score += 260;
+        else if (role.includes(q)) score += 220;
+        if (full.includes(q)) score += 90;
+      }
+      if (digitsQ) {
+        if (person.phones.some(ph => ph === digitsQ)) score += 950;
+        else if (person.phones.some(ph => ph.startsWith(digitsQ))) score += 760;
+        else if (phones.includes(digitsQ)) score += 620;
+      }
+      return score;
+    }
+
+    function highlightText(text, query) {
+      const raw = String(text || '');
+      const q = String(query || '').trim();
+      if (!q) return escapeHtml(raw);
+      const queryNorm = norm(q);
+      if (!queryNorm) return escapeHtml(raw);
+      const chars = Array.from(raw);
+      const normChars = chars.map(ch => norm(ch));
+      let start = -1;
+      let end = -1;
+      for (let i = 0; i < chars.length; i += 1) {
+        let built = '';
+        for (let j = i; j < chars.length; j += 1) {
+          built += normChars[j];
+          if (built === queryNorm) { start = i; end = j + 1; break; }
+          if (!queryNorm.startsWith(built)) break;
+        }
+        if (start !== -1) break;
+      }
+      if (start === -1) return escapeHtml(raw);
+      return escapeHtml(raw.slice(0, start)) + '<span class="search-hit">' + escapeHtml(raw.slice(start, end)) + '</span>' + escapeHtml(raw.slice(end));
+    }
+
+    function renderDeptChips() {
+      els.deptChips.innerHTML = DEPT_FILTERS.map(dept => `
+        <button class="chip ${dept === state.activeDept ? 'active' : ''}" type="button" data-dept="${escapeHtml(dept)}">${escapeHtml(dept)}</button>
+      `).join('');
+      els.deptChips.querySelectorAll('.chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+          Sound.tap();
+          vibrate(8);
+          state.activeDept = btn.dataset.dept;
+          if (state.activeRole !== ROLE_ALL && !getAvailableRolesForDept(state.activeDept, state.people).includes(state.activeRole)) state.activeRole = ROLE_ALL;
+          runTransition(render);
+        });
+      });
+    }
+
+    function renderRoleOptionsForSelect(selectId, dept, selectedRole = '') {
+      const select = document.getElementById(selectId);
+      if (!select) return;
+      const roles = getAllowedRolesByDept(dept);
+      const fallbackRole = roles.includes('Cán bộ') ? 'Cán bộ' : roles[0];
+      select.innerHTML = roles.map(role => `<option value="${escapeHtml(role)}">${escapeHtml(role)}</option>`).join('');
+      select.value = roles.includes(selectedRole) ? selectedRole : fallbackRole;
+    }
+
+    function renderAdminOptions() {
+      const deptOptions = APP.departmentOptions.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
+      ['add-dept', 'update-dept'].forEach(id => document.getElementById(id).innerHTML = deptOptions);
+      renderRoleOptionsForSelect('add-role', APP.departmentOptions[0], 'Cán bộ');
+      renderRoleOptionsForSelect('update-role', APP.departmentOptions[0], 'Cán bộ');
+    }
+
+    function looksLikeHeaderRow(cells) {
+      const joined = norm(cells.join(' '));
+      return joined.includes('ho ten') && (joined.includes('sdt') || joined.includes('so dien thoai'));
+    }
+
+    function normalizeRowObject(obj) {
+      const o = Object.assign({ 'TT': '', 'Họ tên': '', 'Chức vụ': '', 'Vị trí': '', 'SĐT 1': '', 'SĐT 2': '' }, obj || {});
+      const deptFromRole = detectDepartment(o['Chức vụ']);
+      const roleFromDept = detectRole(o['Vị trí']);
+      if ((!detectDepartment(o['Vị trí']) && deptFromRole) || (!detectRole(o['Chức vụ']) && roleFromDept)) {
+        const temp = o['Vị trí'];
+        o['Vị trí'] = o['Chức vụ'];
+        o['Chức vụ'] = temp;
+      }
+      o['Vị trí'] = normalizeDepartment(o['Vị trí'] || '');
+      o['Chức vụ'] = normalizeRole(o['Chức vụ'] || '');
+      return {
+        'TT': String(o['TT'] || '').trim(),
+        'Họ tên': String(o['Họ tên'] || '').trim(),
+        'Chức vụ': String(o['Chức vụ'] || '').trim(),
+        'Vị trí': String(o['Vị trí'] || '').trim(),
+        'SĐT 1': String(o['SĐT 1'] || '').trim(),
+        'SĐT 2': String(o['SĐT 2'] || '').trim()
+      };
+    }
+
+    function buildObjectFromCells(cells, cols) {
+      const obj = {};
+      cols.forEach((col, idx) => { if (col) obj[col] = String(cells[idx] || '').trim(); });
+      return normalizeRowObject(obj);
+    }
+
+    function inferObjectFromCells(cells) {
+      const clean = cells.map(v => String(v || '').trim()).filter(Boolean);
+      let tt = '';
+      const phones = [];
+      const texts = [];
+      clean.forEach((cell, idx) => {
+        if (!tt && idx === 0 && isTTLike(cell)) { tt = cell; return; }
+        if (isPhoneLike(cell)) { phones.push(cell); return; }
+        texts.push(cell);
+      });
+      let dept = '';
+      let role = '';
+      const remain = [];
+      texts.forEach(cell => {
+        const dep = detectDepartment(cell);
+        const rol = detectRole(cell);
+        if (!dept && dep) { dept = dep; return; }
+        if (!role && rol) { role = rol; return; }
+        remain.push(cell);
+      });
+      const name = remain.join(' ').trim();
+      return normalizeRowObject({
+        'TT': tt,
+        'Họ tên': name,
+        'Vị trí': dept,
+        'Chức vụ': role,
+        'SĐT 1': phones[0] || '',
+        'SĐT 2': phones[1] || ''
+      });
+    }
+
+    function transformRows(gvizResponse) {
+      const rawCols = (gvizResponse.table?.cols || []).map(col => String(col.label || '').trim());
+      const rawRows = (gvizResponse.table?.rows || []).map(row => row.c?.map(rawCellValue) || []);
+      if (!rawRows.length) return [];
+
+      let cols = rawCols.map(canonicalHeader);
+      let rows = rawRows.slice();
+
+      const headerRowInData = looksLikeHeaderRow(rows[0]);
+      if (headerRowInData) {
+        cols = rows[0].map(canonicalHeader);
+        rows = rows.slice(1);
+      }
+
+      const hasUsefulHeaders = cols.some(v => ['TT', 'Họ tên', 'Chức vụ', 'Vị trí', 'SĐT 1', 'SĐT 2'].includes(v));
+      const objects = rows.map(cells => {
+        if (hasUsefulHeaders) return buildObjectFromCells(cells, cols);
+        return inferObjectFromCells(cells);
+      }).filter(row => Object.values(row).some(v => String(v || '').trim() !== ''));
+
+      return objects;
+    }
+
     function preparePeople(rows) {
-      let duplicateRowsRemoved = 0, duplicatePhonesCollapsed = 0;
+      let duplicateRowsRemoved = 0;
+      let duplicatePhonesCollapsed = 0;
       const exactMap = new Map();
+
       rows.forEach((row, index) => {
-        const name = String(row["Họ tên"] || "").trim();
-        const role = String(row["Chức vụ"] || "").trim();
-        const unit = String(row["Vị trí"] || row["Vị trí/Đội"] || "").trim();
-        const tt = String(row["TT"] || index + 1).trim();
-        if (!name && !role && !unit && !row["SĐT 1"] && !row["SĐT 2"]) return;
-        const phoneInfo = extractPhones(row["SĐT 1"], row["SĐT 2"]);
+        const normalized = normalizeRowObject(row);
+        const name = String(normalized['Họ tên'] || '').trim();
+        const roleRaw = String(normalized['Chức vụ'] || '').trim();
+        const departmentRaw = String(normalized['Vị trí'] || '').trim();
+        const tt = String(normalized['TT'] || index + 1).trim();
+
+        if (!name && !roleRaw && !departmentRaw && !normalized['SĐT 1'] && !normalized['SĐT 2']) return;
+
+        const phoneInfo = extractPhones(normalized['SĐT 1'], normalized['SĐT 2']);
         duplicatePhonesCollapsed += phoneInfo.collapsedCount;
+
         const person = {
-          tt, name: name || "Chưa rõ họ tên", role: role || "Chưa rõ chức vụ",
-          unit: unit || "Chưa rõ bộ phận", phones: phoneInfo.uniquePhones,
+          id: '',
+          tt,
+          name: name || 'Chưa rõ họ tên',
+          department: departmentRaw || 'Chưa rõ bộ phận',
+          role: roleRaw || 'Chưa rõ chức vụ',
+          phones: phoneInfo.uniquePhones,
           phoneDisplays: phoneInfo.uniquePhones.map(formatPhoneDisplay)
         };
-        const exactKey = [norm(person.name), norm(person.role), norm(person.unit), [...person.phones].sort().join("|")].join("::");
+
+        const exactKey = [norm(person.tt), norm(person.name), norm(person.department), norm(person.role), [...person.phones].sort().join('|')].join('::');
         if (exactMap.has(exactKey)) { duplicateRowsRemoved += 1; return; }
+        person.id = exactKey;
         person.searchIndex = buildSearchIndex(person);
         exactMap.set(exactKey, person);
       });
-      const people = [...exactMap.values()].sort((a, b) => {
-        const byUnit = compareText(a.unit, b.unit);
-        if (byUnit !== 0) return byUnit;
-        const byRole = compareText(a.role, b.role);
-        if (byRole !== 0) return byRole;
-        return compareText(a.name, b.name);
-      });
+
+      const people = [...exactMap.values()].sort(comparePeopleBase);
+
       return { people, duplicateRowsRemoved, duplicatePhonesCollapsed };
     }
-    function applyFilter() {
-      const q = norm(state.query), activeUnit = norm(state.activeUnit);
+
+    function applyFilters() {
+      const q = norm(state.query);
+      const digitsQ = q.replace(/\D/g, '');
       state.filtered = state.people.filter(person => {
-        const matchUnit = state.activeUnit === "Tất cả" || norm(person.unit) === activeUnit;
-        const digitsQ = q.replace(/\D/g, "");
+        const matchDept = state.activeDept === 'Tất cả' || person.department === state.activeDept;
+        const matchRole = state.activeRole === 'Tất cả' || person.role === state.activeRole;
         const matchQuery = !q || person.searchIndex.includes(q) || (digitsQ && person.phones.some(ph => ph.includes(digitsQ)));
-        return matchUnit && matchQuery;
+        person.__searchScore = getSearchScore(person, q, digitsQ);
+        return matchDept && matchRole && matchQuery;
+      }).sort((a, b) => {
+        const byScore = (b.__searchScore || 0) - (a.__searchScore || 0);
+        if (byScore !== 0) return byScore;
+        return comparePeopleBase(a, b);
       });
     }
+
     function renderStats() {
       const visiblePhoneCount = state.filtered.reduce((sum, p) => sum + p.phones.length, 0);
       els.visiblePeople.textContent = String(state.filtered.length);
       els.visiblePhones.textContent = String(visiblePhoneCount);
     }
-    function renderCards() {
-      if (!state.filtered.length) {
-        els.cardGrid.classList.add("hidden");
-        els.emptyState.classList.remove("hidden");
+
+    function renderSummaryText() {
+      if (state.isLoading) return;
+      if (!state.people.length) {
+        els.resultText.innerHTML = ICONS.result + '<span>Không đọc được dữ liệu danh bạ.</span>';
+        setBadge('warn', 'Lỗi tải');
         return;
       }
-      els.emptyState.classList.add("hidden");
-      els.cardGrid.classList.remove("hidden");
+      const totalPhones = state.filtered.reduce((sum, p) => sum + p.phones.length, 0);
+      const parts = [`Hiển thị ${state.filtered.length} nhân sự`, `${totalPhones} số điện thoại`];
+      if (state.activeDept !== 'Tất cả') parts.push('Bộ phận: ' + state.activeDept);
+      if (state.activeRole !== ROLE_ALL) parts.push('Chức vụ: ' + state.activeRole);
+      if (state.usingCache) parts.push('Đang dùng dữ liệu lưu gần nhất');
+      els.resultText.innerHTML = ICONS.result + `<span>${escapeHtml(parts.join(' • '))}</span>`;
+      if (state.lastSyncAt) {
+        const hh = String(state.lastSyncAt.getHours()).padStart(2, '0');
+        const mm = String(state.lastSyncAt.getMinutes()).padStart(2, '0');
+        setBadge(state.usingCache ? 'warn' : 'ok', state.usingCache ? ('Cache ' + hh + ':' + mm) : ('Đã tải ' + hh + ':' + mm));
+      } else {
+        setBadge(state.usingCache ? 'warn' : 'ok', state.usingCache ? 'Dùng cache' : 'Sẵn sàng');
+      }
+    }
+
+    function renderCards() {
+      if (!state.filtered.length) {
+        els.cardGrid.classList.add('hidden');
+        els.emptyState.classList.remove('hidden');
+        return;
+      }
+      els.emptyState.classList.add('hidden');
+      els.cardGrid.classList.remove('hidden');
+
       els.cardGrid.innerHTML = state.filtered.map((person, cardIdx) => {
         const phonesHtml = person.phones.length
           ? person.phones.map((phone, idx) => {
               const display = person.phoneDisplays[idx];
-              return `<div class="phone-item">
-                <div class="phone-main">
-                  <div class="phone-icon-wrap">${ICONS.phone}</div>
-                  <div class="phone-info">
-                    <a class="phone-number" href="tel:${phone}">${escapeHtml(display)}</a>
-                    <div class="phone-meta">Chạm để gọi hoặc dùng QR để thao tác nhanh.</div>
+              return `
+                <div class="phone-item">
+                  <div class="phone-main">
+                    <div class="phone-icon-wrap">${ICONS.phone}</div>
+                    <div>
+                      <a class="phone-number" href="tel:${escapeHtml(phone)}">${highlightText(display, state.query)}</a>
+                      <div class="phone-meta">Chạm để gọi, sao chép hoặc tạo mã QR.</div>
+                    </div>
+                  </div>
+                  <div class="phone-actions">
+                    <button class="tiny-btn copy-phone-btn" type="button" data-phone="${escapeHtml(phone)}" data-display="${escapeHtml(display)}">${ICONS.copy}<span>Chép</span></button>
+                    <button class="tiny-btn qr-phone-btn" type="button" data-phone="${escapeHtml(phone)}" data-display="${escapeHtml(display)}">${ICONS.qr}<span>QR</span></button>
                   </div>
                 </div>
-                <div class="phone-actions">
-                  <button class="tiny-btn copy-phone-btn" type="button" data-phone="${escapeHtml(phone)}" data-display="${escapeHtml(display)}">${ICONS.copy}<span>Chép</span></button>
-                  <button class="tiny-btn qr-phone-btn" type="button" data-phone="${escapeHtml(phone)}" data-display="${escapeHtml(display)}" aria-label="Hiện QR">${ICONS.qr}<span>QR</span></button>
+              `;
+            }).join('')
+          : `
+            <div class="phone-item">
+              <div class="phone-main">
+                <div class="phone-icon-wrap">${ICONS.phone}</div>
+                <div>
+                  <div class="phone-number" style="text-decoration:none;cursor:default;">Chưa có số điện thoại</div>
+                  <div class="phone-meta">Bản ghi này hiện chưa có dữ liệu SĐT.</div>
                 </div>
-              </div>`;
-            }).join("")
-          : `<div class="phone-item"><div class="phone-main"><div class="phone-icon-wrap">${ICONS.phone}</div><div class="phone-info"><div class="phone-number" style="text-decoration:none;cursor:default;">Chưa có số điện thoại</div><div class="phone-meta">Bản ghi này hiện chưa có dữ liệu SĐT.</div></div></div></div>`;
-        return `<article class="person-card" style="animation-delay:${cardIdx * 0.04}s">
-          <div class="person-top">
-            <div class="avatar">${escapeHtml(initials(person.name))}</div>
-            <div><h3 class="person-name">${escapeHtml(person.name)}</h3><div class="person-role">${escapeHtml(person.role)}</div></div>
-            <div class="tt-badge">TT #${escapeHtml(person.tt)}</div>
-          </div>
-          <div class="badge-row">
-            <span class="unit-badge ${unitClass(person.unit)}">${ICONS.filter}<span>${escapeHtml(person.unit)}</span></span>
-            <span class="count-badge">${ICONS.phone}<span>${person.phones.length} số</span></span>
-          </div>
-          <div class="phone-list">${phonesHtml}</div>
-          <div class="person-footer">
-            <div class="note">Ứng dụng tự gộp nếu SĐT 1 và SĐT 2 trùng nhau trên cùng bản ghi.</div>
-            <button class="tiny-btn copy-all-btn" type="button" data-phones="${escapeHtml(person.phoneDisplays.join(", "))}">${ICONS.copy}<span>Chép tất cả</span></button>
-          </div>
-        </article>`;
-      }).join("");
-      els.cardGrid.querySelectorAll(".copy-phone-btn").forEach(btn => btn.addEventListener("click", () => { Sound.copy(); vibrate(8); copyText(btn.dataset.display || btn.dataset.phone, btn); }));
-      els.cardGrid.querySelectorAll(".qr-phone-btn").forEach(btn => btn.addEventListener("click", () => { Sound.tap(); vibrate(8); openQrModal(btn.dataset.phone, btn.dataset.display || btn.dataset.phone); }));
-      els.cardGrid.querySelectorAll(".copy-all-btn").forEach(btn => btn.addEventListener("click", () => { Sound.copy(); vibrate(8); copyText(btn.dataset.phones || "", btn); }));
+              </div>
+            </div>
+          `;
+
+        return `
+          <article class="person-card" style="animation-delay:${cardIdx * 0.03}s">
+            <div class="person-top">
+              <div class="avatar">${escapeHtml(initials(person.name))}</div>
+              <div>
+                <h3 class="person-name">${highlightText(person.name, state.query)}</h3>
+                <div class="person-role">${highlightText(person.role, state.query)}</div>
+              </div>
+            </div>
+            <div class="badge-row">
+              <span class="unit-badge ${departmentClass(person.department)}"><span>${highlightText(person.department, state.query)}</span></span>
+              <span class="role-badge"><span>${highlightText(person.role, state.query)}</span></span>
+              <span class="count-badge">${ICONS.phone}<span>${person.phones.length} số</span></span>
+            </div>
+            <div class="phone-list">${phonesHtml}</div>
+            <div class="person-footer">
+              <div class="note">Sắp xếp ưu tiên theo nội dung tìm kiếm, rồi đến Bộ phận, Chức vụ và tên A–Z.</div>
+              <button class="tiny-btn copy-all-btn" type="button" data-phones="${escapeHtml(person.phoneDisplays.join(', '))}">${ICONS.copy}<span>Chép tất cả</span></button>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      els.cardGrid.querySelectorAll('.copy-phone-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          Sound.copy(); vibrate(8);
+          await copyText(btn.dataset.display || btn.dataset.phone, btn);
+          showToast('Đã sao chép số điện thoại.', 'success', '✅');
+        });
+      });
+      els.cardGrid.querySelectorAll('.qr-phone-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          Sound.tap(); vibrate(8);
+          openQrModal(btn.dataset.phone, btn.dataset.display || btn.dataset.phone);
+        });
+      });
+      els.cardGrid.querySelectorAll('.copy-all-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          Sound.copy(); vibrate(8);
+          await copyText(btn.dataset.phones || '', btn);
+          showToast('Đã sao chép các số đang chọn.', 'success', '✅');
+        });
+      });
     }
-    function renderSummaryText() {
-      if (state.isLoading) return;
-      if (!state.people.length) { setStatus("Không đọc được dữ liệu từ Google Sheets.", "warn"); return; }
-      const totalPhones = state.filtered.reduce((sum, p) => sum + p.phones.length, 0);
-      setStatus(`Hiển thị ${state.filtered.length} người với ${totalPhones} số điện thoại.`, "ok");
-    }
+
     function render() {
-      applyFilter(); renderChips(); renderStats(); renderCards(); renderSummaryText();
-      els.clearBtn.classList.toggle("active", !!state.query);
+      applyFilters();
+      renderDeptChips();
+      renderRoleChips();
+      renderStats();
+      renderCards();
+      renderSummaryText();
+      els.clearBtn.classList.toggle('active', !!state.query);
     }
 
-    // ━━━━━━━━━━━━━━ COPY ━━━━━━━━━━━━━━
-    async function copyText(text, button) {
-      const value = String(text || "").trim();
-      if (!value) return;
-      try { await navigator.clipboard.writeText(value); }
-      catch (e) {
-        const ta = document.createElement("textarea");
-        ta.value = value; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta);
-      }
-      if (button) {
-        const original = button.innerHTML;
-        button.classList.add("done"); button.innerHTML = `${ICONS.check}<span>Đã chép</span>`;
-        setTimeout(() => { button.classList.remove("done"); button.innerHTML = original; }, 1400);
-      }
+    function populatePersonDropdowns() {
+      const options = state.people.map((p) => `
+        <option value="${escapeHtml(p.id)}">${escapeHtml(p.name)} – ${escapeHtml(p.department)} – ${escapeHtml(p.role)}</option>
+      `).join('');
+      document.getElementById('update-person').innerHTML = '<option value="">-- Chọn người --</option>' + options;
+      document.getElementById('delete-person').innerHTML = '<option value="">-- Chọn người cần xóa --</option>' + options;
+      ['update', 'delete'].forEach(mode => {
+        const config = adminPickerState[mode];
+        if (config.selectedId && !getPersonById(config.selectedId)) config.selectedId = '';
+        const hiddenSelect = document.getElementById(`${mode}-person`);
+        if (hiddenSelect && config.selectedId) hiddenSelect.value = config.selectedId;
+        renderAdminPersonPicker(mode);
+      });
     }
 
-    // ━━━━━━━━━━━━━━ QR MODAL ━━━━━━━━━━━━━━
+    function fillUpdateForm(person) {
+      document.getElementById('update-name').value = person.name || '';
+      const deptValue = APP.departmentOptions.includes(person.department) ? person.department : APP.departmentOptions[0];
+      document.getElementById('update-dept').value = deptValue;
+      renderRoleOptionsForSelect('update-role', deptValue, person.role);
+      document.getElementById('update-phone1').value = person.phoneDisplays[0] || '';
+      document.getElementById('update-phone2').value = person.phoneDisplays[1] || '';
+      const box = document.getElementById('update-current-info');
+      box.classList.remove('hidden');
+      box.innerHTML = `<b>${escapeHtml(person.name)}</b><br>Bộ phận: <b>${escapeHtml(person.department)}</b> • Chức vụ: <b>${escapeHtml(person.role)}</b><br>SĐT hiện tại: <b>${escapeHtml(person.phoneDisplays.join(', ') || 'Chưa có')}</b>`;
+    }
+
+    function updateDeletePreview(person) {
+      const box = document.getElementById('delete-preview');
+      box.classList.remove('hidden');
+      box.innerHTML = `Sẽ xóa: <b>${escapeHtml(person.name)}</b><br>Bộ phận: ${escapeHtml(person.department)} • Chức vụ: ${escapeHtml(person.role)}<br>SĐT: ${escapeHtml(person.phoneDisplays.join(', ') || 'Chưa có')}`;
+    }
+
     function openQrModal(phone, display) {
-      qrPhone = String(phone || "").trim();
+      qrPhone = String(phone || '').trim();
       els.qrNumber.textContent = display || formatPhoneDisplay(phone);
       els.callQrPhoneLink.href = `tel:${qrPhone}`;
-      els.qrModal.classList.add("show"); els.qrModal.setAttribute("aria-hidden","false");
-      Sound.open(); vibrate(12);
+      openModal(els.qrModal);
       if (window.QRious) {
         if (!qrInstance) {
-          qrInstance = new QRious({ element: els.qrCanvas, size: 240, background: "#ffffff", foreground: "#7a1221", level: "H", padding: 16 });
+          qrInstance = new QRious({ element: els.qrCanvas, size: 240, background: '#ffffff', foreground: '#7a1221', level: 'H', padding: 16 });
         }
         qrInstance.value = `tel:${qrPhone}`;
       }
     }
-    function closeModal(el) { el.classList.remove("show"); el.setAttribute("aria-hidden","true"); Sound.close(); }
 
-    // ━━━━━━━━━━━━━━ LOAD DATA ━━━━━━━━━━━━━━
-    function transformRows(gvizResponse) {
-      const cols = (gvizResponse.table?.cols || []).map(col => canonicalHeader(col.label || ""));
-      const rows = (gvizResponse.table?.rows || []).map(row => {
-        const obj = {};
-        cols.forEach((col, i) => { obj[col] = rawCellValue(row.c?.[i]); });
-        return obj;
+    function appsScriptJsonp(params) {
+      return new Promise((resolve, reject) => {
+        const url = String(APP.scriptUrl || '').trim();
+        if (!url || !/\/exec(\?|$)/.test(url)) {
+          reject(new Error('Apps Script chưa được cấu hình đúng /exec.'));
+          return;
+        }
+        const cbName = `__appsScriptJsonp_${Date.now()}_${Math.floor(Math.random() * 100000)}`;
+        const script = document.createElement('script');
+        const timeout = setTimeout(() => {
+          cleanup();
+          reject(new Error('Hết thời gian chờ phản hồi từ Apps Script.'));
+        }, 15000);
+
+        function cleanup() {
+          clearTimeout(timeout);
+          delete window[cbName];
+          script.remove();
+        }
+
+        window[cbName] = (response) => {
+          cleanup();
+          resolve(response);
+        };
+
+        const qs = new URLSearchParams(Object.assign({}, params || {}, { callback: cbName, _: Date.now() }));
+        script.onerror = () => {
+          cleanup();
+          reject(new Error('Không tải được Apps Script Web App.'));
+        };
+        script.src = url + (url.includes('?') ? '&' : '?') + qs.toString();
+        document.body.appendChild(script);
       });
-      return rows.filter(row => Object.values(row).some(v => String(v || "").trim() !== ""));
     }
+
+    async function loadAppsScriptFetch() {
+      const data = await appsScriptJsonp({ action: 'list' });
+      if (!data || !data.ok || !Array.isArray(data.rows)) {
+        throw new Error(data && data.msg ? data.msg : 'Apps Script không trả về danh sách hợp lệ.');
+      }
+      return { rows: data.rows, detail: `Apps Script /exec • ${data.version || 'không rõ phiên bản'}` };
+    }
+
     function loadSheetViaJsonp() {
       return new Promise((resolve, reject) => {
-        const cbName = `__sheetJsonp_${Date.now()}_${Math.floor(Math.random()*100000)}`;
-        const script = document.createElement("script");
-        const timeout = setTimeout(() => { cleanup(); reject(new Error("Hết thời gian chờ.")); }, 15000);
+        const cbName = `__sheetJsonp_${Date.now()}_${Math.floor(Math.random() * 100000)}`;
+        const script = document.createElement('script');
+        const timeout = setTimeout(() => { cleanup(); reject(new Error('Hết thời gian chờ tải Google Sheets.')); }, 15000);
         function cleanup() { clearTimeout(timeout); delete window[cbName]; script.remove(); }
-        window[cbName] = (response) => { try { cleanup(); resolve(transformRows(response)); } catch(e) { reject(e); } };
-        script.onerror = () => { cleanup(); reject(new Error("Không tải được dữ liệu.")); };
+        window[cbName] = (response) => { try { cleanup(); resolve(transformRows(response)); } catch (e) { reject(e); } };
+        script.onerror = () => { cleanup(); reject(new Error('Không tải được dữ liệu từ Google Sheets.')); };
         script.src = `https://docs.google.com/spreadsheets/d/${APP.sheetId}/gviz/tq?gid=${APP.gid}&headers=1&tqx=${encodeURIComponent(`out:json;responseHandler:${cbName}`)}`;
         document.body.appendChild(script);
       });
     }
-    async function syncData() {
-      setLoading(true); setStatus("Đang đồng bộ dữ liệu từ Google Sheets…", "ok");
-      try {
-        const rawRows = await loadSheetViaJsonp();
-        const prepared = preparePeople(rawRows);
-        state.rawRows = rawRows; state.people = prepared.people;
-        state.duplicateRowsRemoved = prepared.duplicateRowsRemoved;
-        state.duplicatePhonesCollapsed = prepared.duplicatePhonesCollapsed;
-        state.lastSyncAt = new Date();
-        state.unitOptions = ["Tất cả", ...new Set(prepared.people.map(p => p.unit))];
-        render(); Sound.success();
-      } catch(error) {
-        console.error(error);
-        state.rawRows = []; state.people = []; state.filtered = []; state.unitOptions = ["Tất cả"];
-        renderChips(); els.cardGrid.classList.add("hidden"); els.emptyState.classList.remove("hidden");
-        setStatus("Không thể đồng bộ dữ liệu. Kiểm tra quyền chia sẻ Google Sheets.", "warn");
-        Sound.error();
-      } finally { setLoading(false); }
-    }
 
-    // ━━━━━━━━━━━━━━ GOOGLE APPS SCRIPT ━━━━━━━━━━━━━━
-    async function callScript(params) {
-      if (!APP.scriptUrl) {
-        return { ok: false, msg: "Chưa cấu hình Google Apps Script URL." };
-      }
-      const url = APP.scriptUrl + "?" + new URLSearchParams({...params, auth: "310329Xnc@"}).toString();
-      try {
-        const res = await fetch(url);
-        return await res.json();
-      } catch(e) {
-        return { ok: false, msg: "Không kết nối được với Apps Script: " + e.message };
-      }
-    }
-
-    // ━━━━━━━━━━━━━━ ADMIN LOGIC ━━━━━━━━━━━━━━
-    function populatePersonDropdowns() {
-      const opts = state.people.map((p, i) =>
-        `<option value="${i}">${escapeHtml(p.name)} – ${escapeHtml(p.unit)}</option>`
-      ).join("");
-      document.getElementById("update-person").innerHTML = '<option value="">-- Chọn người --</option>' + opts;
-      document.getElementById("delete-person").innerHTML = '<option value="">-- Chọn người cần xóa --</option>' + opts;
-    }
-
-    document.getElementById("update-person").addEventListener("change", function() {
-      const idx = parseInt(this.value);
-      const box = document.getElementById("update-current-info");
-      if (isNaN(idx)) { box.style.display = "none"; return; }
-      const p = state.people[idx];
-      box.style.display = "block";
-      box.innerHTML = `<b>${escapeHtml(p.name)}</b> – ${escapeHtml(p.role)}<br>SĐT hiện tại: <b>${p.phoneDisplays.join(", ") || "Chưa có"}</b>`;
-      document.getElementById("update-phone1").value = p.phoneDisplays[0] || "";
-      document.getElementById("update-phone2").value = p.phoneDisplays[1] || "";
-    });
-
-    document.getElementById("delete-person").addEventListener("change", function() {
-      const idx = parseInt(this.value);
-      const box = document.getElementById("delete-preview");
-      if (isNaN(idx)) { box.style.display = "none"; return; }
-      const p = state.people[idx];
-      box.style.display = "block";
-      box.innerHTML = `Sẽ xóa: <b>${escapeHtml(p.name)}</b> (${escapeHtml(p.unit)})<br>Chức vụ: ${escapeHtml(p.role)}<br>SĐT: ${p.phoneDisplays.join(", ") || "Chưa có"}`;
-    });
-
-    // Tab switching
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        Sound.tap();
-        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-        document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
-        btn.classList.add("active");
-        document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
-      });
-    });
-
-    // Add submit
-    document.getElementById("addSubmitBtn").addEventListener("click", async () => {
-      const name = document.getElementById("add-name").value.trim();
-      const role = document.getElementById("add-role").value.trim();
-      const unit = document.getElementById("add-unit").value.trim();
-      const phone1 = document.getElementById("add-phone1").value.trim();
-      const phone2 = document.getElementById("add-phone2").value.trim();
-      const pass = document.getElementById("add-confirm-pass").value;
-      const errEl = document.getElementById("add-pass-error");
-      errEl.classList.remove("show");
-      if (!name || !unit) { showToast("Vui lòng nhập họ tên và bộ phận.", "error", "⚠️"); Sound.error(); return; }
-      if (!checkPass(pass)) { errEl.classList.add("show"); Sound.error(); vibrate([10,50,10]); return; }
-      vibrate(15);
-      const btn = document.getElementById("addSubmitBtn");
-      btn.disabled = true; btn.textContent = "Đang gửi…";
-      const result = await callScript({ action: "add", name, role, unit, phone1: standardizeDigits(phone1), phone2: standardizeDigits(phone2) });
-      btn.disabled = false; btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Xác nhận thêm nhân sự';
-      if (result.ok) {
-        Sound.success(); showToast(result.msg || "Thêm thành công!", "success", "✅");
-        document.getElementById("add-name").value = ""; document.getElementById("add-role").value = "";
-        document.getElementById("add-unit").value = ""; document.getElementById("add-phone1").value = "";
-        document.getElementById("add-phone2").value = ""; document.getElementById("add-confirm-pass").value = "";
-        setTimeout(syncData, 1200);
-      } else {
-        Sound.error(); showToast(result.msg || "Lỗi không xác định.", "error", "❌");
-      }
-    });
-
-    // Update submit
-    document.getElementById("updateSubmitBtn").addEventListener("click", async () => {
-      const idx = parseInt(document.getElementById("update-person").value);
-      const pass = document.getElementById("update-confirm-pass").value;
-      const errEl = document.getElementById("update-pass-error");
-      errEl.classList.remove("show");
-      if (isNaN(idx)) { showToast("Vui lòng chọn nhân sự.", "error", "⚠️"); Sound.error(); return; }
-      if (!checkPass(pass)) { errEl.classList.add("show"); Sound.error(); vibrate([10,50,10]); return; }
-      const p = state.people[idx];
-      const phone1 = standardizeDigits(document.getElementById("update-phone1").value);
-      const phone2 = standardizeDigits(document.getElementById("update-phone2").value);
-      vibrate(15);
-      const btn = document.getElementById("updateSubmitBtn");
-      btn.disabled = true; btn.textContent = "Đang cập nhật…";
-      const result = await callScript({ action: "update", name: p.name, unit: p.unit, phone1, phone2 });
-      btn.disabled = false; btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg> Xác nhận cập nhật SĐT';
-      if (result.ok) {
-        Sound.success(); showToast(result.msg || "Cập nhật thành công!", "success", "✅");
-        document.getElementById("update-confirm-pass").value = "";
-        setTimeout(syncData, 1200);
-      } else { Sound.error(); showToast(result.msg || "Lỗi không xác định.", "error", "❌"); }
-    });
-
-    // Delete submit
-    document.getElementById("deleteSubmitBtn").addEventListener("click", async () => {
-      const idx = parseInt(document.getElementById("delete-person").value);
-      const pass = document.getElementById("delete-confirm-pass").value;
-      const errEl = document.getElementById("delete-pass-error");
-      errEl.classList.remove("show");
-      if (isNaN(idx)) { showToast("Vui lòng chọn nhân sự.", "error", "⚠️"); Sound.error(); return; }
-      if (!checkPass(pass)) { errEl.classList.add("show"); Sound.error(); vibrate([10,50,10]); return; }
-      const p = state.people[idx];
-      vibrate(20);
-      const btn = document.getElementById("deleteSubmitBtn");
-      btn.disabled = true; btn.textContent = "Đang xóa…";
-      const result = await callScript({ action: "delete", name: p.name, unit: p.unit });
-      btn.disabled = false; btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg> Xác nhận xóa nhân sự';
-      if (result.ok) {
-        Sound.success(); showToast(result.msg || "Đã xóa thành công!", "success", "✅");
-        document.getElementById("delete-confirm-pass").value = "";
-        document.getElementById("delete-person").value = "";
-        document.getElementById("delete-preview").style.display = "none";
-        setTimeout(syncData, 1200);
-      } else { Sound.error(); showToast(result.msg || "Lỗi không xác định.", "error", "❌"); }
-    });
-
-    // ━━━━━━━━━━━━━━ EVENT LISTENERS ━━━━━━━━━━━━━━
-    els.searchInput.addEventListener("input", (e) => { state.query = e.target.value; render(); });
-    els.clearBtn.addEventListener("click", () => { Sound.tap(); state.query = ""; els.searchInput.value = ""; els.searchInput.focus(); render(); });
-    els.resetBtn.addEventListener("click", () => { Sound.tap(); state.query = ""; state.activeUnit = "Tất cả"; els.searchInput.value = ""; render(); });
-    els.copyVisibleBtn.addEventListener("click", () => {
-      Sound.copy(); vibrate(10);
-      const phones = state.filtered.flatMap(p => p.phoneDisplays);
-      copyText(phones.join(", "), els.copyVisibleBtn);
-    });
-    els.refreshBtn.addEventListener("click", () => { Sound.tap(); vibrate(10); syncData(); });
-
-    // Admin button → password modal
-    els.adminBtn.addEventListener("click", () => {
-      Sound.open(); vibrate(12);
-      els.passInput.value = ""; els.passError.classList.remove("show");
-      els.passModal.classList.add("show"); els.passModal.setAttribute("aria-hidden","false");
-      setTimeout(() => els.passInput.focus(), 350);
-    });
-    els.closePassBtn.addEventListener("click", () => closeModal(els.passModal));
-    els.passModal.addEventListener("click", (e) => { if (e.target === els.passModal) closeModal(els.passModal); });
-
-    // Password submit
-    function submitPassword() {
-      const val = els.passInput.value;
-      if (!checkPass(val)) {
-        els.passError.classList.add("show");
-        Sound.error(); vibrate([10,50,10]);
-        els.passInput.classList.add("error");
-        setTimeout(() => els.passInput.classList.remove("error"), 600);
-        return;
-      }
-      Sound.success(); vibrate(15);
-      closeModal(els.passModal);
-      // Check script URL
-      const noticeEl = document.getElementById("scriptNotice");
-      noticeEl.style.display = APP.scriptUrl ? "none" : "block";
-      // Populate dropdowns
+    function applyDataRows(rawRows, source, detail, usingCache = false, cachedAt = null) {
+      const prepared = preparePeople(rawRows);
+      state.rawRows = rawRows;
+      state.people = prepared.people;
+      state.duplicateRowsRemoved = prepared.duplicateRowsRemoved;
+      state.duplicatePhonesCollapsed = prepared.duplicatePhonesCollapsed;
+      state.lastSyncAt = new Date();
+      state.dataSource = source;
+      state.dataDetail = detail;
+      state.usingCache = usingCache;
+      state.cachedAt = cachedAt;
+      if (!usingCache) saveCache(rawRows, source);
       populatePersonDropdowns();
-      setTimeout(() => {
-        els.adminModal.classList.add("show"); els.adminModal.setAttribute("aria-hidden","false");
-      }, 200);
+      runTransition(render);
     }
-    els.passSubmitBtn.addEventListener("click", submitPassword);
-    els.passInput.addEventListener("keydown", (e) => { if (e.key === "Enter") submitPassword(); });
 
-    els.closeAdminBtn.addEventListener("click", () => closeModal(els.adminModal));
-    els.adminModal.addEventListener("click", (e) => { if (e.target === els.adminModal) closeModal(els.adminModal); });
+    async function syncData() {
+      setLoading(true);
+      state.lastError = '';
+      const errors = [];
+      try {
+        try {
+          const apps = await loadAppsScriptFetch();
+          applyDataRows(apps.rows, 'Apps Script', apps.detail, false, null);
+          Sound.success();
+          return;
+        } catch (error) {
+          errors.push('Apps Script: ' + error.message);
+        }
 
-    // Setup guide
-    document.getElementById("showSetupGuide").addEventListener("click", (e) => {
-      e.preventDefault();
-      const g = document.getElementById("setupGuideBox");
-      g.style.display = g.style.display === "none" ? "block" : "none";
-      console.log("Apps Script code:\n", APP.appsScriptCode);
-    });
+        try {
+          const sheetRows = await loadSheetViaJsonp();
+          applyDataRows(sheetRows, 'Google Sheets', 'Đọc trực tiếp từ Google Sheets công khai', false, null);
+          Sound.success();
+          return;
+        } catch (error) {
+          errors.push('Google Sheets: ' + error.message);
+        }
 
-    // QR modal listeners
-    els.closeQrBtn.addEventListener("click", () => closeModal(els.qrModal));
-    els.copyQrPhoneBtn.addEventListener("click", () => { Sound.copy(); copyText(formatPhoneDisplay(qrPhone), els.copyQrPhoneBtn); });
-    els.qrModal.addEventListener("click", (e) => { if (e.target === els.qrModal) closeModal(els.qrModal); });
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        if (els.adminModal.classList.contains("show")) closeModal(els.adminModal);
-        else if (els.passModal.classList.contains("show")) closeModal(els.passModal);
-        else if (els.qrModal.classList.contains("show")) closeModal(els.qrModal);
+        const cache = loadCache();
+        if (cache) {
+          applyDataRows(cache.rows, cache.meta && cache.meta.source ? cache.meta.source : 'Cache cục bộ', 'Không tải được mạng, đang dùng dữ liệu lưu gần nhất trên thiết bị', true, cache.meta && cache.meta.savedAt ? cache.meta.savedAt : null);
+          state.lastError = errors.join(' | ');
+          Sound.error();
+          setBadge('warn', 'Dùng cache');
+          showToast('Đang dùng dữ liệu lưu gần nhất trên thiết bị.', 'error', '⚠️');
+        } else {
+          state.rawRows = [];
+          state.people = [];
+          state.filtered = [];
+          state.dataSource = '';
+          state.dataDetail = '';
+          state.usingCache = false;
+          state.lastError = errors.join(' | ');
+          renderDeptChips();
+          els.cardGrid.classList.add('hidden');
+          els.emptyState.classList.remove('hidden');
+          els.resultText.innerHTML = ICONS.result + '<span>Không thể đọc dữ liệu danh bạ ở thời điểm hiện tại.</span>';
+          setBadge('warn', 'Lỗi tải');
+          Sound.error();
+        }
+      } finally {
+        setLoading(false);
       }
-    });
+    }
 
-    renderChips();
+    function wait(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function buildWriteAuthPayload(authPass = '') {
+      const rawPass = String(authPass || state.adminSessionPass || APP.adminPassword || '');
+      const cleanPass = sanitizePasswordInput(rawPass);
+      return {
+        auth: rawPass,
+        auth_clean: cleanPass,
+        auth_app: APP.adminPassword,
+        pass: rawPass,
+        password: rawPass,
+        pwd: rawPass,
+        adminPassword: rawPass,
+        admin_password: rawPass,
+        admin_pass: rawPass,
+        confirmPassword: rawPass,
+        confirm_pass: rawPass,
+        sessionPassword: state.adminSessionPass || rawPass,
+        session_password: state.adminSessionPass || rawPass,
+        token: rawPass,
+        key: rawPass,
+        secret: rawPass,
+        session_auth: state.adminSessionAuthorized ? '1' : '0'
+      };
+    }
+
+    async function callScriptJsonpAction(payload, authPass = '') {
+      try {
+        const data = await appsScriptJsonp(Object.assign({}, payload || {}, buildWriteAuthPayload(authPass)));
+        if (!data || typeof data !== 'object') {
+          return { ok: false, msg: 'Apps Script trả về dữ liệu không hợp lệ.' };
+        }
+        return data;
+      } catch (e) {
+        return { ok: false, msg: 'Không kết nối được với Apps Script: ' + e.message };
+      }
+    }
+
+    async function submitScriptPostNoCors(payload, authPass = '') {
+      try {
+        const url = String(APP.scriptUrl || '').trim();
+        if (!url || !/\/exec(\?|$)/.test(url)) return false;
+        const body = new URLSearchParams(Object.assign({}, payload || {}, buildWriteAuthPayload(authPass), { _: Date.now() }));
+        await fetch(url, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+          body
+        });
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    async function refreshDataSilently() {
+      const errors = [];
+      try {
+        const apps = await loadAppsScriptFetch();
+        applyDataRows(apps.rows, 'Apps Script', apps.detail, false, null);
+        return { ok: true, source: 'Apps Script' };
+      } catch (error) {
+        errors.push('Apps Script: ' + error.message);
+      }
+
+      try {
+        const sheetRows = await loadSheetViaJsonp();
+        applyDataRows(sheetRows, 'Google Sheets', 'Đọc trực tiếp từ Google Sheets công khai', false, null);
+        return { ok: true, source: 'Google Sheets' };
+      } catch (error) {
+        errors.push('Google Sheets: ' + error.message);
+      }
+
+      const cache = loadCache();
+      if (cache) {
+        applyDataRows(cache.rows, cache.meta && cache.meta.source ? cache.meta.source : 'Cache cục bộ', 'Không tải được mạng, đang dùng dữ liệu lưu gần nhất trên thiết bị', true, cache.meta && cache.meta.savedAt ? cache.meta.savedAt : null);
+        state.lastError = errors.join(' | ');
+        return { ok: true, source: 'Cache' };
+      }
+
+      state.lastError = errors.join(' | ');
+      return { ok: false, msg: state.lastError || 'Không thể làm mới dữ liệu.' };
+    }
+
+    async function verifyWriteWithRefresh(verifyFn, attempts = 4, delayMs = 1100) {
+      if (typeof verifyFn !== 'function') return false;
+      for (let i = 0; i < attempts; i += 1) {
+        await wait(delayMs);
+        await refreshDataSilently();
+        if (verifyFn()) return true;
+      }
+      return false;
+    }
+
+    async function callScript(payload, authPass = '', verifyFn = null) {
+      const getResult = await callScriptJsonpAction(payload, authPass);
+      if (getResult && getResult.ok) return getResult;
+
+      if (typeof verifyFn === 'function') {
+        const posted = await submitScriptPostNoCors(payload, authPass);
+        if (posted) {
+          const verified = await verifyWriteWithRefresh(verifyFn);
+          if (verified) return { ok: true, msg: 'Ghi dữ liệu thành công.' };
+        }
+      }
+
+      return getResult;
+    }
+
+    function setButtonBusy(btn, busy, idleHtml, busyText) {
+      btn.disabled = busy;
+      btn.innerHTML = busy ? busyText : idleHtml;
+      btn.style.opacity = busy ? '.8' : '1';
+    }
+
+    function clearPassError(inputId, errorId) {
+      document.getElementById(inputId).classList.remove('error');
+      document.getElementById(errorId).classList.remove('show');
+    }
+
+    function showPassError(inputId, errorId) {
+      const input = document.getElementById(inputId);
+      const err = document.getElementById(errorId);
+      err.classList.add('show');
+      input.classList.add('error');
+      Sound.error();
+      vibrate([10, 50, 10]);
+      setTimeout(() => input.classList.remove('error'), 700);
+    }
+
+    function resetAddForm() {
+      document.getElementById('add-name').value = '';
+      document.getElementById('add-dept').value = APP.departmentOptions[0];
+      renderRoleOptionsForSelect('add-role', APP.departmentOptions[0], 'Cán bộ');
+      document.getElementById('add-phone1').value = '';
+      document.getElementById('add-phone2').value = '';
+      document.getElementById('add-confirm-pass').value = '';
+      clearPassError('add-confirm-pass', 'add-pass-error');
+    }
+
+    function resetUpdateForm() {
+      document.getElementById('update-person').value = '';
+      document.getElementById('update-name').value = '';
+      document.getElementById('update-dept').value = APP.departmentOptions[0];
+      renderRoleOptionsForSelect('update-role', APP.departmentOptions[0], 'Cán bộ');
+      document.getElementById('update-phone1').value = '';
+      document.getElementById('update-phone2').value = '';
+      document.getElementById('update-confirm-pass').value = '';
+      document.getElementById('update-picker-search').value = '';
+      adminPickerState.update = { dept: 'Tất cả', role: ROLE_ALL, query: '', selectedId: '' };
+      document.getElementById('update-current-info').classList.add('hidden');
+      clearPassError('update-confirm-pass', 'update-pass-error');
+      renderAdminPersonPicker('update');
+    }
+
+    function resetDeleteForm() {
+      document.getElementById('delete-person').value = '';
+      document.getElementById('delete-confirm-pass').value = '';
+      document.getElementById('delete-picker-search').value = '';
+      adminPickerState.delete = { dept: 'Tất cả', role: ROLE_ALL, query: '', selectedId: '' };
+      document.getElementById('delete-preview').classList.add('hidden');
+      clearPassError('delete-confirm-pass', 'delete-pass-error');
+      renderAdminPersonPicker('delete');
+    }
+
+    function initAdminEvents() {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          Sound.tap();
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+          btn.classList.add('active');
+          document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+        });
+      });
+
+      document.getElementById('toggleSetupGuide').addEventListener('click', (e) => {
+        e.preventDefault();
+        Sound.tap();
+        const shown = els.setupGuideBox.style.display === 'block';
+        els.setupGuideBox.style.display = shown ? 'none' : 'block';
+      });
+
+      document.getElementById('update-person').addEventListener('change', function() {
+        const personId = parseSelectedPersonId(this.value);
+        adminPickerState.update.selectedId = personId;
+        const person = getPersonById(personId);
+        if (!person) { document.getElementById('update-current-info').classList.add('hidden'); renderAdminPersonPicker('update'); return; }
+        fillUpdateForm(person);
+        renderAdminPersonPicker('update');
+      });
+
+      document.getElementById('delete-person').addEventListener('change', function() {
+        const personId = parseSelectedPersonId(this.value);
+        adminPickerState.delete.selectedId = personId;
+        const person = getPersonById(personId);
+        if (!person) { document.getElementById('delete-preview').classList.add('hidden'); renderAdminPersonPicker('delete'); return; }
+        updateDeletePreview(person);
+        renderAdminPersonPicker('delete');
+      });
+
+      ['update', 'delete'].forEach(mode => {
+        const searchEl = document.getElementById(`${mode}-picker-search`);
+        if (!searchEl) return;
+        searchEl.addEventListener('input', () => {
+          adminPickerState[mode].query = searchEl.value;
+          renderAdminPersonPicker(mode);
+        });
+      });
+
+      document.getElementById('add-dept').addEventListener('change', function() {
+        renderRoleOptionsForSelect('add-role', this.value, document.getElementById('add-role').value);
+      });
+
+      document.getElementById('update-dept').addEventListener('change', function() {
+        renderRoleOptionsForSelect('update-role', this.value, document.getElementById('update-role').value);
+      });
+
+      document.getElementById('addSubmitBtn').addEventListener('click', async () => {
+        clearPassError('add-confirm-pass', 'add-pass-error');
+        const name = document.getElementById('add-name').value.trim();
+        const department = document.getElementById('add-dept').value;
+        const role = document.getElementById('add-role').value;
+        const phone1 = standardizeDigits(document.getElementById('add-phone1').value);
+        const phone2 = standardizeDigits(document.getElementById('add-phone2').value);
+        const pass = sanitizePasswordInput(document.getElementById('add-confirm-pass').value);
+
+        if (!name) { showToast('Vui lòng nhập họ tên nhân sự.', 'error', '⚠️'); Sound.error(); return; }
+        if (!checkPass(pass)) { showPassError('add-confirm-pass', 'add-pass-error'); return; }
+
+        const verifyAdd = () => state.people.some(item =>
+          norm(item.name) === norm(name) &&
+          normalizeDepartment(item.department) === normalizeDepartment(department) &&
+          normalizeRole(item.role) === normalizeRole(role) &&
+          (item.phones[0] || '') === phone1 &&
+          (item.phones[1] || '') === phone2
+        );
+
+        const btn = document.getElementById('addSubmitBtn');
+        const idleHtml = btn.innerHTML;
+        setButtonBusy(btn, true, idleHtml, 'Đang gửi...');
+        const result = await callScript({ action: 'add', name, department, role, phone1, phone2 }, pass, verifyAdd);
+        setButtonBusy(btn, false, idleHtml, '');
+        if (result.ok) {
+          Sound.success(); showToast(result.msg || 'Đã thêm nhân sự.', 'success', '✅');
+          resetAddForm(); await syncData();
+        } else {
+          Sound.error(); showToast(result.msg || 'Không thể thêm nhân sự.', 'error', '❌');
+          els.scriptNotice.style.display = 'block';
+        }
+      });
+
+      document.getElementById('updateSubmitBtn').addEventListener('click', async () => {
+        clearPassError('update-confirm-pass', 'update-pass-error');
+        const personId = parseSelectedPersonId(document.getElementById('update-person').value);
+        const pass = sanitizePasswordInput(document.getElementById('update-confirm-pass').value);
+        const person = getPersonById(personId);
+        if (!person) { showToast('Vui lòng chọn nhân sự cần cập nhật.', 'error', '⚠️'); Sound.error(); return; }
+        if (!checkPass(pass)) { showPassError('update-confirm-pass', 'update-pass-error'); return; }
+        const name = document.getElementById('update-name').value.trim();
+        const department = document.getElementById('update-dept').value;
+        const role = document.getElementById('update-role').value;
+        const phone1 = standardizeDigits(document.getElementById('update-phone1').value);
+        const phone2 = standardizeDigits(document.getElementById('update-phone2').value);
+
+        if (!name) { showToast('Họ tên không được để trống.', 'error', '⚠️'); Sound.error(); return; }
+
+        const oldPhone1 = person.phones[0] || '';
+        const oldPhone2 = person.phones[1] || '';
+        const noChanges =
+          norm(name) === norm(person.name) &&
+          normalizeDepartment(department) === normalizeDepartment(person.department) &&
+          normalizeRole(role) === normalizeRole(person.role) &&
+          phone1 === oldPhone1 &&
+          phone2 === oldPhone2;
+
+        if (noChanges) { showToast('Chưa có thay đổi để cập nhật.', 'ok', 'ℹ️'); return; }
+
+        const verifyUpdate = () => state.people.some(item =>
+          norm(item.name) === norm(name) &&
+          normalizeDepartment(item.department) === normalizeDepartment(department) &&
+          normalizeRole(item.role) === normalizeRole(role) &&
+          (item.phones[0] || '') === phone1 &&
+          (item.phones[1] || '') === phone2
+        );
+
+        const btn = document.getElementById('updateSubmitBtn');
+        const idleHtml = btn.innerHTML;
+        setButtonBusy(btn, true, idleHtml, 'Đang cập nhật...');
+        const result = await callScript({ action: 'update', tt: person.tt, personId: person.id, oldName: person.name, oldDepartment: person.department, oldRole: person.role, oldPhone1, oldPhone2, name, department, role, phone1, phone2 }, pass, verifyUpdate);
+        setButtonBusy(btn, false, idleHtml, '');
+        if (result.ok) {
+          Sound.success(); showToast(result.msg || 'Đã cập nhật thông tin.', 'success', '✅');
+          resetUpdateForm(); await syncData();
+        } else {
+          Sound.error(); showToast(result.msg || 'Không thể cập nhật.', 'error', '❌');
+          els.scriptNotice.style.display = 'block';
+        }
+      });
+
+      document.getElementById('deleteSubmitBtn').addEventListener('click', async () => {
+        clearPassError('delete-confirm-pass', 'delete-pass-error');
+        const personId = parseSelectedPersonId(document.getElementById('delete-person').value);
+        const pass = sanitizePasswordInput(document.getElementById('delete-confirm-pass').value);
+        const person = getPersonById(personId);
+        if (!person) { showToast('Vui lòng chọn nhân sự cần xóa.', 'error', '⚠️'); Sound.error(); return; }
+        if (!checkPass(pass)) { showPassError('delete-confirm-pass', 'delete-pass-error'); return; }
+        const verifyDelete = () => !getPersonById(person.id);
+
+        const btn = document.getElementById('deleteSubmitBtn');
+        const idleHtml = btn.innerHTML;
+        setButtonBusy(btn, true, idleHtml, 'Đang xóa...');
+        const result = await callScript({ action: 'delete', tt: person.tt, personId: person.id, oldName: person.name, oldDepartment: person.department, oldRole: person.role }, pass, verifyDelete);
+        setButtonBusy(btn, false, idleHtml, '');
+        if (result.ok) {
+          Sound.success(); showToast(result.msg || 'Đã xóa nhân sự.', 'success', '✅');
+          resetDeleteForm(); await syncData();
+        } else {
+          Sound.error(); showToast(result.msg || 'Không thể xóa nhân sự.', 'error', '❌');
+          els.scriptNotice.style.display = 'block';
+        }
+      });
+    }
+
+    function initEvents() {
+      els.searchInput.addEventListener('input', (e) => {
+        const value = e.target.value;
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(() => {
+          state.query = value;
+          render();
+        }, 70);
+      });
+      els.clearBtn.addEventListener('click', () => {
+        Sound.tap(); state.query = ''; els.searchInput.value = ''; els.searchInput.focus(); render();
+      });
+      els.resetBtn.addEventListener('click', () => {
+        Sound.tap(); state.query = ''; state.activeDept = 'Tất cả'; state.activeRole = ROLE_ALL;
+        els.searchInput.value = ''; runTransition(render);
+      });
+      els.copyVisibleBtn.addEventListener('click', async () => {
+        const phones = [...new Set(state.filtered.flatMap(p => p.phoneDisplays).filter(Boolean))];
+        if (!phones.length) { showToast('Không có số điện thoại để sao chép.', 'error', '⚠️'); Sound.error(); return; }
+        Sound.copy(); vibrate(10); await copyText(phones.join(', '), els.copyVisibleBtn); showToast('Đã sao chép các số đang hiển thị.', 'success', '✅');
+      });
+      els.refreshBtn.addEventListener('click', () => { Sound.tap(); vibrate(10); syncData(); });
+      if (els.retryBtn) els.retryBtn.addEventListener('click', () => { Sound.tap(); vibrate(10); syncData(); });
+      els.soundToggleBtn.addEventListener('click', () => {
+        Sound.setEnabled(!Sound.enabled); updateSoundToggle();
+        if (Sound.enabled) { Sound.success(); showToast('Đã bật âm thanh.', 'success', '🔊'); }
+        else showToast('Đã tắt âm thanh.', 'ok', '🔇');
+      });
+
+      ['passInput','add-confirm-pass','update-confirm-pass','delete-confirm-pass'].forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+          input.setAttribute('autocapitalize', 'off');
+          input.setAttribute('autocorrect', 'off');
+          input.setAttribute('spellcheck', 'false');
+        }
+      });
+
+      [['togglePassBtn','passInput'],['toggleAddPassBtn','add-confirm-pass'],['toggleUpdatePassBtn','update-confirm-pass'],['toggleDeletePassBtn','delete-confirm-pass']].forEach(([btnId,inputId]) => {
+        const btn = document.getElementById(btnId);
+        const input = document.getElementById(inputId);
+        if (!btn || !input) return;
+        btn.addEventListener('click', () => {
+          const hidden = input.type === 'password';
+          input.type = hidden ? 'text' : 'password';
+          btn.textContent = hidden ? 'Ẩn' : 'Hiện';
+          Sound.tap();
+        });
+      });
+
+
+      els.adminBtn.addEventListener('click', () => {
+        els.passInput.value = ''; els.passError.classList.remove('show'); openModal(els.passModal); setTimeout(() => els.passInput.focus(), 250);
+      });
+      els.closePassBtn.addEventListener('click', () => closeModal(els.passModal));
+      els.closeAdminBtn.addEventListener('click', () => closeModal(els.adminModal));
+      els.closeQrBtn.addEventListener('click', () => closeModal(els.qrModal));
+      els.qrModal.addEventListener('click', (e) => { if (e.target === els.qrModal) closeModal(els.qrModal); });
+      els.passModal.addEventListener('click', (e) => { if (e.target === els.passModal) closeModal(els.passModal); });
+      els.adminModal.addEventListener('click', (e) => { if (e.target === els.adminModal) closeModal(els.adminModal); });
+
+      function submitPassword() {
+        if (!checkPass(sanitizePasswordInput(els.passInput.value))) {
+          els.passError.classList.add('show'); els.passInput.classList.add('error'); Sound.error(); vibrate([10, 50, 10]);
+          setTimeout(() => els.passInput.classList.remove('error'), 700); return;
+        }
+        state.adminSessionAuthorized = true;
+        state.adminSessionPass = sanitizePasswordInput(els.passInput.value);
+        closeModal(els.passModal);
+        els.scriptNotice.style.display = (!APP.scriptUrl || !/\/exec(\?|$)/.test(APP.scriptUrl)) ? 'block' : 'none';
+        populatePersonDropdowns(); resetAddForm(); resetUpdateForm(); resetDeleteForm();
+        setTimeout(() => openModal(els.adminModal), 140); Sound.success();
+      }
+      els.passSubmitBtn.addEventListener('click', submitPassword);
+      els.passInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitPassword(); });
+
+      els.copyQrPhoneBtn.addEventListener('click', async () => {
+        Sound.copy(); await copyText(formatPhoneDisplay(qrPhone), els.copyQrPhoneBtn); showToast('Đã sao chép số điện thoại.', 'success', '✅');
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          if (els.adminModal.classList.contains('show')) closeModal(els.adminModal);
+          else if (els.passModal.classList.contains('show')) closeModal(els.passModal);
+          else if (els.qrModal.classList.contains('show')) closeModal(els.qrModal);
+        }
+      });
+    }
+
+    renderAdminOptions();
+    updateSoundToggle();
+    renderDeptChips();
+    initEvents();
+    initAdminEvents();
     syncData();
   </script>
 </body>
