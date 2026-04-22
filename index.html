@@ -482,15 +482,22 @@
       padding: 18px 16px 22px;
       min-height: 260px;
       view-transition-name: content-grid;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
     }
     .card-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0,1fr));
       gap: 14px;
+      contain: layout style;
     }
     .person-card {
       position: relative;
       border-radius: 24px;
+      content-visibility: auto;
+      contain-intrinsic-size: 260px;
+      backface-visibility: hidden;
+      transform: translateZ(0);
       border: 1px solid rgba(148,163,184,.18);
       background:
         radial-gradient(circle at top right, rgba(211,156,47,.12), transparent 32%),
@@ -761,6 +768,8 @@
     }
     .modal-card {
       width: min(560px, 100%);
+      backface-visibility: hidden;
+      transform: translateZ(0);
       border-radius: 26px 26px 0 0;
       background: #fff;
       box-shadow: 0 24px 50px rgba(15,23,42,.24);
@@ -1154,6 +1163,7 @@
       .toolbar, .content, .footer, .modal-body { padding-inline: 12px; }
       .result-strip { padding: 0 12px 12px; }
       .content { padding-top: 14px; padding-bottom: 16px; }
+      .card-grid { gap: 10px; }
       .person-card { padding: 14px; border-radius: 20px; }
       .person-top { grid-template-columns: 46px 1fr; gap: 10px; }
       .avatar { width: 46px; height: 46px; border-radius: 14px; font-size: 15px; }
@@ -1541,15 +1551,15 @@
 
   <script>
     const APP = {
-      version: "6.7-superfast-close-v17",
+      version: "6.9-safe-dedupe-v19",
       sheetId: "12ScVQf6SvfDt5kSKvLkX5BvFxx3IptISKaWsl3qi65w",
       gid: "0",
-      scriptUrl: "https://script.google.com/macros/s/AKfycbxhnDoQLoSWhnYpM-tFY9CHcX1zr-a8Lf279e2YEzRPhn-deY5DlmD5DZpd8a1d43rH/exec",
+      scriptUrl: "https://script.google.com/macros/s/AKfycbylzmVaU9G9-pBzHcfqN_IQqd9ohN4KEC4UZOgxEMUPsxrPEuz9sG6jdveeLqzUUk9n/exec",
       adminPassword: "310326Xnc@",
       departmentOptions: ["BCH", "Đội 1", "Đội 2", "Đội 3"],
       roleOptions: ["Trưởng phòng", "Phó Trưởng phòng", "Đội trưởng", "Phó Đội trưởng", "Cán bộ"],
-      cacheKey: "xnc_phonebook_cache_v7",
-      cacheMetaKey: "xnc_phonebook_cache_meta_v7"
+      cacheKey: "xnc_phonebook_cache_v8",
+      cacheMetaKey: "xnc_phonebook_cache_meta_v8"
     };
 
     const ICONS = {
@@ -1689,7 +1699,11 @@
     let qrPhone = '';
     let toastTimer = null;
     let searchDebounceTimer = null;
-    let backgroundSyncTimer = null;
+    let queuedRenderFrame = 0;
+    let backgroundSyncTimers = [];
+    const IS_COMPACT_MOBILE = window.matchMedia('(max-width: 680px)').matches;
+    const PREFERS_REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const USE_VIEW_TRANSITIONS = !!document.startViewTransition && !IS_COMPACT_MOBILE && !PREFERS_REDUCED_MOTION;
 
     function escapeHtml(value) {
       return String(value ?? '')
@@ -1888,6 +1902,7 @@
 
     function buildRawRowFromValues(values) {
       return normalizeRowObject({
+        '__ROW': String(values.rowKey || values.__ROW || '').trim(),
         'TT': String(values.tt || '').trim(),
         'Họ tên': String(values.name || '').trim(),
         'Chức vụ': normalizeRole(values.role || ''),
@@ -1908,13 +1923,34 @@
     function applyOptimisticMutation(type, values) {
       let nextRows = Array.isArray(state.rawRows) ? state.rawRows.map(row => normalizeRowObject(row)) : [];
       const tt = String(values.tt || '').trim();
+      const rowKey = String(values.rowKey || values.__ROW || '').trim();
+      const mergeRowKeys = Array.isArray(values.mergeRowKeys) ? values.mergeRowKeys.map(item => String(item || '').trim()).filter(Boolean) : [];
 
       if (type === 'add') {
         nextRows.push(buildRawRowFromValues(values));
       } else if (type === 'update') {
-        nextRows = nextRows.map(row => String((row && row['TT']) || '').trim() === tt ? buildRawRowFromValues(values) : row);
+        nextRows = nextRows.map(row => {
+          const currentRowKey = String((row && row['__ROW']) || '').trim();
+          const currentTT = String((row && row['TT']) || '').trim();
+          const matched = rowKey ? currentRowKey === rowKey : currentTT === tt;
+          return matched ? buildRawRowFromValues(Object.assign({}, row, values)) : row;
+        });
+        if (mergeRowKeys.length > 1) {
+          const removable = new Set(mergeRowKeys);
+          if (rowKey) removable.delete(rowKey);
+          nextRows = nextRows.filter(row => !removable.has(String((row && row['__ROW']) || '').trim()));
+        }
       } else if (type === 'delete') {
-        nextRows = nextRows.filter(row => String((row && row['TT']) || '').trim() !== tt);
+        if (mergeRowKeys.length) {
+          const removable = new Set(mergeRowKeys);
+          nextRows = nextRows.filter(row => !removable.has(String((row && row['__ROW']) || '').trim()));
+        } else {
+          nextRows = nextRows.filter(row => {
+            const currentRowKey = String((row && row['__ROW']) || '').trim();
+            const currentTT = String((row && row['TT']) || '').trim();
+            return rowKey ? currentRowKey !== rowKey : currentTT !== tt;
+          });
+        }
       }
 
       const fastDetail = state.dataDetail
@@ -1934,11 +1970,16 @@
       applyDataRows(snapshot, state.dataSource || 'Apps Script', restoreDetail, false, null);
     }
 
-    function scheduleBackgroundSync(delay = 220) {
-      clearTimeout(backgroundSyncTimer);
-      backgroundSyncTimer = setTimeout(() => {
-        refreshDataSilently().catch(() => {});
-      }, delay);
+    function scheduleBackgroundSync(delays = [160, 900, 2200]) {
+      backgroundSyncTimers.forEach(timer => clearTimeout(timer));
+      backgroundSyncTimers = [];
+      const plan = Array.isArray(delays) ? delays : [delays];
+      plan.forEach(delay => {
+        const timer = setTimeout(() => {
+          refreshDataSilently().catch(() => {});
+        }, Math.max(0, Number(delay) || 0));
+        backgroundSyncTimers.push(timer);
+      });
     }
 
     function renderRoleChips() {
@@ -2024,8 +2065,17 @@
     }
 
     function runTransition(fn) {
-      if (document.startViewTransition) document.startViewTransition(fn);
+      if (USE_VIEW_TRANSITIONS) document.startViewTransition(fn);
       else fn();
+    }
+
+    function queueRender(useTransition = false) {
+      if (queuedRenderFrame) cancelAnimationFrame(queuedRenderFrame);
+      queuedRenderFrame = requestAnimationFrame(() => {
+        queuedRenderFrame = 0;
+        if (useTransition) runTransition(render);
+        else render();
+      });
     }
 
     function updatePickerClearButton(mode) {
@@ -2055,9 +2105,20 @@
       }
     }
 
+    function setBodyScrollLocked(locked) {
+      document.body.style.overflow = locked ? 'hidden' : '';
+      document.body.style.touchAction = locked ? 'none' : '';
+    }
+
+    function syncBodyLockState() {
+      const hasOpenModal = document.querySelector('.modal.show');
+      setBodyScrollLocked(!!hasOpenModal);
+    }
+
     function openModal(modalEl) {
       modalEl.classList.add('show');
       modalEl.setAttribute('aria-hidden', 'false');
+      syncBodyLockState();
       Sound.open();
       vibrate(10);
     }
@@ -2065,6 +2126,7 @@
     function closeModal(modalEl) {
       modalEl.classList.remove('show');
       modalEl.setAttribute('aria-hidden', 'true');
+      syncBodyLockState();
       Sound.close();
     }
 
@@ -2106,6 +2168,49 @@
       const byRole = rolePriority(a.role) - rolePriority(b.role);
       if (byRole !== 0) return byRole;
       return compareText(a.name, b.name);
+    }
+
+    function getPersonRowKeys(person) {
+      return [...new Set((person && person.rowKeys ? person.rowKeys : []).map(item => String(item || '').trim()).filter(Boolean))];
+    }
+
+    function sameIdentity(person, name, department, role) {
+      return normalizeComparableText(person && person.name) === normalizeComparableText(name) &&
+        normalizeDepartment(person && person.department) === normalizeDepartment(department) &&
+        normalizeRole(person && person.role) === normalizeRole(role);
+    }
+
+    function findIdentityDuplicate(name, department, role, excludeId = '') {
+      return state.people.find(item => item.id !== excludeId && sameIdentity(item, name, department, role)) || null;
+    }
+
+    function findRoleConflict(role, department, excludeId = '') {
+      const normalizedRole = normalizeRole(role);
+      const normalizedDept = normalizeDepartment(department);
+      if (normalizedRole === 'Đội trưởng') {
+        return state.people.find(item => item.id !== excludeId && normalizeRole(item.role) === 'Đội trưởng' && normalizeDepartment(item.department) === normalizedDept) || null;
+      }
+      if (normalizedRole === 'Trưởng phòng') {
+        return state.people.find(item => item.id !== excludeId && normalizeRole(item.role) === 'Trưởng phòng') || null;
+      }
+      return null;
+    }
+
+    function getConstraintError(name, department, role, excludeId = '') {
+      const duplicate = findIdentityDuplicate(name, department, role, excludeId);
+      if (duplicate) {
+        return 'Đã tồn tại bản ghi trùng họ tên, bộ phận và chức vụ. Vui lòng dùng mục Cập nhật thay vì thêm mới.';
+      }
+      const roleConflict = findRoleConflict(role, department, excludeId);
+      if (roleConflict) {
+        if (normalizeRole(role) === 'Đội trưởng') {
+          return 'Mỗi đội chỉ được có 01 Đội trưởng. Bộ phận này đã có Đội trưởng rồi.';
+        }
+        if (normalizeRole(role) === 'Trưởng phòng') {
+          return 'Một phòng chỉ được có 01 Trưởng phòng. Hiện đã có Trưởng phòng trong danh bạ.';
+        }
+      }
+      return '';
     }
 
     function getSearchScore(person, q, digitsQ) {
@@ -2196,7 +2301,7 @@
     }
 
     function normalizeRowObject(obj) {
-      const o = Object.assign({ 'TT': '', 'Họ tên': '', 'Chức vụ': '', 'Vị trí': '', 'SĐT 1': '', 'SĐT 2': '' }, obj || {});
+      const o = Object.assign({ '__ROW': '', 'TT': '', 'Họ tên': '', 'Chức vụ': '', 'Vị trí': '', 'SĐT 1': '', 'SĐT 2': '' }, obj || {});
       const deptFromRole = detectDepartment(o['Chức vụ']);
       const roleFromDept = detectRole(o['Vị trí']);
       if ((!detectDepartment(o['Vị trí']) && deptFromRole) || (!detectRole(o['Chức vụ']) && roleFromDept)) {
@@ -2207,6 +2312,7 @@
       o['Vị trí'] = normalizeDepartment(o['Vị trí'] || '');
       o['Chức vụ'] = normalizeRole(o['Chức vụ'] || '');
       return {
+        '__ROW': String(o['__ROW'] || o['__row'] || o['ROW'] || '').trim(),
         'TT': String(o['TT'] || '').trim(),
         'Họ tên': String(o['Họ tên'] || '').trim(),
         'Chức vụ': String(o['Chức vụ'] || '').trim(),
@@ -2279,7 +2385,7 @@
     function preparePeople(rows) {
       let duplicateRowsRemoved = 0;
       let duplicatePhonesCollapsed = 0;
-      const exactMap = new Map();
+      const mergedMap = new Map();
 
       rows.forEach((row, index) => {
         const normalized = normalizeRowObject(row);
@@ -2287,30 +2393,55 @@
         const roleRaw = String(normalized['Chức vụ'] || '').trim();
         const departmentRaw = String(normalized['Vị trí'] || '').trim();
         const tt = String(normalized['TT'] || index + 1).trim();
+        const rowKey = String(normalized['__ROW'] || '').trim();
 
         if (!name && !roleRaw && !departmentRaw && !normalized['SĐT 1'] && !normalized['SĐT 2']) return;
 
         const phoneInfo = extractPhones(normalized['SĐT 1'], normalized['SĐT 2']);
         duplicatePhonesCollapsed += phoneInfo.collapsedCount;
+        const identityKey = [norm(name || ('row-' + (rowKey || tt || index + 1))), norm(departmentRaw), norm(roleRaw)].join('::');
+        const identityFallback = identityKey === '::' ? ['fallback', norm(tt || String(index + 1)), norm(rowKey || String(index + 1))].join('::') : identityKey;
 
-        const person = {
-          id: '',
+        let person = mergedMap.get(identityFallback);
+        if (!person) {
+          person = {
+            id: identityFallback,
+            rowKey: rowKey,
+            rowKeys: rowKey ? [rowKey] : [],
+            sourceRows: [],
+            tt,
+            name: name || 'Chưa rõ họ tên',
+            department: departmentRaw || 'Chưa rõ bộ phận',
+            role: roleRaw || 'Chưa rõ chức vụ',
+            phones: [],
+            phoneDisplays: []
+          };
+          mergedMap.set(identityFallback, person);
+        } else {
+          duplicateRowsRemoved += 1;
+        }
+
+        if (rowKey && !person.rowKeys.includes(rowKey)) person.rowKeys.push(rowKey);
+        person.sourceRows.push({
+          rowKey,
           tt,
           name: name || 'Chưa rõ họ tên',
           department: departmentRaw || 'Chưa rõ bộ phận',
           role: roleRaw || 'Chưa rõ chức vụ',
-          phones: phoneInfo.uniquePhones,
-          phoneDisplays: phoneInfo.uniquePhones.map(formatPhoneDisplay)
-        };
+          phones: phoneInfo.uniquePhones.slice()
+        });
 
-        const exactKey = [norm(person.tt), norm(person.name), norm(person.department), norm(person.role), [...person.phones].sort().join('|')].join('::');
-        if (exactMap.has(exactKey)) { duplicateRowsRemoved += 1; return; }
-        person.id = exactKey;
-        person.searchIndex = buildSearchIndex(person);
-        exactMap.set(exactKey, person);
+        const mergedPhones = normalizePhoneArray([...(person.phones || []), ...phoneInfo.uniquePhones]);
+        person.phones = mergedPhones;
+        person.phoneDisplays = mergedPhones.map(formatPhoneDisplay);
       });
 
-      const people = [...exactMap.values()].sort(comparePeopleBase);
+      const people = [...mergedMap.values()].map(person => {
+        person.rowKey = person.rowKey || ((person.sourceRows || []).find(item => item.rowKey) || {}).rowKey || '';
+        person.searchIndex = buildSearchIndex(person);
+        person.hasMergedDuplicates = (person.sourceRows || []).length > 1;
+        return person;
+      }).sort(comparePeopleBase);
 
       return { people, duplicateRowsRemoved, duplicatePhonesCollapsed };
     }
@@ -2346,6 +2477,7 @@
       }
       const totalPhones = state.filtered.reduce((sum, p) => sum + p.phones.length, 0);
       const parts = [`Hiển thị ${state.filtered.length} nhân sự`, `${totalPhones} số điện thoại`];
+      if (state.duplicateRowsRemoved > 0) parts.push(`Đã gộp ${state.duplicateRowsRemoved} bản ghi trùng`);
       if (state.activeDept !== 'Tất cả') parts.push('Bộ phận: ' + state.activeDept);
       if (state.activeRole !== ROLE_ALL) parts.push('Chức vụ: ' + state.activeRole);
       if (state.usingCache) parts.push('Đang dùng dữ liệu lưu gần nhất');
@@ -2493,13 +2625,15 @@
       const box = document.getElementById('update-current-info');
       if (title) title.classList.remove('hidden');
       box.classList.remove('hidden');
-      box.innerHTML = `<b>${escapeHtml(person.name)}</b><br>Bộ phận: <b>${escapeHtml(person.department)}</b> • Chức vụ: <b>${escapeHtml(person.role)}</b><br>SĐT hiện tại: <b>${escapeHtml(person.phoneDisplays.join(', ') || 'Chưa có')}</b>`;
+      const duplicateNote = person.hasMergedDuplicates ? `<br><span style="color:#b45309; font-weight:700;">Đã phát hiện ${escapeHtml(String((person.sourceRows || []).length))} bản ghi trùng và đang gộp để tránh hiển thị lặp.</span>` : '';
+      box.innerHTML = `<b>${escapeHtml(person.name)}</b><br>Bộ phận: <b>${escapeHtml(person.department)}</b> • Chức vụ: <b>${escapeHtml(person.role)}</b><br>SĐT hiện tại: <b>${escapeHtml(person.phoneDisplays.join(', ') || 'Chưa có')}</b>${duplicateNote}`;
     }
 
     function updateDeletePreview(person) {
       const box = document.getElementById('delete-preview');
       box.classList.remove('hidden');
-      box.innerHTML = `Sẽ xóa: <b>${escapeHtml(person.name)}</b><br>Bộ phận: ${escapeHtml(person.department)} • Chức vụ: ${escapeHtml(person.role)}<br>SĐT: ${escapeHtml(person.phoneDisplays.join(', ') || 'Chưa có')}`;
+      const duplicateNote = person.hasMergedDuplicates ? `<br><b>Lưu ý:</b> thao tác này sẽ xóa toàn bộ ${escapeHtml(String((person.sourceRows || []).length))} bản ghi trùng của cá nhân này.` : '';
+      box.innerHTML = `Sẽ xóa: <b>${escapeHtml(person.name)}</b><br>Bộ phận: ${escapeHtml(person.department)} • Chức vụ: ${escapeHtml(person.role)}<br>SĐT: ${escapeHtml(person.phoneDisplays.join(', ') || 'Chưa có')}${duplicateNote}`;
     }
 
     function openQrModal(phone, display) {
@@ -2826,11 +2960,15 @@
     }
 
     function closeAdminQuickly(message = 'Đã nhận thao tác, đang đồng bộ nền...', icon = '⚡') {
-      resetAddForm();
-      resetUpdateForm();
-      resetDeleteForm();
       closeModal(els.adminModal);
       showToast(message, 'ok', icon);
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          resetAddForm();
+          resetUpdateForm();
+          resetDeleteForm();
+        }, 90);
+      });
     }
 
     function resetAddForm() {
@@ -2977,13 +3115,10 @@
 
         if (!name) { showToast('Vui lòng nhập họ tên nhân sự.', 'error', '⚠️'); Sound.error(); return; }
         if (!checkPass(pass)) { showPassError('add-confirm-pass', 'add-pass-error'); return; }
+        const addConstraintError = getConstraintError(name, department, role);
+        if (addConstraintError) { showToast(addConstraintError, 'error', '⚠️'); Sound.error(); return; }
 
-        const verifyAdd = () => state.people.some(item =>
-          norm(item.name) === norm(name) &&
-          normalizeDepartment(item.department) === normalizeDepartment(department) &&
-          normalizeRole(item.role) === normalizeRole(role) &&
-          samePhoneList(item.phones, phones)
-        );
+        const verifyAdd = () => state.people.some(item => sameIdentity(item, name, department, role));
 
         const btn = document.getElementById('addSubmitBtn');
         const idleHtml = btn.innerHTML;
@@ -3001,7 +3136,7 @@
             applyOptimisticMutation('delete', { tt: optimisticTT });
             applyOptimisticMutation('add', { tt: String(result.tt).trim(), name, department, role, phone1, phone2 });
           }
-          scheduleBackgroundSync(180);
+          scheduleBackgroundSync([160, 900, 2200]);
           Sound.success(); showToast(result.msg || 'Đã thêm nhân sự.', 'success', '✅');
         } else {
           restoreRawRowsSnapshot(snapshot, 'Đã khôi phục dữ liệu do ghi thêm mới chưa thành công');
@@ -3026,6 +3161,8 @@
         const phones = phonePayload.phones;
 
         if (!name) { showToast('Họ tên không được để trống.', 'error', '⚠️'); Sound.error(); return; }
+        const updateConstraintError = getConstraintError(name, department, role, person.id);
+        if (updateConstraintError) { showToast(updateConstraintError, 'error', '⚠️'); Sound.error(); return; }
 
         const oldPhonePayload = encodePhonesForStorage(person.phones);
         const oldPhone1 = oldPhonePayload.phone1;
@@ -3039,6 +3176,7 @@
         if (noChanges) { showToast('Chưa có thay đổi để cập nhật.', 'ok', 'ℹ️'); return; }
 
         const verifyUpdate = () => state.people.some(item =>
+          item.id === person.id &&
           normalizeComparableText(item.name) === normalizeComparableText(name) &&
           normalizeDepartment(item.department) === normalizeDepartment(department) &&
           normalizeRole(item.role) === normalizeRole(role) &&
@@ -3049,14 +3187,14 @@
         const idleHtml = btn.innerHTML;
         const snapshot = takeRawRowsSnapshot();
 
-        applyOptimisticMutation('update', { tt: person.tt, name, department, role, phone1, phone2 });
+        applyOptimisticMutation('update', { rowKey: person.rowKey, mergeRowKeys: getPersonRowKeys(person), tt: person.tt, name, department, role, phone1, phone2 });
         setButtonBusy(btn, true, idleHtml, 'Đang đồng bộ...');
         closeAdminQuickly('Đã ghi nhận cập nhật, đang đồng bộ nền...', '⚡');
 
-        const result = await callScript({ action: 'update', tt: person.tt, personId: person.id, oldName: person.name, oldDepartment: person.department, oldRole: person.role, oldPhone1, oldPhone2, name, department, role, phone1, phone2 }, pass, verifyUpdate);
+        const result = await callScript({ action: 'update', rowKey: person.rowKey, mergeRowKeys: JSON.stringify(getPersonRowKeys(person)), tt: person.tt, personId: person.id, oldName: person.name, oldDepartment: person.department, oldRole: person.role, oldPhone1, oldPhone2, name, department, role, phone1, phone2 }, pass, verifyUpdate);
         setButtonBusy(btn, false, idleHtml, '');
         if (result.ok) {
-          scheduleBackgroundSync(180);
+          scheduleBackgroundSync([160, 900, 2200]);
           Sound.success(); showToast(result.msg || 'Đã cập nhật thông tin.', 'success', '✅');
         } else {
           restoreRawRowsSnapshot(snapshot, 'Đã khôi phục dữ liệu do cập nhật chưa thành công');
@@ -3078,14 +3216,14 @@
         const idleHtml = btn.innerHTML;
         const snapshot = takeRawRowsSnapshot();
 
-        applyOptimisticMutation('delete', { tt: person.tt });
+        applyOptimisticMutation('delete', { rowKey: person.rowKey, mergeRowKeys: getPersonRowKeys(person), tt: person.tt });
         setButtonBusy(btn, true, idleHtml, 'Đang đồng bộ...');
         closeAdminQuickly('Đã ghi nhận xóa, đang đồng bộ nền...', '⚡');
 
-        const result = await callScript({ action: 'delete', tt: person.tt, personId: person.id, oldName: person.name, oldDepartment: person.department, oldRole: person.role }, pass, verifyDelete);
+        const result = await callScript({ action: 'delete', rowKey: person.rowKey, mergeRowKeys: JSON.stringify(getPersonRowKeys(person)), tt: person.tt, personId: person.id, oldName: person.name, oldDepartment: person.department, oldRole: person.role, oldPhone1: encodePhonesForStorage(person.phones).phone1, oldPhone2: encodePhonesForStorage(person.phones).phone2 }, pass, verifyDelete);
         setButtonBusy(btn, false, idleHtml, '');
         if (result.ok) {
-          scheduleBackgroundSync(180);
+          scheduleBackgroundSync([160, 900, 2200]);
           Sound.success(); showToast(result.msg || 'Đã xóa nhân sự.', 'success', '✅');
         } else {
           restoreRawRowsSnapshot(snapshot, 'Đã khôi phục dữ liệu do xóa chưa thành công');
@@ -3101,11 +3239,11 @@
         clearTimeout(searchDebounceTimer);
         searchDebounceTimer = setTimeout(() => {
           state.query = value;
-          render();
-        }, 70);
+          queueRender(false);
+        }, IS_COMPACT_MOBILE ? 45 : 60);
       });
       els.clearBtn.addEventListener('click', () => {
-        Sound.tap(); state.query = ''; els.searchInput.value = ''; els.searchInput.focus(); render();
+        Sound.tap(); state.query = ''; els.searchInput.value = ''; els.searchInput.focus(); queueRender(false);
       });
       els.refreshBtn.addEventListener('click', () => { Sound.tap(); vibrate(10); syncData(); });
       if (els.retryBtn) els.retryBtn.addEventListener('click', () => { Sound.tap(); vibrate(10); syncData(); });
@@ -3133,7 +3271,7 @@
 
 
       els.adminBtn.addEventListener('click', () => {
-        els.passInput.value = ''; els.passError.classList.remove('show'); openModal(els.passModal); setTimeout(() => els.passInput.focus(), 250);
+        els.passInput.value = ''; els.passError.classList.remove('show'); openModal(els.passModal); setTimeout(() => els.passInput.focus(), 120);
       });
       els.closePassBtn.addEventListener('click', () => closeModal(els.passModal));
       els.closeAdminBtn.addEventListener('click', () => closeModal(els.adminModal));
@@ -3152,7 +3290,7 @@
         closeModal(els.passModal);
         els.scriptNotice.style.display = (!APP.scriptUrl || !/\/exec(\?|$)/.test(APP.scriptUrl)) ? 'block' : 'none';
         populatePersonDropdowns(); resetAddForm(); resetUpdateForm(); resetDeleteForm();
-        setTimeout(() => openModal(els.adminModal), 140); Sound.success();
+        setTimeout(() => { openModal(els.adminModal); }, 80); Sound.success();
       }
       els.passSubmitBtn.addEventListener('click', submitPassword);
       els.passInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitPassword(); });
