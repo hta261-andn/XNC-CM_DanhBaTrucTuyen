@@ -95,18 +95,44 @@
       text-transform: uppercase;
     }
     .title-line-2 span { display: inline-block; }
-    .hero-actions-row {
+    .top-actions {
+      padding: 14px 16px 0;
+      background: linear-gradient(180deg, rgba(255,255,255,.78), rgba(255,255,255,.94));
+    }
+    .top-actions .btn-admin {
+      background: linear-gradient(180deg, #8b1220, #6f0f19);
+      color: #fff;
+      border: 1px solid rgba(139,18,32,.22);
+      box-shadow: 0 10px 20px rgba(139,18,32,.18);
+    }
+    .top-actions .btn-admin:hover {
+      background: linear-gradient(180deg, #971424, #76111b);
+    }
+    .top-actions .hero-actions #adminBtn {
+      display: inline-flex !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      color: #ffffff !important;
+      background: linear-gradient(180deg, #8b1220, #6f0f19) !important;
+      border: 1px solid rgba(139,18,32,.22) !important;
+      box-shadow: 0 10px 20px rgba(139,18,32,.18) !important;
       position: relative;
-      z-index: 1;
-      margin-top: 14px;
-      display: flex;
-      justify-content: center;
+      z-index: 3;
+      -webkit-text-fill-color: #ffffff;
+    }
+    .top-actions .hero-actions #adminBtn span,
+    .top-actions .hero-actions #adminBtn svg {
+      opacity: 1 !important;
+      visibility: visible !important;
+      color: inherit !important;
+      fill: none;
     }
     .hero-actions {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, auto));
       gap: 10px;
       align-items: center;
+      justify-content: center;
     }
     .btn, .tiny-btn, .icon-toggle {
       border: 0;
@@ -177,7 +203,7 @@
     }
     .search-row {
       display: grid;
-      grid-template-columns: 1fr auto auto;
+      grid-template-columns: 1fr;
       gap: 10px;
       align-items: center;
     }
@@ -220,8 +246,20 @@
     }
     .clear-btn.active { display: inline-grid; place-items: center; }
 
+    .toolbar .btn-ghost {
+      background: #f8fafc;
+      color: #475569;
+      border: 1px solid rgba(148,163,184,.22);
+      box-shadow: none;
+    }
+    .toolbar .btn-ghost:hover {
+      background: #f1f5f9;
+      border-color: rgba(139,18,32,.16);
+      color: #7a1221;
+    }
+
     .filters {
-      margin-top: 8px;
+      margin-top: 4px;
       display: grid;
       grid-template-columns: 1fr;
       gap: 10px;
@@ -283,6 +321,26 @@
     .picker-search:focus {
       border-color: rgba(139,18,32,.45);
       box-shadow: 0 0 0 4px rgba(139,18,32,.08);
+    }
+    .picker-search-wrap {
+      position: relative;
+    }
+    .picker-search-wrap .picker-search {
+      padding-right: 46px;
+    }
+    .picker-clear-btn {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: none;
+      place-items: center;
+      background: #f3f4f6;
+      color: #6b7280;
+      border: none;
+    }
+    .picker-clear-btn.active {
+      display: inline-grid;
     }
     .picker-section + .picker-section { margin-top: 12px; }
     .picker-label {
@@ -807,6 +865,10 @@
       color: #7a1221;
       line-height: 1.4;
     }
+    .section-title.tight {
+      margin-top: 2px;
+      margin-bottom: 10px;
+    }
     .picker-heading {
       margin-bottom: 8px;
       color: #7a1221;
@@ -1019,9 +1081,50 @@
       font-weight: 700;
     }
 
+    .dynamic-phone-list {
+      display: grid;
+      gap: 10px;
+    }
+    .phone-field-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center;
+    }
+    .phone-field-row .form-input {
+      margin: 0;
+    }
+    .phone-remove-btn,
+    .phone-add-inline-btn {
+      min-height: 48px;
+      min-width: 48px;
+      padding: 0 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,.22);
+      background: #fff;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .phone-remove-btn {
+      color: #b91c1c;
+      border-color: rgba(220,38,38,.2);
+      background: #fff7f7;
+    }
+    .phone-add-inline-btn {
+      color: #7a1221;
+      border-color: rgba(139,18,32,.18);
+      background: #f8fafc;
+    }
+    .phone-tools {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
     @media (max-width: 980px) {
       .hero-grid { grid-template-columns: 90px 1fr; }
-      .hero-actions-row { justify-content: center; }
+      .hero-actions { justify-content: center; }
       .filters { grid-template-columns: 1fr; }
       .card-grid { grid-template-columns: 1fr; }
     }
@@ -1033,15 +1136,16 @@
       .logo-wrap img { width: 74px; height: 74px; }
       .title-line-1 { font-size: clamp(16px, 4.6vw, 20px); line-height: 1.12; letter-spacing: .1px; white-space: nowrap; }
       .title-line-2 { font-size: 11px; line-height: 1.32; }
-      .hero-actions-row { margin-top: 10px; }
+      .top-actions { padding: 10px 12px 0; }
       .hero-actions { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
       .hero-actions .btn { width: 100%; min-height: 44px; justify-content: center; padding: 0 10px; font-size: clamp(10.5px, 3.05vw, 12.5px); gap: 6px; }
       .hero-actions .btn span:last-child { white-space: nowrap; }
       .main-panel { margin-top: 10px; border-radius: 22px; }
-      .toolbar { padding: 12px; }
+      .toolbar { padding: 10px 12px 12px; }
       .search-row { grid-template-columns: 1fr; gap: 8px; }
+      .search-wrap { grid-column: auto; }
       .search-input { min-height: 50px; font-size: 15px; }
-      .filters { margin-top: 6px; gap: 8px; }
+      .filters { margin-top: 4px; gap: 8px; }
       .filter-box { padding: 10px; border-radius: 16px; }
       .chip { min-height: 40px; font-size: 12px; padding: 0 12px; }
       .mini-summary { padding: 10px 12px 8px; }
@@ -1109,7 +1213,10 @@
           <p class="title-line-2"><span>PHÒNG QUẢN LÝ XUẤT NHẬP CẢNH</span><br><span>CÔNG AN TỈNH CÀ MAU</span></p>
         </div>
       </div>
-      <div class="hero-actions-row">
+    </header>
+
+    <main class="main-panel">
+      <section class="top-actions">
         <div class="hero-actions">
           <button class="btn btn-primary" id="refreshBtn" type="button">
             <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4v6h-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
@@ -1120,10 +1227,8 @@
             <span>Điều chỉnh/Bổ sung SĐT</span>
           </button>
         </div>
-      </div>
-    </header>
+      </section>
 
-    <main class="main-panel">
       <section class="toolbar">
         <div class="search-row">
           <div class="search-wrap">
@@ -1131,14 +1236,6 @@
             <input id="searchInput" class="search-input" type="text" placeholder="Tìm theo họ tên, bộ phận, chức vụ hoặc số điện thoại..." autocomplete="off" />
             <button id="clearBtn" class="clear-btn" type="button" aria-label="Xóa tìm kiếm">×</button>
           </div>
-          <button class="btn btn-ghost" id="resetBtn" type="button">
-            <span><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M3 4v5h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-            <span>Xóa lọc</span>
-          </button>
-          <button class="btn btn-ghost" id="copyVisibleBtn" type="button">
-            <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
-            <span>Chép số đang hiện</span>
-          </button>
         </div>
 
         <div class="filters">
@@ -1296,13 +1393,13 @@
               <label class="form-label">Chức vụ <span style="color:#dc2626">*</span></label>
               <select class="form-select" id="add-role"></select>
             </div>
-            <div class="form-group">
-              <label class="form-label">Số điện thoại 1</label>
-              <input class="form-input" id="add-phone1" type="tel" placeholder="0901 234 567" />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Số điện thoại 2</label>
-              <input class="form-input" id="add-phone2" type="tel" placeholder="Để trống nếu không có" />
+            <div class="form-group span-2">
+              <label class="form-label">Số điện thoại</label>
+              <div class="dynamic-phone-list" id="add-phone-list"></div>
+              <div class="phone-tools">
+                <button class="phone-add-inline-btn" id="addPhoneFieldBtn" type="button">＋ Thêm số điện thoại</button>
+              </div>
+              <div class="helper-text">Có thể thêm nhiều số điện thoại. Hệ thống sẽ tự gộp để lưu và hiển thị đầy đủ khi mở phần cập nhật.</div>
             </div>
           </div>
           <div class="confirm-row">
@@ -1326,7 +1423,10 @@
           <div class="form-group">
             <label class="form-label">Chọn nhanh nhân sự cần cập nhật</label>
             <div class="picker-box">
-              <input class="picker-search" id="update-picker-search" type="text" placeholder="Tìm theo họ tên, bộ phận, chức vụ hoặc số điện thoại..." autocomplete="off" />
+              <div class="picker-search-wrap">
+                <input class="picker-search" id="update-picker-search" type="text" placeholder="Tìm theo họ tên, bộ phận, chức vụ hoặc số điện thoại..." autocomplete="off" />
+                <button class="clear-btn picker-clear-btn" id="update-picker-clear" type="button" aria-label="Xóa tìm kiếm cập nhật">×</button>
+              </div>
               <div class="picker-section">
                 <div class="picker-label">Bộ phận</div>
                 <div class="chips" id="updateDeptChips"></div>
@@ -1345,6 +1445,7 @@
               <option value="">-- Chọn người --</option>
             </select>
           </div>
+          <div class="section-title tight hidden" id="update-current-title">Thông tin hiện tại</div>
           <div class="preview-box hidden" id="update-current-info"></div>
           <div class="section-title">Thông tin cần điều chỉnh</div>
           <div class="form-grid">
@@ -1360,13 +1461,13 @@
               <label class="form-label">Chức vụ</label>
               <select class="form-select" id="update-role"></select>
             </div>
-            <div class="form-group">
-              <label class="form-label">SĐT 1</label>
-              <input class="form-input" id="update-phone1" type="tel" placeholder="Số điện thoại 1..." />
-            </div>
-            <div class="form-group">
-              <label class="form-label">SĐT 2</label>
-              <input class="form-input" id="update-phone2" type="tel" placeholder="Số điện thoại 2..." />
+            <div class="form-group span-2">
+              <label class="form-label">Số điện thoại hiện có / cần điều chỉnh</label>
+              <div class="dynamic-phone-list" id="update-phone-list"></div>
+              <div class="phone-tools">
+                <button class="phone-add-inline-btn" id="updateAddPhoneFieldBtn" type="button">＋ Thêm số điện thoại</button>
+              </div>
+              <div class="helper-text">Mỗi số nằm ở một ô riêng. Có thể nhấn dấu × để bỏ nhanh số không còn sử dụng.</div>
             </div>
           </div>
           <div class="confirm-row">
@@ -1393,7 +1494,10 @@
           <div class="form-group">
             <label class="form-label">Chọn nhanh nhân sự cần xóa</label>
             <div class="picker-box">
-              <input class="picker-search" id="delete-picker-search" type="text" placeholder="Tìm theo họ tên, bộ phận, chức vụ hoặc số điện thoại..." autocomplete="off" />
+              <div class="picker-search-wrap">
+                <input class="picker-search" id="delete-picker-search" type="text" placeholder="Tìm theo họ tên, bộ phận, chức vụ hoặc số điện thoại..." autocomplete="off" />
+                <button class="clear-btn picker-clear-btn" id="delete-picker-clear" type="button" aria-label="Xóa tìm kiếm xóa nhân sự">×</button>
+              </div>
               <div class="picker-section">
                 <div class="picker-label">Bộ phận</div>
                 <div class="chips" id="deleteDeptChips"></div>
@@ -1403,7 +1507,7 @@
                 <div class="chips" id="deleteRoleChips"></div>
               </div>
               <div class="picker-section">
-                <div class="picker-label">Nhân sự phù hợp</div>
+                <div class="picker-label">Nhấn để chọn cá nhân cần xóa</div>
                 <div class="picker-list" id="deletePersonList"></div>
               </div>
             </div>
@@ -1437,15 +1541,15 @@
 
   <script>
     const APP = {
-      version: "6.2-ui-mobile-namefix",
+      version: "6.7-superfast-close-v17",
       sheetId: "12ScVQf6SvfDt5kSKvLkX5BvFxx3IptISKaWsl3qi65w",
       gid: "0",
-      scriptUrl: "https://script.google.com/macros/s/AKfycbw3ieo6Iq_RrBHL7lKJBKWIHEpey9cd9eJrqSOAD1Lf3PCpE-ALhzBI_PMrgPCa30IaJw/exec",
+      scriptUrl: "https://script.google.com/macros/s/AKfycbxhnDoQLoSWhnYpM-tFY9CHcX1zr-a8Lf279e2YEzRPhn-deY5DlmD5DZpd8a1d43rH/exec",
       adminPassword: "310326Xnc@",
       departmentOptions: ["BCH", "Đội 1", "Đội 2", "Đội 3"],
       roleOptions: ["Trưởng phòng", "Phó Trưởng phòng", "Đội trưởng", "Phó Đội trưởng", "Cán bộ"],
-      cacheKey: "xnc_phonebook_cache_v6",
-      cacheMetaKey: "xnc_phonebook_cache_meta_v6"
+      cacheKey: "xnc_phonebook_cache_v7",
+      cacheMetaKey: "xnc_phonebook_cache_meta_v7"
     };
 
     const ICONS = {
@@ -1536,8 +1640,6 @@
     const els = {
       searchInput: document.getElementById('searchInput'),
       clearBtn: document.getElementById('clearBtn'),
-      resetBtn: document.getElementById('resetBtn'),
-      copyVisibleBtn: document.getElementById('copyVisibleBtn'),
       refreshBtn: document.getElementById('refreshBtn'),
       retryBtn: document.getElementById('retryBtn'),
       adminBtn: document.getElementById('adminBtn'),
@@ -1587,6 +1689,7 @@
     let qrPhone = '';
     let toastTimer = null;
     let searchDebounceTimer = null;
+    let backgroundSyncTimer = null;
 
     function escapeHtml(value) {
       return String(value ?? '')
@@ -1783,6 +1886,61 @@
       return { rows, meta: meta || {} };
     }
 
+    function buildRawRowFromValues(values) {
+      return normalizeRowObject({
+        'TT': String(values.tt || '').trim(),
+        'Họ tên': String(values.name || '').trim(),
+        'Chức vụ': normalizeRole(values.role || ''),
+        'Vị trí': normalizeDepartment(values.department || ''),
+        'SĐT 1': String(values.phone1 || '').trim(),
+        'SĐT 2': String(values.phone2 || '').trim()
+      });
+    }
+
+    function getNextLocalTT() {
+      const maxTT = (state.rawRows || []).reduce((max, row) => {
+        const value = parseInt(String((row && row['TT']) || '').trim(), 10);
+        return Number.isFinite(value) ? Math.max(max, value) : max;
+      }, 0);
+      return String(maxTT + 1);
+    }
+
+    function applyOptimisticMutation(type, values) {
+      let nextRows = Array.isArray(state.rawRows) ? state.rawRows.map(row => normalizeRowObject(row)) : [];
+      const tt = String(values.tt || '').trim();
+
+      if (type === 'add') {
+        nextRows.push(buildRawRowFromValues(values));
+      } else if (type === 'update') {
+        nextRows = nextRows.map(row => String((row && row['TT']) || '').trim() === tt ? buildRawRowFromValues(values) : row);
+      } else if (type === 'delete') {
+        nextRows = nextRows.filter(row => String((row && row['TT']) || '').trim() !== tt);
+      }
+
+      const fastDetail = state.dataDetail
+        ? state.dataDetail + ' • Giao diện đã cập nhật tức thời'
+        : 'Giao diện đã cập nhật tức thời';
+
+      applyDataRows(nextRows, state.dataSource || 'Apps Script', fastDetail, false, null);
+    }
+
+    function takeRawRowsSnapshot() {
+      return Array.isArray(state.rawRows) ? state.rawRows.map(row => normalizeRowObject(row)) : [];
+    }
+
+    function restoreRawRowsSnapshot(snapshot, detail = '') {
+      if (!Array.isArray(snapshot)) return;
+      const restoreDetail = detail || state.dataDetail || 'Đã khôi phục dữ liệu trước khi ghi';
+      applyDataRows(snapshot, state.dataSource || 'Apps Script', restoreDetail, false, null);
+    }
+
+    function scheduleBackgroundSync(delay = 220) {
+      clearTimeout(backgroundSyncTimer);
+      backgroundSyncTimer = setTimeout(() => {
+        refreshDataSilently().catch(() => {});
+      }, delay);
+    }
+
     function renderRoleChips() {
       const roles = getAvailableRolesForDept(state.activeDept, state.people);
       if (state.activeRole !== ROLE_ALL && !roles.includes(state.activeRole)) state.activeRole = ROLE_ALL;
@@ -1855,7 +2013,10 @@
           hiddenSelect.value = personId;
           const person = getPersonById(personId);
           if (!person) return;
-          if (mode === 'update') fillUpdateForm(person);
+          if (mode === 'update') {
+            fillUpdateForm(person);
+            scrollUpdateEditSectionIntoView();
+          }
           if (mode === 'delete') updateDeletePreview(person);
           renderAdminPersonPicker(mode);
         });
@@ -1865,6 +2026,13 @@
     function runTransition(fn) {
       if (document.startViewTransition) document.startViewTransition(fn);
       else fn();
+    }
+
+    function updatePickerClearButton(mode) {
+      const searchEl = document.getElementById(`${mode}-picker-search`);
+      const clearEl = document.getElementById(`${mode}-picker-clear`);
+      if (!searchEl || !clearEl) return;
+      clearEl.classList.toggle('active', !!searchEl.value.trim());
     }
 
     async function copyText(text, button) {
@@ -2301,14 +2469,29 @@
       });
     }
 
+    function scrollUpdateEditSectionIntoView() {
+      const target = document.getElementById('update-current-title') || document.getElementById('update-name');
+      if (!target) return;
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          try {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+          } catch (e) {
+            target.scrollIntoView(true);
+          }
+        }, 80);
+      });
+    }
+
     function fillUpdateForm(person) {
       document.getElementById('update-name').value = person.name || '';
       const deptValue = APP.departmentOptions.includes(person.department) ? person.department : APP.departmentOptions[0];
       document.getElementById('update-dept').value = deptValue;
       renderRoleOptionsForSelect('update-role', deptValue, person.role);
-      document.getElementById('update-phone1').value = person.phoneDisplays[0] || '';
-      document.getElementById('update-phone2').value = person.phoneDisplays[1] || '';
+      ensurePhoneRows('update-phone-list', person.phoneDisplays.length ? person.phoneDisplays : [''], 'Số điện thoại...');
+      const title = document.getElementById('update-current-title');
       const box = document.getElementById('update-current-info');
+      if (title) title.classList.remove('hidden');
       box.classList.remove('hidden');
       box.innerHTML = `<b>${escapeHtml(person.name)}</b><br>Bộ phận: <b>${escapeHtml(person.department)}</b> • Chức vụ: <b>${escapeHtml(person.role)}</b><br>SĐT hiện tại: <b>${escapeHtml(person.phoneDisplays.join(', ') || 'Chưa có')}</b>`;
     }
@@ -2540,7 +2723,7 @@
       return { ok: false, msg: state.lastError || 'Không thể làm mới dữ liệu.' };
     }
 
-    async function verifyWriteWithRefresh(verifyFn, attempts = 4, delayMs = 1100) {
+    async function verifyWriteWithRefresh(verifyFn, attempts = 2, delayMs = 180) {
       if (typeof verifyFn !== 'function') return false;
       for (let i = 0; i < attempts; i += 1) {
         await wait(delayMs);
@@ -2586,12 +2769,75 @@
       setTimeout(() => input.classList.remove('error'), 700);
     }
 
+    function normalizePhoneArray(values) {
+      const unique = [];
+      const seen = new Set();
+      (values || []).forEach(value => {
+        const digits = standardizeDigits(value);
+        if (!digits || seen.has(digits)) return;
+        seen.add(digits);
+        unique.push(digits);
+      });
+      return unique;
+    }
+
+    function samePhoneList(listA, listB) {
+      const a = normalizePhoneArray(listA);
+      const b = normalizePhoneArray(listB);
+      if (a.length !== b.length) return false;
+      return a.every((item, idx) => item === b[idx]);
+    }
+
+    function encodePhonesForStorage(phoneList) {
+      const phones = normalizePhoneArray(phoneList);
+      return {
+        phones,
+        phone1: phones[0] || '',
+        phone2: phones.slice(1).join(' / ')
+      };
+    }
+
+    function buildPhoneFieldRow(value = '', placeholder = '0901 234 567') {
+      return `
+        <div class="phone-field-row">
+          <input class="form-input" data-phone-item="1" type="tel" placeholder="${escapeHtml(placeholder)}" value="${escapeHtml(value)}" />
+          <button class="phone-remove-btn" type="button" title="Xóa số này" aria-label="Xóa số này">×</button>
+        </div>
+      `;
+    }
+
+    function ensurePhoneRows(containerId, values = [], placeholder = '0901 234 567') {
+      const wrap = document.getElementById(containerId);
+      if (!wrap) return;
+      const list = (values && values.length ? values : ['']).map(value => formatPhoneDisplay(value) || String(value || '').trim());
+      wrap.innerHTML = list.map(value => buildPhoneFieldRow(value, placeholder)).join('');
+    }
+
+    function appendPhoneRow(containerId, value = '', placeholder = '0901 234 567') {
+      const wrap = document.getElementById(containerId);
+      if (!wrap) return;
+      wrap.insertAdjacentHTML('beforeend', buildPhoneFieldRow(value, placeholder));
+    }
+
+    function collectPhoneValues(containerId) {
+      const wrap = document.getElementById(containerId);
+      if (!wrap) return [];
+      return normalizePhoneArray(Array.from(wrap.querySelectorAll('input[data-phone-item="1"]')).map(input => input.value));
+    }
+
+    function closeAdminQuickly(message = 'Đã nhận thao tác, đang đồng bộ nền...', icon = '⚡') {
+      resetAddForm();
+      resetUpdateForm();
+      resetDeleteForm();
+      closeModal(els.adminModal);
+      showToast(message, 'ok', icon);
+    }
+
     function resetAddForm() {
       document.getElementById('add-name').value = '';
       document.getElementById('add-dept').value = APP.departmentOptions[0];
       renderRoleOptionsForSelect('add-role', APP.departmentOptions[0], 'Cán bộ');
-      document.getElementById('add-phone1').value = '';
-      document.getElementById('add-phone2').value = '';
+      ensurePhoneRows('add-phone-list', ['']);
       document.getElementById('add-confirm-pass').value = '';
       clearPassError('add-confirm-pass', 'add-pass-error');
     }
@@ -2601,13 +2847,14 @@
       document.getElementById('update-name').value = '';
       document.getElementById('update-dept').value = APP.departmentOptions[0];
       renderRoleOptionsForSelect('update-role', APP.departmentOptions[0], 'Cán bộ');
-      document.getElementById('update-phone1').value = '';
-      document.getElementById('update-phone2').value = '';
+      ensurePhoneRows('update-phone-list', [''], 'Số điện thoại...');
       document.getElementById('update-confirm-pass').value = '';
       document.getElementById('update-picker-search').value = '';
       adminPickerState.update = { dept: 'Tất cả', role: ROLE_ALL, query: '', selectedId: '' };
       document.getElementById('update-current-info').classList.add('hidden');
+      document.getElementById('update-current-title').classList.add('hidden');
       clearPassError('update-confirm-pass', 'update-pass-error');
+      updatePickerClearButton('update');
       renderAdminPersonPicker('update');
     }
 
@@ -2618,6 +2865,7 @@
       adminPickerState.delete = { dept: 'Tất cả', role: ROLE_ALL, query: '', selectedId: '' };
       document.getElementById('delete-preview').classList.add('hidden');
       clearPassError('delete-confirm-pass', 'delete-pass-error');
+      updatePickerClearButton('delete');
       renderAdminPersonPicker('delete');
     }
 
@@ -2639,12 +2887,41 @@
         els.setupGuideBox.style.display = shown ? 'none' : 'block';
       });
 
+      ensurePhoneRows('add-phone-list', ['']);
+      ensurePhoneRows('update-phone-list', [''], 'Số điện thoại...');
+
+      document.getElementById('addPhoneFieldBtn').addEventListener('click', () => {
+        Sound.tap();
+        appendPhoneRow('add-phone-list');
+      });
+
+      document.getElementById('updateAddPhoneFieldBtn').addEventListener('click', () => {
+        Sound.tap();
+        appendPhoneRow('update-phone-list', '', 'Số điện thoại...');
+      });
+
+      ['add-phone-list', 'update-phone-list'].forEach(containerId => {
+        const wrap = document.getElementById(containerId);
+        if (!wrap) return;
+        wrap.addEventListener('click', (e) => {
+          const removeBtn = e.target.closest('.phone-remove-btn');
+          if (!removeBtn) return;
+          Sound.tap();
+          const row = removeBtn.closest('.phone-field-row');
+          if (row) row.remove();
+          if (!wrap.querySelector('.phone-field-row')) {
+            appendPhoneRow(containerId, '', containerId === 'update-phone-list' ? 'Số điện thoại...' : '0901 234 567');
+          }
+        });
+      });
+
       document.getElementById('update-person').addEventListener('change', function() {
         const personId = parseSelectedPersonId(this.value);
         adminPickerState.update.selectedId = personId;
         const person = getPersonById(personId);
-        if (!person) { document.getElementById('update-current-info').classList.add('hidden'); renderAdminPersonPicker('update'); return; }
+        if (!person) { document.getElementById('update-current-info').classList.add('hidden'); document.getElementById('update-current-title').classList.add('hidden'); renderAdminPersonPicker('update'); return; }
         fillUpdateForm(person);
+        scrollUpdateEditSectionIntoView();
         renderAdminPersonPicker('update');
       });
 
@@ -2659,11 +2936,24 @@
 
       ['update', 'delete'].forEach(mode => {
         const searchEl = document.getElementById(`${mode}-picker-search`);
+        const clearEl = document.getElementById(`${mode}-picker-clear`);
         if (!searchEl) return;
         searchEl.addEventListener('input', () => {
           adminPickerState[mode].query = searchEl.value;
+          updatePickerClearButton(mode);
           renderAdminPersonPicker(mode);
         });
+        if (clearEl) {
+          clearEl.addEventListener('click', () => {
+            Sound.tap();
+            searchEl.value = '';
+            adminPickerState[mode].query = '';
+            updatePickerClearButton(mode);
+            renderAdminPersonPicker(mode);
+            searchEl.focus();
+          });
+        }
+        updatePickerClearButton(mode);
       });
 
       document.getElementById('add-dept').addEventListener('change', function() {
@@ -2679,8 +2969,10 @@
         const name = document.getElementById('add-name').value.trim();
         const department = document.getElementById('add-dept').value;
         const role = document.getElementById('add-role').value;
-        const phone1 = standardizeDigits(document.getElementById('add-phone1').value);
-        const phone2 = standardizeDigits(document.getElementById('add-phone2').value);
+        const phonePayload = encodePhonesForStorage(collectPhoneValues('add-phone-list'));
+        const phone1 = phonePayload.phone1;
+        const phone2 = phonePayload.phone2;
+        const phones = phonePayload.phones;
         const pass = sanitizePasswordInput(document.getElementById('add-confirm-pass').value);
 
         if (!name) { showToast('Vui lòng nhập họ tên nhân sự.', 'error', '⚠️'); Sound.error(); return; }
@@ -2690,19 +2982,29 @@
           norm(item.name) === norm(name) &&
           normalizeDepartment(item.department) === normalizeDepartment(department) &&
           normalizeRole(item.role) === normalizeRole(role) &&
-          (item.phones[0] || '') === phone1 &&
-          (item.phones[1] || '') === phone2
+          samePhoneList(item.phones, phones)
         );
 
         const btn = document.getElementById('addSubmitBtn');
         const idleHtml = btn.innerHTML;
-        setButtonBusy(btn, true, idleHtml, 'Đang gửi...');
+        const snapshot = takeRawRowsSnapshot();
+        const optimisticTT = String(getNextLocalTT()).trim();
+
+        applyOptimisticMutation('add', { tt: optimisticTT, name, department, role, phone1, phone2 });
+        setButtonBusy(btn, true, idleHtml, 'Đang đồng bộ...');
+        closeAdminQuickly('Đã thêm trên giao diện, đang đồng bộ nền...', '⚡');
+
         const result = await callScript({ action: 'add', name, department, role, phone1, phone2 }, pass, verifyAdd);
         setButtonBusy(btn, false, idleHtml, '');
         if (result.ok) {
+          if (String(result.tt || '').trim() && String(result.tt).trim() !== optimisticTT) {
+            applyOptimisticMutation('delete', { tt: optimisticTT });
+            applyOptimisticMutation('add', { tt: String(result.tt).trim(), name, department, role, phone1, phone2 });
+          }
+          scheduleBackgroundSync(180);
           Sound.success(); showToast(result.msg || 'Đã thêm nhân sự.', 'success', '✅');
-          resetAddForm(); await syncData();
         } else {
+          restoreRawRowsSnapshot(snapshot, 'Đã khôi phục dữ liệu do ghi thêm mới chưa thành công');
           Sound.error(); showToast(result.msg || 'Không thể thêm nhân sự.', 'error', '❌');
           els.scriptNotice.style.display = 'block';
         }
@@ -2718,19 +3020,21 @@
         const name = document.getElementById('update-name').value.trim();
         const department = document.getElementById('update-dept').value;
         const role = document.getElementById('update-role').value;
-        const phone1 = standardizeDigits(document.getElementById('update-phone1').value);
-        const phone2 = standardizeDigits(document.getElementById('update-phone2').value);
+        const phonePayload = encodePhonesForStorage(collectPhoneValues('update-phone-list'));
+        const phone1 = phonePayload.phone1;
+        const phone2 = phonePayload.phone2;
+        const phones = phonePayload.phones;
 
         if (!name) { showToast('Họ tên không được để trống.', 'error', '⚠️'); Sound.error(); return; }
 
-        const oldPhone1 = person.phones[0] || '';
-        const oldPhone2 = person.phones[1] || '';
+        const oldPhonePayload = encodePhonesForStorage(person.phones);
+        const oldPhone1 = oldPhonePayload.phone1;
+        const oldPhone2 = oldPhonePayload.phone2;
         const noChanges =
           normalizeComparableText(name) === normalizeComparableText(person.name) &&
           normalizeDepartment(department) === normalizeDepartment(person.department) &&
           normalizeRole(role) === normalizeRole(person.role) &&
-          phone1 === oldPhone1 &&
-          phone2 === oldPhone2;
+          samePhoneList(phones, person.phones);
 
         if (noChanges) { showToast('Chưa có thay đổi để cập nhật.', 'ok', 'ℹ️'); return; }
 
@@ -2738,19 +3042,24 @@
           normalizeComparableText(item.name) === normalizeComparableText(name) &&
           normalizeDepartment(item.department) === normalizeDepartment(department) &&
           normalizeRole(item.role) === normalizeRole(role) &&
-          (item.phones[0] || '') === phone1 &&
-          (item.phones[1] || '') === phone2
+          samePhoneList(item.phones, phones)
         );
 
         const btn = document.getElementById('updateSubmitBtn');
         const idleHtml = btn.innerHTML;
-        setButtonBusy(btn, true, idleHtml, 'Đang cập nhật...');
+        const snapshot = takeRawRowsSnapshot();
+
+        applyOptimisticMutation('update', { tt: person.tt, name, department, role, phone1, phone2 });
+        setButtonBusy(btn, true, idleHtml, 'Đang đồng bộ...');
+        closeAdminQuickly('Đã ghi nhận cập nhật, đang đồng bộ nền...', '⚡');
+
         const result = await callScript({ action: 'update', tt: person.tt, personId: person.id, oldName: person.name, oldDepartment: person.department, oldRole: person.role, oldPhone1, oldPhone2, name, department, role, phone1, phone2 }, pass, verifyUpdate);
         setButtonBusy(btn, false, idleHtml, '');
         if (result.ok) {
+          scheduleBackgroundSync(180);
           Sound.success(); showToast(result.msg || 'Đã cập nhật thông tin.', 'success', '✅');
-          resetUpdateForm(); await syncData();
         } else {
+          restoreRawRowsSnapshot(snapshot, 'Đã khôi phục dữ liệu do cập nhật chưa thành công');
           Sound.error(); showToast(result.msg || 'Không thể cập nhật.', 'error', '❌');
           els.scriptNotice.style.display = 'block';
         }
@@ -2767,13 +3076,19 @@
 
         const btn = document.getElementById('deleteSubmitBtn');
         const idleHtml = btn.innerHTML;
-        setButtonBusy(btn, true, idleHtml, 'Đang xóa...');
+        const snapshot = takeRawRowsSnapshot();
+
+        applyOptimisticMutation('delete', { tt: person.tt });
+        setButtonBusy(btn, true, idleHtml, 'Đang đồng bộ...');
+        closeAdminQuickly('Đã ghi nhận xóa, đang đồng bộ nền...', '⚡');
+
         const result = await callScript({ action: 'delete', tt: person.tt, personId: person.id, oldName: person.name, oldDepartment: person.department, oldRole: person.role }, pass, verifyDelete);
         setButtonBusy(btn, false, idleHtml, '');
         if (result.ok) {
+          scheduleBackgroundSync(180);
           Sound.success(); showToast(result.msg || 'Đã xóa nhân sự.', 'success', '✅');
-          resetDeleteForm(); await syncData();
         } else {
+          restoreRawRowsSnapshot(snapshot, 'Đã khôi phục dữ liệu do xóa chưa thành công');
           Sound.error(); showToast(result.msg || 'Không thể xóa nhân sự.', 'error', '❌');
           els.scriptNotice.style.display = 'block';
         }
@@ -2791,15 +3106,6 @@
       });
       els.clearBtn.addEventListener('click', () => {
         Sound.tap(); state.query = ''; els.searchInput.value = ''; els.searchInput.focus(); render();
-      });
-      els.resetBtn.addEventListener('click', () => {
-        Sound.tap(); state.query = ''; state.activeDept = 'Tất cả'; state.activeRole = ROLE_ALL;
-        els.searchInput.value = ''; runTransition(render);
-      });
-      els.copyVisibleBtn.addEventListener('click', async () => {
-        const phones = [...new Set(state.filtered.flatMap(p => p.phoneDisplays).filter(Boolean))];
-        if (!phones.length) { showToast('Không có số điện thoại để sao chép.', 'error', '⚠️'); Sound.error(); return; }
-        Sound.copy(); vibrate(10); await copyText(phones.join(', '), els.copyVisibleBtn); showToast('Đã sao chép các số đang hiển thị.', 'success', '✅');
       });
       els.refreshBtn.addEventListener('click', () => { Sound.tap(); vibrate(10); syncData(); });
       if (els.retryBtn) els.retryBtn.addEventListener('click', () => { Sound.tap(); vibrate(10); syncData(); });
