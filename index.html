@@ -1131,6 +1131,126 @@
       margin-top: 10px;
     }
 
+    .audit-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .audit-summary-card {
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,.18);
+      background: linear-gradient(180deg, #fff, #fff9ef);
+      padding: 12px;
+    }
+    .audit-summary-card.warn {
+      background: linear-gradient(180deg, #fff7f7, #fff);
+      border-color: rgba(220,38,38,.16);
+    }
+    .audit-summary-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: #60101a;
+      line-height: 1.1;
+    }
+    .audit-summary-label {
+      margin-top: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #64748b;
+      line-height: 1.45;
+    }
+    .audit-list {
+      display: grid;
+      gap: 12px;
+    }
+    .audit-section-title {
+      margin: 2px 0 10px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #7a1221;
+    }
+    .audit-item {
+      border-radius: 18px;
+      border: 1px solid rgba(148,163,184,.18);
+      background: #fff;
+      padding: 12px;
+      box-shadow: 0 8px 18px rgba(15,23,42,.04);
+    }
+    .audit-item.warn {
+      border-color: rgba(220,38,38,.18);
+      background: linear-gradient(180deg, #fff, #fff8f8);
+    }
+    .audit-item-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+    .audit-item-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #1f2937;
+      line-height: 1.45;
+    }
+    .audit-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(220,38,38,.14);
+      background: rgba(220,38,38,.08);
+      color: #b91c1c;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .audit-meta {
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.65;
+    }
+    .audit-sublist {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .audit-subitem {
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,.14);
+      background: #f8fafc;
+      padding: 10px;
+      font-size: 12px;
+      color: #475569;
+      line-height: 1.6;
+    }
+    .audit-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .audit-empty {
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px dashed rgba(148,163,184,.28);
+      background: rgba(248,250,252,.8);
+      color: #64748b;
+      font-size: 13px;
+      text-align: center;
+      line-height: 1.65;
+    }
+
+
+    @media (max-width: 860px) {
+      .audit-summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media (max-width: 980px) {
       .hero-grid { grid-template-columns: 90px 1fr; }
       .hero-actions { justify-content: center; }
@@ -1387,6 +1507,7 @@
           <button class="tab-btn active" data-tab="add" type="button">➕ Thêm nhân sự</button>
           <button class="tab-btn" data-tab="update" type="button">✏️ Cập nhật</button>
           <button class="tab-btn" data-tab="delete" type="button">🗑️ Xóa nhân sự</button>
+          <button class="tab-btn" data-tab="audit" type="button">🔎 Rà trùng</button>
         </div>
 
         <div class="tab-pane active" id="tab-add">
@@ -1542,6 +1663,17 @@
             </button>
           </div>
         </div>
+
+        <div class="tab-pane" id="tab-audit">
+          <div class="info-box">
+            🔎 Hệ thống tự rà các trường hợp <b>nghi trùng</b> để admin kiểm tra nhanh, tránh nhập lặp mà không nhớ. Danh sách bên dưới chỉ là <b>cảnh báo hỗ trợ</b>, không tự xóa dữ liệu.
+          </div>
+          <div class="phone-tools" style="margin-top:0; margin-bottom:12px;">
+            <button class="phone-add-inline-btn" id="duplicateScanRefreshBtn" type="button">↻ Rà lại danh sách nghi trùng</button>
+          </div>
+          <div class="audit-summary-grid" id="duplicateScanSummary"></div>
+          <div class="audit-list" id="duplicateScanList"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -1551,10 +1683,10 @@
 
   <script>
     const APP = {
-      version: "6.9-safe-dedupe-v19",
+      version: "7.0-duplicate-audit-v20",
       sheetId: "12ScVQf6SvfDt5kSKvLkX5BvFxx3IptISKaWsl3qi65w",
       gid: "0",
-      scriptUrl: "https://script.google.com/macros/s/AKfycbylzmVaU9G9-pBzHcfqN_IQqd9ohN4KEC4UZOgxEMUPsxrPEuz9sG6jdveeLqzUUk9n/exec",
+      scriptUrl: "https://script.google.com/macros/s/AKfycbxhnDoQLoSWhnYpM-tFY9CHcX1zr-a8Lf279e2YEzRPhn-deY5DlmD5DZpd8a1d43rH/exec",
       adminPassword: "310326Xnc@",
       departmentOptions: ["BCH", "Đội 1", "Đội 2", "Đội 3"],
       roleOptions: ["Trưởng phòng", "Phó Trưởng phòng", "Đội trưởng", "Phó Đội trưởng", "Cán bộ"],
@@ -1633,6 +1765,7 @@
       lastSyncAt: null,
       duplicateRowsRemoved: 0,
       duplicatePhonesCollapsed: 0,
+      duplicateAudit: { total: 0, exact: [], phone: [], updatedAt: '' },
       dataSource: '',
       dataDetail: '',
       lastError: '',
@@ -2446,6 +2579,197 @@
       return { people, duplicateRowsRemoved, duplicatePhonesCollapsed };
     }
 
+    function buildDuplicateAudit(rows) {
+      const rawRecords = [];
+      (rows || []).forEach((row, index) => {
+        const normalized = normalizeRowObject(row);
+        const name = String(normalized['Họ tên'] || '').trim();
+        const department = normalizeDepartment(normalized['Vị trí'] || '');
+        const role = normalizeRole(normalized['Chức vụ'] || '');
+        const tt = String(normalized['TT'] || index + 1).trim();
+        const rowKey = String(normalized['__ROW'] || '').trim();
+        const phones = extractPhones(normalized['SĐT 1'], normalized['SĐT 2']).uniquePhones;
+        if (!name && !department && !role && !phones.length) return;
+        const identityKey = [normalizeComparableText(name), normalizeDepartment(department), normalizeRole(role)].join('::');
+        const linkedPerson = state.people.find(item => sameIdentity(item, name, department, role)) || null;
+        rawRecords.push({
+          rowKey,
+          tt,
+          name: name || 'Chưa rõ họ tên',
+          department: department || 'Chưa rõ bộ phận',
+          role: role || 'Chưa rõ chức vụ',
+          phones,
+          phoneDisplays: phones.map(formatPhoneDisplay),
+          identityKey,
+          personId: linkedPerson ? linkedPerson.id : ''
+        });
+      });
+
+      const exactMap = new Map();
+      rawRecords.forEach(record => {
+        if (!record.identityKey || record.identityKey === '::') return;
+        if (!exactMap.has(record.identityKey)) exactMap.set(record.identityKey, []);
+        exactMap.get(record.identityKey).push(record);
+      });
+      const exact = [...exactMap.values()].filter(group => group.length > 1).map(group => {
+        const first = group[0];
+        return {
+          key: first.identityKey,
+          name: first.name,
+          department: first.department,
+          role: first.role,
+          count: group.length,
+          rowKeys: group.map(item => item.rowKey).filter(Boolean),
+          tts: group.map(item => item.tt).filter(Boolean),
+          phones: normalizePhoneArray(group.flatMap(item => item.phones || [])),
+          phoneDisplays: normalizePhoneArray(group.flatMap(item => item.phones || [])).map(formatPhoneDisplay),
+          personId: first.personId,
+          items: group
+        };
+      }).sort((a, b) => comparePeopleBase(a, b));
+
+      const phoneMap = new Map();
+      rawRecords.forEach(record => {
+        (record.phones || []).forEach(phone => {
+          if (!phoneMap.has(phone)) phoneMap.set(phone, []);
+          phoneMap.get(phone).push(record);
+        });
+      });
+      const phone = [...phoneMap.entries()].map(([phoneValue, recordsForPhone]) => {
+        const distinct = [];
+        const seen = new Set();
+        recordsForPhone.forEach(item => {
+          const key = item.identityKey && item.identityKey !== '::' ? item.identityKey : ('row::' + item.rowKey);
+          if (seen.has(key)) return;
+          seen.add(key);
+          distinct.push(item);
+        });
+        return {
+          phone: phoneValue,
+          phoneDisplay: formatPhoneDisplay(phoneValue),
+          count: distinct.length,
+          items: distinct
+        };
+      }).filter(group => group.count > 1).sort((a, b) => String(a.phoneDisplay || '').localeCompare(String(b.phoneDisplay || ''), 'vi'));
+
+      return {
+        total: exact.length + phone.length,
+        exact,
+        phone,
+        updatedAt: new Date().toISOString()
+      };
+    }
+
+    function openAdminTab(tabName) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabName));
+      document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.toggle('active', pane.id === 'tab-' + tabName));
+      if (tabName === 'audit') renderDuplicateAuditTab();
+    }
+
+    function focusPersonFromAudit(personId, mode = 'update') {
+      const person = getPersonById(personId);
+      if (!person) {
+        showToast('Không tìm thấy nhân sự để mở nhanh.', 'error', '⚠️');
+        return;
+      }
+      if (mode === 'delete') {
+        adminPickerState.delete.selectedId = person.id;
+        document.getElementById('delete-person').value = person.id;
+        updateDeletePreview(person);
+        renderAdminPersonPicker('delete');
+        openAdminTab('delete');
+        return;
+      }
+      adminPickerState.update.selectedId = person.id;
+      document.getElementById('update-person').value = person.id;
+      fillUpdateForm(person);
+      renderAdminPersonPicker('update');
+      openAdminTab('update');
+      scrollUpdateEditSectionIntoView();
+    }
+
+    function renderDuplicateAuditTab() {
+      const summaryEl = document.getElementById('duplicateScanSummary');
+      const listEl = document.getElementById('duplicateScanList');
+      if (!summaryEl || !listEl) return;
+      const audit = state.duplicateAudit || { total: 0, exact: [], phone: [], updatedAt: '' };
+      summaryEl.innerHTML = `
+        <div class="audit-summary-card ${audit.total ? 'warn' : ''}">
+          <div class="audit-summary-value">${escapeHtml(String(audit.total || 0))}</div>
+          <div class="audit-summary-label">Tổng nhóm nghi trùng cần kiểm tra</div>
+        </div>
+        <div class="audit-summary-card ${audit.exact && audit.exact.length ? 'warn' : ''}">
+          <div class="audit-summary-value">${escapeHtml(String((audit.exact || []).length))}</div>
+          <div class="audit-summary-label">Trùng cùng họ tên + bộ phận + chức vụ</div>
+        </div>
+        <div class="audit-summary-card ${audit.phone && audit.phone.length ? 'warn' : ''}">
+          <div class="audit-summary-value">${escapeHtml(String((audit.phone || []).length))}</div>
+          <div class="audit-summary-label">Số điện thoại đang xuất hiện ở nhiều người</div>
+        </div>
+      `;
+      if (!audit.total) {
+        listEl.innerHTML = '<div class="audit-empty">Hiện chưa phát hiện trường hợp nghi trùng nào từ dữ liệu đang tải.</div>';
+        return;
+      }
+
+      const exactHtml = (audit.exact || []).length ? `
+        <div>
+          <div class="audit-section-title">Nhóm nghi trùng cao: cùng họ tên, bộ phận, chức vụ</div>
+          ${(audit.exact || []).map(group => `
+            <div class="audit-item warn">
+              <div class="audit-item-head">
+                <div class="audit-item-title">${escapeHtml(group.name)} • ${escapeHtml(group.department)} • ${escapeHtml(group.role)}</div>
+                <span class="audit-pill">${escapeHtml(String(group.count))} bản ghi</span>
+              </div>
+              <div class="audit-meta">TT: ${escapeHtml(group.tts.join(', ') || '—')} • Dòng sheet: ${escapeHtml(group.rowKeys.join(', ') || '—')}</div>
+              <div class="audit-meta">SĐT đang có: ${escapeHtml(group.phoneDisplays.join(', ') || 'Chưa có')}</div>
+              <div class="audit-actions">
+                ${group.personId ? `<button class="tiny-btn audit-open-update-btn" type="button" data-person-id="${escapeHtml(group.personId)}">Mở cập nhật</button>` : ''}
+                ${group.personId ? `<button class="tiny-btn audit-open-delete-btn" type="button" data-person-id="${escapeHtml(group.personId)}">Mở xóa</button>` : ''}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      ` : '';
+
+      const phoneHtml = (audit.phone || []).length ? `
+        <div>
+          <div class="audit-section-title">Nhóm cần rà: cùng một số điện thoại xuất hiện ở nhiều người</div>
+          ${(audit.phone || []).map(group => `
+            <div class="audit-item">
+              <div class="audit-item-head">
+                <div class="audit-item-title">Số điện thoại ${escapeHtml(group.phoneDisplay || group.phone)}</div>
+                <span class="audit-pill">${escapeHtml(String(group.count))} người</span>
+              </div>
+              <div class="audit-sublist">
+                ${(group.items || []).map(item => `
+                  <div class="audit-subitem">
+                    <b>${escapeHtml(item.name)}</b><br>
+                    Bộ phận: ${escapeHtml(item.department)} • Chức vụ: ${escapeHtml(item.role)}<br>
+                    TT: ${escapeHtml(item.tt || '—')} • Dòng sheet: ${escapeHtml(item.rowKey || '—')}
+                    <div class="audit-actions">
+                      ${item.personId ? `<button class="tiny-btn audit-open-update-btn" type="button" data-person-id="${escapeHtml(item.personId)}">Mở cập nhật</button>` : ''}
+                      ${item.personId ? `<button class="tiny-btn audit-open-delete-btn" type="button" data-person-id="${escapeHtml(item.personId)}">Mở xóa</button>` : ''}
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      ` : '';
+
+      listEl.innerHTML = exactHtml + phoneHtml;
+      listEl.querySelectorAll('.audit-open-update-btn').forEach(btn => btn.addEventListener('click', () => {
+        Sound.tap();
+        focusPersonFromAudit(btn.dataset.personId, 'update');
+      }));
+      listEl.querySelectorAll('.audit-open-delete-btn').forEach(btn => btn.addEventListener('click', () => {
+        Sound.tap();
+        focusPersonFromAudit(btn.dataset.personId, 'delete');
+      }));
+    }
+
     function applyFilters() {
       const q = norm(state.query);
       const digitsQ = q.replace(/\D/g, '');
@@ -2478,6 +2802,7 @@
       const totalPhones = state.filtered.reduce((sum, p) => sum + p.phones.length, 0);
       const parts = [`Hiển thị ${state.filtered.length} nhân sự`, `${totalPhones} số điện thoại`];
       if (state.duplicateRowsRemoved > 0) parts.push(`Đã gộp ${state.duplicateRowsRemoved} bản ghi trùng`);
+      if (state.duplicateAudit && state.duplicateAudit.total > 0) parts.push(`Nghi trùng: ${state.duplicateAudit.total}`);
       if (state.activeDept !== 'Tất cả') parts.push('Bộ phận: ' + state.activeDept);
       if (state.activeRole !== ROLE_ALL) parts.push('Chức vụ: ' + state.activeRole);
       if (state.usingCache) parts.push('Đang dùng dữ liệu lưu gần nhất');
@@ -2711,6 +3036,7 @@
       state.people = prepared.people;
       state.duplicateRowsRemoved = prepared.duplicateRowsRemoved;
       state.duplicatePhonesCollapsed = prepared.duplicatePhonesCollapsed;
+      state.duplicateAudit = buildDuplicateAudit(rawRows);
       state.lastSyncAt = new Date();
       state.dataSource = source;
       state.dataDetail = detail;
@@ -2718,6 +3044,7 @@
       state.cachedAt = cachedAt;
       if (!usingCache) saveCache(rawRows, source);
       populatePersonDropdowns();
+      renderDuplicateAuditTab();
       runTransition(render);
     }
 
@@ -3005,16 +3332,14 @@
       clearPassError('delete-confirm-pass', 'delete-pass-error');
       updatePickerClearButton('delete');
       renderAdminPersonPicker('delete');
+      renderDuplicateAuditTab();
     }
 
     function initAdminEvents() {
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           Sound.tap();
-          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-          document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-          btn.classList.add('active');
-          document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+          openAdminTab(btn.dataset.tab);
         });
       });
 
@@ -3024,6 +3349,21 @@
         const shown = els.setupGuideBox.style.display === 'block';
         els.setupGuideBox.style.display = shown ? 'none' : 'block';
       });
+
+      const duplicateRefreshBtn = document.getElementById('duplicateScanRefreshBtn');
+      if (duplicateRefreshBtn) {
+        duplicateRefreshBtn.addEventListener('click', async () => {
+          Sound.tap();
+          const idleText = duplicateRefreshBtn.textContent;
+          duplicateRefreshBtn.disabled = true;
+          duplicateRefreshBtn.textContent = 'Đang rà...';
+          await refreshDataSilently();
+          renderDuplicateAuditTab();
+          duplicateRefreshBtn.disabled = false;
+          duplicateRefreshBtn.textContent = idleText;
+          showToast(state.duplicateAudit && state.duplicateAudit.total > 0 ? 'Đã rà lại và cập nhật danh sách nghi trùng.' : 'Đã rà lại, chưa phát hiện nghi trùng.', 'success', '✅');
+        });
+      }
 
       ensurePhoneRows('add-phone-list', ['']);
       ensurePhoneRows('update-phone-list', [''], 'Số điện thoại...');
